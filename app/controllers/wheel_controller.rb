@@ -5,6 +5,25 @@ class WheelController < ApplicationController
   
   @@angle_separation = 7
   
+  def new
+    @wheel = Wheel.new
+    3.times do |i|
+      row = @wheel.rows.build
+      row.index = i
+    end
+  end
+  
+  def create
+    @wheel = Wheel.new(params[:wheel])
+    
+    if @wheel.save
+      flash[:notice] = "Wheel Successfully created"
+      redirect_to :action => 'show'
+    else
+      render :action => 'new'
+    end
+  end
+  
   def draw
     radius = 250
     names = ['Malaria', 'HIV', 'Colera', 'Sarasa', 'Papap']

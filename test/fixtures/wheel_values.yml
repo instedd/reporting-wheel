@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  index: 1
+  value: MyString
+  code: 1
+  wheel_row_id: 1
+
+two:
+  index: 1
+  value: MyString
+  code: 1
+  wheel_row_id: 1

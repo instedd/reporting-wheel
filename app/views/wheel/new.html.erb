@@ -1,0 +1,13 @@
+<% form_for @wheel, :url => {:action => :create} do |f| %>
+	<%= f.error_messages %>
+	<p>
+		<%= f.label :name %><br/>
+		<%= f.text_field :name %>
+	</p>
+	<% f.fields_for :wheel_rows do |builder| %>
+		<%= render 'wheel_row_fields', :f => builder %>
+	<% end %>
+	<p>
+		<%= f.submit "Create" %>
+	</p>
+<% end %>
