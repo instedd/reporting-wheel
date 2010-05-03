@@ -33,4 +33,11 @@ class Prime
     last
   end
   
+  def self.factorize(n)
+    @@primes.each do |p|
+      return p if n % p == 0
+    end
+    n #return n if no prime is found
+  end
+  
 end

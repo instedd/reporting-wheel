@@ -14,6 +14,10 @@ class Wheel < ActiveRecord::Base
   alias :rows :wheel_rows
   
   before_validation_on_create :calculate_factors
+  
+  def self.find_for_factors(factors)
+    Wheel.find :first, :conditions => {:factor0 => factors[0], :factor1 => factors[1], :factor2 => factors[2]}
+  end
 
   private
 
@@ -23,7 +27,7 @@ class Wheel < ActiveRecord::Base
     
     # TODO improve this
     while true do
-      count = Wheel.count :all, :conditions => {:factor0 => factors[0], :factor1 => factors[1], :factor2 => [2]}
+      count = Wheel.count :all, :conditions => {:factor0 => factors[0], :factor1 => factors[1], :factor2 => factors[2]}
       break if count == 0
       maxFactor = factors.max
       factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
