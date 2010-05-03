@@ -10,4 +10,8 @@ class WheelRow < ActiveRecord::Base
   
   alias :values :wheel_values
   
+  def <=>(other)
+    self.index <=> other.index
+  end
+  
 end
