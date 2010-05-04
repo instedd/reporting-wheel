@@ -4,7 +4,14 @@ include Magick
 class WheelController < ApplicationController
   
   @@angle_separation = 5
-  @@initial_radius = 500
+  @@angle_modifier = 2
+  @@initial_radius = 10.4.cm
+  @@row_separation = 0.2.cm
+  @@colors = ['red', 'green', 'blue']
+  @@values_font_size = 14
+  @@codes_font_size = 16 
+  @@left_size = 2.5.cm
+  @@right_size = 1.cm
   
   before_filter :find_wheel, :only => [:draw]
   
@@ -28,49 +35,41 @@ class WheelController < ApplicationController
   end
   
   def draw
-    radius = @@initial_radius
+    left_margin = 0
     
-    RVG::dpi = 72
+    RVG::dpi = 90
     
-    rvg = RVG.new(1500, 400*3) do |canvas|
+    rvg = RVG.new(21.cm,29.7.cm) do |canvas|
        canvas.background_fill = 'white'
        
        @wheel.rows.sort.each_with_index do |row, i|
-         canvas.g.translate(@@initial_radius + 20, 500) do |group|
-           radius = @@initial_radius - i*130
+         canvas.g.translate(@@initial_radius + 0.1.cm, @@initial_radius + 0.1.cm) do |group|
+           left_radius = @@initial_radius - i * @@left_size - i * @@row_separation
+           right_radius = @@initial_radius - i * @@right_size - i * @@row_separation
            
-           group.circle(radius).styles(:fill => '#94B487', :stroke => 'black')
+           circle(group, left_radius, right_radius)
            
            indexes = (0..row.values.count-1).map{|z| z - row.values.count/2}.reverse
            
            row.values.sort.each_with_index do |value, j|
-             angle = (@@angle_separation + i) * indexes[j]
+             angle = (@@angle_separation + i * @@angle_modifier) * indexes[j]
              angle_rad = to_rad angle
-             dx = (radius - 10) * Math.cos(angle_rad)
-             dy = (radius - 10) * Math.sin(angle_rad)
-             group.text(dx*-1, dy*-1, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => 20,
+             
+             dx = - (left_radius - @@row_separation) * Math.cos(angle_rad)
+             dy = - (left_radius - @@row_separation) * Math.sin(angle_rad)
+             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => @@values_font_size,
                :font_family => 'monaco', :fill => 'black')
-             group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => 20, 
+             
+             dx = (right_radius - @@row_separation) * Math.cos(angle_rad)
+             dy = (right_radius - @@row_separation) * Math.sin(angle_rad)
+             group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
                :font_family => 'helvetica', :fill => 'black')
            end
+           
+           # max_value = row.values.map{|v| v.value.length}.max
+           # left_margin += max_value * @@ppc
          end
-         #canvas.g.translate(500,500).rotate(-90).path("M -200,0 A200,200 0 0,0 200,0 L -200,0")
        end
-       
-       
-       # canvas.g.translate(500,500) do |group|
-       #   group.circle(radius).styles(:fill => '#94B487', :stroke => 'black')
-       #   names.each_with_index do |name, i|
-       #    angle = @@angle_separation * indexes[i]
-       #    angle_rad = to_rad angle
-       #    dx = (radius - 10) * Math.cos(angle_rad)
-       #    dy = (radius - 10) * Math.sin(angle_rad)
-       #    group.text(dx*-1, dy*-1, name).rotate(angle).styles(:text_anchor =>'start', :font_size => 18,
-       #      :font_family => 'monaco', :fill => 'black')
-       #    group.text(dx, dy, values[i]).rotate(angle).styles(:text_anchor => 'end', :font_size => 18, 
-       #      :font_family => 'helvetica', :fill => 'black')                                                       
-       #   end
-       # end
      end
      
      img = rvg.draw
@@ -80,6 +79,12 @@ class WheelController < ApplicationController
   end
   
   private
+  
+  def circle(container, left_radius, right_radius)
+    container.path("M -#{left_radius},0 A#{left_radius},#{left_radius} 0 0,0 #{left_radius},0 L -#{left_radius},0").rotate(90).styles(:fill => '#94B487', :stroke => 'black')
+    container.path("M -#{right_radius},0 A#{right_radius},#{right_radius} 0 0,0 #{right_radius},0 L -#{right_radius},0").rotate(-90).styles(:fill => '#94B487', :stroke => 'black')
+    container
+  end
   
   def to_rad(angle)
     angle * Math::PI / 180.0
