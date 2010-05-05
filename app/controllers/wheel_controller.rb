@@ -1,6 +1,8 @@
 require 'rvg/rvg'
 include Magick
 
+RVG::dpi = 90
+
 class WheelController < ApplicationController
   
   @@angle_separation = 5
@@ -12,6 +14,7 @@ class WheelController < ApplicationController
   @@codes_font_size = 16 
   @@left_size = 2.5.cm
   @@right_size = 1.cm
+  @@field_cover_height = 0.8.cm
   
   before_filter :find_wheel, :only => [:draw]
   
@@ -35,15 +38,14 @@ class WheelController < ApplicationController
   end
   
   def draw
-    left_margin = 0
+    global_dy = 0
     
-    RVG::dpi = 90
-    
-    rvg = RVG.new(21.cm,29.7.cm) do |canvas|
+    rvg = RVG.new(21.cm,4 * @@initial_radius * 2 + 1.cm) do |canvas|
        canvas.background_fill = 'white'
        
+       # Draw wheel rows
        @wheel.rows.sort.each_with_index do |row, i|
-         canvas.g.translate(@@initial_radius + 0.1.cm, @@initial_radius + 0.1.cm) do |group|
+         canvas.g.translate(@@initial_radius + 0.1.cm, @@initial_radius + 0.1.cm + global_dy) do |group|
            left_radius = @@initial_radius - i * @@left_size - i * @@row_separation
            right_radius = @@initial_radius - i * @@right_size - i * @@row_separation
            
@@ -64,12 +66,26 @@ class WheelController < ApplicationController
              dy = (right_radius - @@row_separation) * Math.sin(angle_rad)
              group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
                :font_family => 'helvetica', :fill => 'black')
-           end
-           
+           end  
            # max_value = row.values.map{|v| v.value.length}.max
            # left_margin += max_value * @@ppc
          end
+         
+         global_dy += @@initial_radius * 2         
        end
+       
+       # Draw cover
+        canvas.g.translate(@@initial_radius + 0.1.cm, @@initial_radius + 0.1.cm + global_dy) do |g|
+          g.circle(@@initial_radius).styles(:stroke => 'black', :fill => 'transparent')
+          @wheel.rows.each_with_index do |row, i|
+            dx = - @@initial_radius + i * @@left_size + i * @@row_separation + 0.1.cm
+            dy = - @@field_cover_height / 2 - 0.1.cm
+            g.rect(@@left_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')
+            
+            dx = @@initial_radius - i * @@right_size - i * @@row_separation - @@right_size - 0.1.cm
+            g.rect(@@right_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')             
+          end
+        end
      end
      
      img = rvg.draw
