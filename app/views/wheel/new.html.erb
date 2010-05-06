@@ -7,6 +7,7 @@
 	<% f.fields_for :wheel_rows do |builder| %>
 		<%= render 'wheel_row_fields', :f => builder %>
 	<% end %>
+	<p><%= link_to_add_fields "Add Row", f, :wheel_rows %></p>
 	<p>
 		<%= f.submit "Create" %>
 	</p>

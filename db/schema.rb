@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100429214621) do
+ActiveRecord::Schema.define(:version => 20100506160546) do
 
   create_table "wheel_rows", :force => true do |t|
     t.integer  "index"
@@ -30,11 +30,9 @@ ActiveRecord::Schema.define(:version => 20100429214621) do
 
   create_table "wheels", :force => true do |t|
     t.string   "name"
-    t.integer  "factor0"
-    t.integer  "factor1"
-    t.integer  "factor2"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "factors"
   end
 
 end

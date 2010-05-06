@@ -28,6 +28,12 @@ class WheelController < ApplicationController
     3.times do |i|
       row = @wheel.rows.build
       row.index = i
+      row.label = "Row #{i}" 
+      5.times do |j|
+        value = row.values.build
+        value.index = j
+        value.value = "Value #{i} #{j}"
+      end
     end
   end
   
