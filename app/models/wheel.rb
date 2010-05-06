@@ -6,6 +6,7 @@ class Wheel < ActiveRecord::Base
   
   validates_presence_of :name
   validates_length_of :wheel_rows, :minimum => 1
+  validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows
   
   accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
   
@@ -25,11 +26,25 @@ class Wheel < ActiveRecord::Base
   
   private
   
-  def validate
-    # validate uniqueness of factors
-    # validate inclusion of factors in Prime.primes
-    # validate length of factors == length of rows
-    fs = self.factors.split(',')
+  def uniqueness_of_factors
+    factors = self.factors.split(',')
+    
+    errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors)
+  end
+
+  def factors_are_primes
+    factors = self.factors.split(',')
+    
+    factors.each do |f|
+      errors.add(:factors, "#{f} is not a prime number") unless Prime.primes.include?(f.to_i)
+    end
+  end
+  
+  def length_of_factors_and_rows
+    factors_count = self.factors.split(',').length
+    rows_count = self.rows.length
+    
+    errors.add(:factors, "Length of factors is not the same as the number of wheel rows") if factors_count != rows_count
   end
 
   def calculate_factors
