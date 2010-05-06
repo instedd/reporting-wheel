@@ -3,7 +3,7 @@ require 'rubygems'
 require 'pdf/writer'
 include Magick
 
-RVG::dpi = 72
+RVG::dpi = 144
 
 class WheelController < ApplicationController
   
@@ -12,8 +12,8 @@ class WheelController < ApplicationController
   @@initial_radius = 10.5.cm
   @@row_separation = 0.2.cm
   @@colors = ['red', 'green', 'blue']
-  @@values_font_size = 14
-  @@codes_font_size = 16 
+  @@values_font_size = 20
+  @@codes_font_size = 22
   @@left_size = 2.5.cm
   @@right_size = 1.cm
   @@field_cover_height = 0.8.cm
@@ -84,9 +84,9 @@ class WheelController < ApplicationController
       end
             
       img = rvg.draw
-      img.format = "JPG"
+      img.format = 'JPG'
       
-      pdf.add_image(img.to_blob, 0 ,0)
+      pdf.add_image(img.to_blob {self.quality = 100}, 0 ,0, img.columns * 0.5, img.rows * 0.5)
       pdf.start_new_page
     end
     
@@ -113,7 +113,7 @@ class WheelController < ApplicationController
     img_cover = rvg_cover.draw
     img_cover.format = "JPG"
     
-    pdf.add_image(img_cover.to_blob, 0, 0)
+    pdf.add_image(img_cover.to_blob {self.quality = 100}, 0 ,0, img_cover.columns * 0.5, img_cover.rows * 0.5)
     
     send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
   end
