@@ -47,7 +47,7 @@ class Wheel < ActiveRecord::Base
   end
   
   def get_best_factor(count)
-    ceiling = @@max_field_code / count
+    ceiling = @@max_field_code / (Prime.value_for(count-1))
     Prime.find_first_smaller_than ceiling
   end
   
