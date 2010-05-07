@@ -1,0 +1,15 @@
+<h1>Wheels</h1>
+
+<h2><%= link_to 'Create a new Wheel!', :action => :new %></h2>
+
+<table border="1">
+	<tr>
+		<th>Wheel Name</th><th>Actions</th>
+	</tr>
+	<% @wheels.each do |wheel| %>
+		<tr>
+			<td><%= link_to wheel.name, :action => :show, :id => wheel.id %></td>
+			<td><%= link_to 'Edit', :action => :edit, :id => wheel.id %></td>
+		</tr>
+	<% end %>
+</table>

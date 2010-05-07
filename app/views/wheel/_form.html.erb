@@ -1,0 +1,14 @@
+<%= f.error_messages %>
+<p>
+	<%= f.label :name %><br/>
+	<%= f.text_field :name %><br/>
+	<%= f.label :url_callback %><br/>
+	<%= f.text_field :url_callback, :size => 75 %>
+</p>
+<% f.fields_for :wheel_rows do |builder| %>
+	<%= render 'wheel_row_fields', :f => builder %>
+<% end %>
+<p><%= link_to_add_fields "Add Row", f, :wheel_rows %></p>
+<p>
+	<%= f.submit "Create" %>
+</p>

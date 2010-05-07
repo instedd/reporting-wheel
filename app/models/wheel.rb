@@ -1,12 +1,13 @@
 class Wheel < ActiveRecord::Base
   
   @@max_field_code = 999
+  @@url_regexp = Regexp.new('((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))', Regexp::IGNORECASE)
   
   has_many :wheel_rows, :dependent => :destroy
   
   validates_presence_of :name
   validates_length_of :wheel_rows, :minimum => 1
-  validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows
+  validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
   accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
   
@@ -38,6 +39,11 @@ class Wheel < ActiveRecord::Base
     factors.each do |f|
       errors.add(:factors, "#{f} is not a prime number") unless Prime.primes.include?(f.to_i)
     end
+  end
+  
+  def callback_is_url
+    return if url_callback.empty?
+    errors.add(:url_callback, "Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
   end
   
   def length_of_factors_and_rows

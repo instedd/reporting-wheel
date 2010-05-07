@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100506160546) do
+ActiveRecord::Schema.define(:version => 20100507174835) do
 
   create_table "wheel_rows", :force => true do |t|
     t.integer  "index"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20100506160546) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "factors"
+    t.string   "url_callback"
   end
 
 end

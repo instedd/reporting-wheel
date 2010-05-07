@@ -1,0 +1,5 @@
+<h1>Edit Wheel</h1>
+
+<% form_for @wheel, :url => {:action => :update, :id => @wheel.id} do |builder| %>
+	<%= render 'form', :f => builder %>
+<% end %>

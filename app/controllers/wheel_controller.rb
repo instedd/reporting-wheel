@@ -21,7 +21,11 @@ class WheelController < ApplicationController
   @@height = 22.cm
   
   
-  before_filter :find_wheel, :only => [:draw]
+  before_filter :find_wheel, :only => [:draw, :edit, :update, :show]
+  
+  def index
+    @wheels = Wheel.all
+  end
   
   def new
     @wheel = Wheel.new
@@ -42,10 +46,24 @@ class WheelController < ApplicationController
     
     if @wheel.save
       flash[:notice] = "Wheel Successfully created"
-      redirect_to :action => 'show'
+      redirect_to :action => 'show', :id => @wheel.id
     else
       render :action => 'new'
     end
+  end
+  
+  def edit
+  end
+  
+  def update
+    if @wheel.update_attributes(params[:wheel])
+      redirect_to :action => 'show', :id => @wheel.id
+    else
+      render :action => 'edit'
+    end
+  end
+  
+  def show
   end
   
   def draw
