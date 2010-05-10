@@ -20,7 +20,6 @@ class WheelController < ApplicationController
   @@width = 22.cm
   @@height = 22.cm
   
-  
   before_filter :find_wheel, :only => [:draw, :edit, :update, :show]
   
   def index
@@ -31,11 +30,9 @@ class WheelController < ApplicationController
     @wheel = Wheel.new
     3.times do |i|
       row = @wheel.rows.build
-      row.index = i
       row.label = "Row #{i}" 
       5.times do |j|
         value = row.values.build
-        value.index = j
         value.value = "Value #{i} #{j}"
       end
     end

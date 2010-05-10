@@ -5,7 +5,7 @@ class Wheel < ActiveRecord::Base
   
   has_many :wheel_rows, :dependent => :destroy
   
-  validates_presence_of :name
+  validates_presence_of :name, :factors
   validates_length_of :wheel_rows, :minimum => 1
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
@@ -28,12 +28,15 @@ class Wheel < ActiveRecord::Base
   private
   
   def uniqueness_of_factors
-    factors = self.factors.split(',')
+    return if self.factors.nil? or self.factors.blank?
     
+    factors = self.factors.split(',')
     errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors)
   end
 
   def factors_are_primes
+    return if self.factors.nil? or self.factors.blank?
+    
     factors = self.factors.split(',')
     
     factors.each do |f|
@@ -42,12 +45,12 @@ class Wheel < ActiveRecord::Base
   end
   
   def callback_is_url
-    return if url_callback.empty?
+    return if url_callback.nil? or url_callback.empty?
     errors.add(:url_callback, "Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
   end
   
   def length_of_factors_and_rows
-    factors_count = self.factors.split(',').length
+    factors_count = self.factors.nil? ? 0 : self.factors.split(',').length
     rows_count = self.rows.length
     
     errors.add(:factors, "Length of factors is not the same as the number of wheel rows") if factors_count != rows_count
@@ -69,8 +72,10 @@ class Wheel < ActiveRecord::Base
       factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
     end
     
+    # save factors
     self.factors = factors.join(',')
     
+    # calculate code for each value for each row
     rows.each_with_index do |row, row_index|
       row.index = row_index
       row.values.each_with_index do |value, value_index|
