@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100507174835) do
+ActiveRecord::Schema.define(:version => 20100511190551) do
+
+  create_table "wheel_records", :force => true do |t|
+    t.integer  "wheel_id"
+    t.string   "code"
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "wheel_rows", :force => true do |t|
     t.integer  "index"

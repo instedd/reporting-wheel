@@ -37,7 +37,7 @@ class Prime
     @@primes.each do |p|
       return p if n % p == 0
     end
-    n #return n if no prime is found
+    raise "Prime not found"
   end
   
 end
