@@ -15,11 +15,11 @@ class DecodeController < ApplicationController
       
       # extract codes from id
       count = wheel_id.length / 3
-      codes = count.times.map{|i| wheel_id[3*i..3*i+2]}
+      codes = count.times.map{|i| wheel_id[3*i..3*i+2].to_i}
       
       # factorize codes to find factors
       # TODO check if factorize fails to find factor
-      factors = codes.map{|c| Prime.factorize c.to_i}
+      factors = codes.map{|c| Prime.factorize c}
       
       # find wheel
       wheel = Wheel.find_for_factors factors
@@ -33,11 +33,24 @@ class DecodeController < ApplicationController
       
       # Output human readable message
       message = values.map{|v| v.row.label + ":" + v.value}.join(',')
+      
+      # Add GeoChat response headers
+      response.headers['X-GeoChat-Action'] = 'continue'
+      response.headers['X-GeoChat-Replace'] = 'true'
+      
+      # TODO Add raw decoded values to metadata
+      
+      # Create callback job and enqueue it
+      Delayed::Job.enqueue DecodeCallbackJob.new(wheel.url_callback, message, metadata)
     rescue Exception => e
+      # TODO define a geochat header to indicate an error
       message = e
+      code = 500
     end
     
-    render :text => message
+    # debugger
+    
+    render :text => message, :status => code or 200
   end
   
 end
