@@ -41,14 +41,16 @@ class DecodeController < ApplicationController
       # TODO Add raw decoded values to metadata
       
       # Create callback job and enqueue it
-      Delayed::Job.enqueue DecodeCallbackJob.new(wheel.url_callback, message, metadata)
+      if wheel.has_callback?
+        Delayed::Job.enqueue DecodeCallbackJob.new(wheel.url_callback, message, metadata)
+      end
     rescue Exception => e
       # TODO define a geochat header to indicate an error
       message = e
       code = 500
     end
     
-    # debugger
+    debugger
     
     render :text => message, :status => code or 200
   end

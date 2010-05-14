@@ -25,6 +25,10 @@ class Wheel < ActiveRecord::Base
     count > 0
   end
   
+  def has_callback?
+    return !url_callback.nil? && !url_callback.blank?
+  end
+  
   private
   
   def uniqueness_of_factors

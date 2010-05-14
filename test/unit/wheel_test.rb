@@ -101,4 +101,12 @@ class WheelTest < ActiveSupport::TestCase
     end
   end
   
+  test "should have a callback when url_callback is defined" do
+    assert @wheel.has_callback?
+    @wheel.url_callback = ''
+    assert !@wheel.has_callback?
+    @wheel.url_callback = nil
+    assert !@wheel.has_callback?
+  end
+  
 end

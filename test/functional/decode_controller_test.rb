@@ -53,7 +53,6 @@ class DecodeControllerTest < ActionController::TestCase
   
   test "should enqueue a decode callback job" do
     setup_valid_request
-    @request.query_parameters = {:some => 'value'}
     
     post :wheel
     
@@ -108,6 +107,7 @@ class DecodeControllerTest < ActionController::TestCase
     row3.expects(:label).returns('Label3')
     value3.expects(:value).returns('Value3')
     
+    wheel.expects(:has_callback?).returns(true)
     wheel.expects(:url_callback).returns('http://www.domain.com/some/url')
   end
   
