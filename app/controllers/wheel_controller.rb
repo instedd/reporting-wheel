@@ -1,5 +1,4 @@
 require 'rvg/rvg'
-require 'rubygems'
 require 'pdf/writer'
 include Magick
 

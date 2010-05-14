@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'mocha'
 require 'YAML'
 
 class DecodeControllerTest < ActionController::TestCase
