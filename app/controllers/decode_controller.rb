@@ -15,7 +15,7 @@ class DecodeController < ApplicationController
       
       # extract codes from id
       count = wheel_id.length / 3
-      codes = count.times.map{|i| wheel_id[3*i..3*i+2].to_i}
+      codes = count.times.map{|i| wheel_id[3*i..3*i+2].to_i}.reverse
       
       # factorize codes to find factors
       # TODO check if factorize fails to find factor
@@ -50,7 +50,7 @@ class DecodeController < ApplicationController
       code = 500
     end
     
-    debugger
+    # debugger
     
     render :text => message, :status => code or 200
   end
