@@ -38,7 +38,8 @@ class DecodeController < ApplicationController
       response.headers['X-GeoChat-Action'] = 'continue'
       response.headers['X-GeoChat-Replace'] = 'true'
       
-      # TODO Add raw decoded values to metadata
+      # Add raw decoded values to metadata
+      metadata = metadata.merge values.inject({}){|h,e| h[e.row.label] = e.value ; h}
       
       # Create callback job and enqueue it
       if wheel.has_callback?
