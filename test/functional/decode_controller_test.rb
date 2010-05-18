@@ -66,6 +66,14 @@ class DecodeControllerTest < ActionController::TestCase
     assert_equal @request.query_parameters, job.query_parameters
   end
   
+  test "should return a GeoChat action reply header in case of an error" do
+    setup_wheel_code 'invalid request'
+    
+    post :wheel
+    
+    assert_header 'X-GeoChat-Action', 'reply'
+  end
+  
   private
   
   def setup_wheel_code(code)

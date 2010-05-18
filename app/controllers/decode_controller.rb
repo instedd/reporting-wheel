@@ -45,7 +45,7 @@ class DecodeController < ApplicationController
         Delayed::Job.enqueue DecodeCallbackJob.new(wheel.url_callback, message, metadata)
       end
     rescue Exception => e
-      # TODO define a geochat header to indicate an error
+      response.headers['X-GeoChat-Action'] = 'reply'
       message = e
       code = 500
     end
