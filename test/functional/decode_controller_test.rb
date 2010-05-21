@@ -63,7 +63,7 @@ class DecodeControllerTest < ActionController::TestCase
     assert_equal 'DecodeCallbackJob', job.class.to_s
     assert_equal 'http://www.domain.com/some/url', job.url
     assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3', job.body
-    assert_equal @request.query_parameters, job.query_parameters
+    assert_equal @request.query_parameters.merge({'Label1' => 'Value1', 'Label2' => 'Value2', 'Label3' => 'Value3'}), job.query_parameters
   end
   
   test "should return a GeoChat action reply header in case of an error" do
@@ -102,17 +102,17 @@ class DecodeControllerTest < ActionController::TestCase
     
     WheelRecord.expects(:create!).returns(nil)
     
-    value1.expects(:row).returns(row1)
-    row1.expects(:label).returns('Label1')    
-    value1.expects(:value).returns('Value1')
+    value1.stubs(:row).returns(row1)
+    row1.stubs(:label).returns('Label1')    
+    value1.stubs(:value).returns('Value1')
     
-    value2.expects(:row).returns(row2)
-    row2.expects(:label).returns('Label2')
-    value2.expects(:value).returns('Value2')
+    value2.stubs(:row).returns(row2)
+    row2.stubs(:label).returns('Label2')
+    value2.stubs(:value).returns('Value2')
         
-    value3.expects(:row).returns(row3)
-    row3.expects(:label).returns('Label3')
-    value3.expects(:value).returns('Value3')
+    value3.stubs(:row).returns(row3)
+    row3.stubs(:label).returns('Label3')
+    value3.stubs(:value).returns('Value3')
     
     wheel.expects(:has_callback?).returns(true)
     wheel.expects(:url_callback).returns('http://www.domain.com/some/url')
