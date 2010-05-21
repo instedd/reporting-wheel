@@ -6,18 +6,19 @@ RVG::dpi = 144
 
 class WheelController < ApplicationController
   
-  @@angle_separation = 5
-  @@angle_modifier = 2
-  @@initial_radius = 10.5.cm
-  @@row_separation = 0.2.cm
-  @@colors = ['red', 'green', 'blue']
-  @@values_font_size = 20
-  @@codes_font_size = 22
-  @@left_size = 2.5.cm
-  @@right_size = 1.cm
-  @@field_cover_height = 0.8.cm
-  @@width = 22.cm
-  @@height = 22.cm
+  @@angle_separation = 5          # (initial) angle separation for values/codes 
+  @@angle_modifier = 2            # angle modifier (angle of row n will be "initial angle separation + n * angle modifier")
+  @@initial_radius = 10.5.cm      # radius of outer circle (row 0)
+  @@row_separation = 0.1.cm       # separation from text to the next wheel border
+  @@values_font_size = 20         # font size for values
+  @@codes_font_size = 22          # font size for codes
+  @@left_size = 2.5.cm            # size for text on the left side (values)
+  @@right_size = 1.cm             # size for text on the right side (codes)
+  @@field_cover_height = 0.8.cm   # box height
+  @@width = 22.cm                 # width of image
+  @@height = 22.cm                # height of image
+  @@outer_margin = 0.5.cm         # separation from wheel border to text for row 0
+  @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
   
   before_filter :find_wheel, :only => [:draw, :edit, :update, :show]
   
@@ -71,8 +72,8 @@ class WheelController < ApplicationController
         canvas.background_fill = 'white'
         
         canvas.g.translate(@@initial_radius + 0.1.cm, @@initial_radius + 0.1.cm) do |group| 
-          left_radius = @@initial_radius - i * @@left_size - i * @@row_separation
-          right_radius = @@initial_radius - i * @@right_size - i * @@row_separation
+          left_radius = @@initial_radius - i * @@left_size - i * @@row_separation - ( i > 0 ? @@outer_margin : 0) - (i > 1 ? (i-1) * @@inner_margin : 0)
+          right_radius = @@initial_radius - i * @@right_size - i * @@row_separation - ( i > 0 ? @@outer_margin : 0) - (i > 1 ? (i-1) * @@inner_margin : 0)
           
           circle(group, left_radius, right_radius)
           
@@ -81,14 +82,16 @@ class WheelController < ApplicationController
           row.values.sort.each_with_index do |value, j|
             angle = (@@angle_separation + i * @@angle_modifier) * indexes[j]
             angle_rad = to_rad angle
+            
+            margin = i > 0 ? @@inner_margin : @@outer_margin
 
-            dx = - (left_radius - @@row_separation) * Math.cos(angle_rad)
-            dy = - (left_radius - @@row_separation) * Math.sin(angle_rad)
+            dx = - (left_radius - margin) * Math.cos(angle_rad)
+            dy = - (left_radius - margin) * Math.sin(angle_rad)
             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => @@values_font_size,
              :font_family => 'monaco', :fill => 'black')
 
-            dx = (right_radius - @@row_separation) * Math.cos(angle_rad)
-            dy = (right_radius - @@row_separation) * Math.sin(angle_rad)
+            dx = (right_radius - margin) * Math.cos(angle_rad)
+            dy = (right_radius - margin) * Math.sin(angle_rad)
             group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
              :font_family => 'helvetica', :fill => 'black')
           end
@@ -113,14 +116,22 @@ class WheelController < ApplicationController
         g.circle(0.1.cm).styles(:fill => 'black')
     
         g.circle(@@initial_radius).styles(:fill => 'transparent', :stroke => 'black')
+        
+        # draw left boxes (boxes for values)
         @wheel.rows.each_with_index do |row, i|
-          dx = - @@initial_radius + i * @@left_size + i * @@row_separation + 0.1.cm
+          dx = - @@initial_radius + i * @@left_size + i * @@row_separation + i * @@inner_margin + @@outer_margin
           dy = - @@field_cover_height / 2 - 0.1.cm
           g.rect(@@left_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')
-          
-          dx = @@initial_radius - i * @@right_size - i * @@row_separation - @@right_size - 0.1.cm
-          g.rect(@@right_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')
-        end          
+        end
+        
+        # draw right box (box for code)
+        rows_count = @wheel.rows.count
+        width = rows_count * @@right_size + (rows_count - 1) * (@@row_separation + @@inner_margin)
+        height = @@field_cover_height
+        dx = @@initial_radius - width - @@outer_margin
+        dy = - @@field_cover_height / 2 - 0.1.cm
+        
+        g.rect(width, height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')
       end
     end
     
