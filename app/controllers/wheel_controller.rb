@@ -19,6 +19,7 @@ class WheelController < ApplicationController
   @@height = 22.cm                # height of image
   @@outer_margin = 0.5.cm         # separation from wheel border to text for row 0
   @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
+  @@stroke_width = 3              # width of borders
   
   before_filter :find_wheel, :only => [:draw, :edit, :update, :show]
   
@@ -115,13 +116,13 @@ class WheelController < ApplicationController
         
         g.circle(0.1.cm).styles(:fill => 'black')
     
-        g.circle(@@initial_radius).styles(:fill => 'transparent', :stroke => 'black')
+        g.circle(@@initial_radius).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => @@stroke_width)
         
         # draw left boxes (boxes for values)
         @wheel.rows.each_with_index do |row, i|
           dx = - @@initial_radius + i * @@left_size + i * @@row_separation + i * @@inner_margin + @@outer_margin
           dy = - @@field_cover_height / 2 - 0.1.cm
-          g.rect(@@left_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')
+          g.rect(@@left_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => @@stroke_width)
         end
         
         # draw right box (box for code)
@@ -131,7 +132,7 @@ class WheelController < ApplicationController
         dx = @@initial_radius - width - @@outer_margin
         dy = - @@field_cover_height / 2 - 0.1.cm
         
-        g.rect(width, height, dx, dy).styles(:fill => 'transparent', :stroke => 'black')
+        g.rect(width, height, dx, dy).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => @@stroke_width)
       end
     end
     
@@ -146,8 +147,8 @@ class WheelController < ApplicationController
   private
   
   def circle(container, left_radius, right_radius)
-    container.path("M -#{left_radius},0 A#{left_radius},#{left_radius} 0 0,0 #{left_radius},0 L -#{left_radius},0").rotate(90).styles(:fill => '#94B487', :stroke => 'black')
-    container.path("M -#{right_radius},0 A#{right_radius},#{right_radius} 0 0,0 #{right_radius},0 L -#{right_radius},0").rotate(-90).styles(:fill => '#94B487', :stroke => 'black')
+    container.path("M -#{left_radius},0 A#{left_radius},#{left_radius} 0 0,0 #{left_radius},0 L -#{left_radius},0").rotate(90).styles(:fill => '#94B487', :stroke => 'black', :stroke_width => @@stroke_width)
+    container.path("M -#{right_radius},0 A#{right_radius},#{right_radius} 0 0,0 #{right_radius},0 L -#{right_radius},0").rotate(-90).styles(:fill => '#94B487', :stroke => 'black', :stroke_width => @@stroke_width)
     container
   end
   
