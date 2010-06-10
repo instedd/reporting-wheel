@@ -5,5 +5,7 @@ response.headers["Content-Type"] = "application/xml; charset=utf-8"
 xml = Builder::XmlMarkup.new(:indent => 1)
 
 xml.instruct! :xml, :version => '1.0', :encoding => 'UTF-8'
-xml.Response 'Hello Nicolas and Ary!'
+xml.Response do 
+ xml.Say 'Hello Nicolas and Ary!'
+end
 %><%= xml.target! %>
