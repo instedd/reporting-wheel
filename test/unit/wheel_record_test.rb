@@ -1,5 +1,5 @@
 require 'test_helper'
-require 'YAML'
+require 'yaml'
 
 class WheelRecordTest < ActiveSupport::TestCase
   
