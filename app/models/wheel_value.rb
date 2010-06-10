@@ -3,7 +3,7 @@ class WheelValue < ActiveRecord::Base
   belongs_to :wheel_row
   
   validates_presence_of :value, :index, :code
-  validates_length_of :value, :maximum => 10
+  validates_length_of :value, :maximum => 300
   
   alias :row :wheel_row
   

@@ -6,13 +6,18 @@ RVG::dpi = 144
 
 class WheelController < ApplicationController
   
-  @@angle_separation = 5          # (initial) angle separation for values/codes 
+  @@angle_separation = 4          # (initial) angle separation for values/codes 
   @@angle_modifier = 2            # angle modifier (angle of row n will be "initial angle separation + n * angle modifier")
   @@initial_radius = 10.5.cm      # radius of outer circle (row 0)
   @@row_separation = 0.1.cm       # separation from text to the next wheel border
-  @@values_font_size = 20         # font size for values
+  @@values_font_size = 14         # font size for values
   @@codes_font_size = 22          # font size for codes
-  @@left_size = 2.5.cm            # size for text on the left side (values)
+  @@left_size = 2.cm            # size for text on the left side (values)
+  
+  @@left_size_field_1 = 4.cm            # size for text on the left side (values)
+  @@left_size_field_2 = 1.cm            # size for text on the left side (values)
+  @@left_size_field_3 = 1.cm            # size for text on the left side (values)
+ 
   @@right_size = 1.cm             # size for text on the right side (codes)
   @@field_cover_height = 0.8.cm   # box height
   @@width = 22.cm                 # width of image
@@ -20,7 +25,7 @@ class WheelController < ApplicationController
   @@outer_margin = 0.5.cm         # separation from wheel border to text for row 0
   @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
   
-  before_filter :find_wheel, :only => [:draw, :edit, :update, :show]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :show]
   
   def index
     @wheels = Wheel.all
@@ -62,17 +67,62 @@ class WheelController < ApplicationController
   
   def show
   end
+ 
+  def draw_text
+    pdf = PDF::Writer.new
+
+    rvg = RVG.new(@@width, @@height) do |canvas|
+      canvas.background_fill = 'white'
+    end
+
+    @wheel.rows.sort.each_with_index do |row, i|
+      img = rvg.draw
+      img.format = 'JPG'
+           
+      row.values.sort.each_with_index do |value, j|
+        text = Magick::Draw.new
+        text.font_family = "Kh Battambang"
+        text.encoding = "Unicode"
+        
+        logger.debug value.value
+        
+        text.text(23, 14 * j,value.value)
+        text.draw(img)
+                
+        pdf.add_image(img.to_blob {self.quality = 100}, 0 ,0, img.columns * 0.5, img.rows * 0.5)
+      end
+      
+      send_data(img.to_blob, :disposition => 'inline', :type => 'application/jpeg', :filename => 'wheel.jpg')
+
+    end
+
+    #send_data(img.to_blob, :disposition => 'inline', :type => 'application/jpeg', :filename => 'wheel.name')
+  
+    #send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
+  end
   
   def draw
     pdf = PDF::Writer.new
     
     # Draw wheel rows
     @wheel.rows.sort.each_with_index do |row, i|
+    
+      case i 
+        when 0 
+          row_left_offset = 0 
+        when 1
+          row_left_offset = @@left_size_field_1
+        when 2
+          row_left_offset = @@left_size_field_1 + @@left_size_field_2
+        else
+          row_left_offset = @@left_size_field_1 + @@left_size_field_2 + @@left_size_field_3 + (i - 3) * @@left_size
+      end
+    
       rvg = RVG.new(@@width, @@height) do |canvas|
         canvas.background_fill = 'white'
-        
+    
         canvas.g.translate(@@initial_radius + 0.1.cm, @@initial_radius + 0.1.cm) do |group| 
-          left_radius = @@initial_radius - i * @@left_size - i * @@row_separation - ( i > 0 ? @@outer_margin : 0) - (i > 1 ? (i-1) * @@inner_margin : 0)
+          left_radius = @@initial_radius - row_left_offset - i * @@row_separation - ( i > 0 ? @@outer_margin : 0) - (i > 1 ? (i-1) * @@inner_margin : 0)
           right_radius = @@initial_radius - i * @@right_size - i * @@row_separation - ( i > 0 ? @@outer_margin : 0) - (i > 1 ? (i-1) * @@inner_margin : 0)
           
           circle(group, left_radius, right_radius)
@@ -88,11 +138,17 @@ class WheelController < ApplicationController
             dx = - (left_radius - margin) * Math.cos(angle_rad)
             dy = - (left_radius - margin) * Math.sin(angle_rad)
             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => @@values_font_size,
-             :font_family => 'monaco', :fill => 'black')
+             #:font_family => 'Kh Battambang', :fill => 'black')
+             :font_family => 'Thonburi', :fill => 'black')
 
             dx = (right_radius - margin) * Math.cos(angle_rad)
             dy = (right_radius - margin) * Math.sin(angle_rad)
-            group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
+            
+            #group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
+            # :font_family => 'helvetica', :fill => 'black')
+            
+            #Force codes to have 3 digits (pad with leading zeros)
+            group.text(dx, dy, "%03d" % value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
              :font_family => 'helvetica', :fill => 'black')
           end
           
