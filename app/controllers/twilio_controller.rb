@@ -10,7 +10,7 @@ class TwilioController < ActionController::Base
     
     digits = params[:Digits];
     
-    codes = [Integer(digits[0] + digits[1] + digits[2]), Integer(digits[3] + digits[4] + digits[5]), Integer(digits[6] + digits[7] + digits[8])]
+    codes = [digits[0..2], digits[3..5], digits[6..8]].map do |x| Integer(x) end
 
     factors = codes.map{|c| Prime.factorize c}
     
