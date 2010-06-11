@@ -6,8 +6,6 @@ xml = Builder::XmlMarkup.new(:indent => 1)
 
 xml.instruct! :xml, :version => '1.0', :encoding => 'UTF-8'
 xml.Response do 
-	xml.Gather :numDigits => 9, :action => '/twilio/receive_code', :method => 'POST' do
-		xml.Say 'Please enter the nine digit code you see on the right side of the wheel'
-	end
+	xml.Say @message
 end
 %><%= xml.target! %>
