@@ -8,7 +8,7 @@ class TwilioController < ActionController::Base
   
   def receive_code
     
-    digits = params[:digits];
+    digits = params[:Digits];
     
     codes = [Integer(digits[0] + digits[1] + digits[2]), Integer(digits[3] + digits[4] + digits[5]), Integer(digits[6] + digits[7] + digits[8])]
 
