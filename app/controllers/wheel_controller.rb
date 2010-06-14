@@ -220,7 +220,7 @@ class WheelController < ApplicationController
   end
   
   def find_wheel
-    @wheel = Wheel.find(params[:id])
+    @wheel = Wheel.find params[:id], :include => {:wheel_rows => :wheel_values}
   end
   
 end
