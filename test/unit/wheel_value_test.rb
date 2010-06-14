@@ -14,7 +14,7 @@ class WheelValueTest < ActiveSupport::TestCase
   end
   
   test "should validate the length of its value" do
-    @wheel_value.value = "A long value with more than 10 chars"
+    @wheel_value.value = "a" * 301
     assert !@wheel_value.valid?
   end
   
