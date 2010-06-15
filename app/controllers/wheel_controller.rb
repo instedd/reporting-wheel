@@ -139,8 +139,7 @@ class WheelController < ApplicationController
             dx = - (left_radius - margin) * Math.cos(angle_rad)
             dy = - (left_radius - margin) * Math.sin(angle_rad)
             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => @@values_font_size,
-             #:font_family => 'Kh Battambang', :fill => 'black')
-             :font_family => 'Thonburi', :fill => 'black')
+             :font_family => font_family, :fill => 'black')
 
             dx = (right_radius - margin) * Math.cos(angle_rad)
             dy = (right_radius - margin) * Math.sin(angle_rad)
@@ -202,6 +201,14 @@ class WheelController < ApplicationController
   
   private
   
+  def font_family
+    if RUBY_PLATFORM.include? "linux"
+      "Garuda"
+    else
+      "Kh Battambang"
+    end
+  end
+  
   def circle(container, left_radius, right_radius)
     container.path("M -#{left_radius},0 A#{left_radius},#{left_radius} 0 0,0 #{left_radius},0 L -#{left_radius},0").rotate(90).styles(:fill => '#94B487', :stroke => 'black', :stroke_width => @@stroke_width)
     container.path("M -#{right_radius},0 A#{right_radius},#{right_radius} 0 0,0 #{right_radius},0 L -#{right_radius},0").rotate(-90).styles(:fill => '#94B487', :stroke => 'black', :stroke_width => @@stroke_width)
@@ -213,7 +220,7 @@ class WheelController < ApplicationController
   end
   
   def find_wheel
-    @wheel = Wheel.find(params[:id])
+    @wheel = Wheel.find params[:id], :include => {:wheel_rows => :wheel_values}
   end
   
 end
