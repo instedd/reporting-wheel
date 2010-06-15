@@ -1,6 +1,10 @@
 require 'array'
 
-class TwilioController < ActionController::Base
+class TropoController < ActionController::Base
+  
+  def index
+    render :content_type => 'application/javascript'
+  end
   
   def hello
     render :content_type => 'application/xml'
