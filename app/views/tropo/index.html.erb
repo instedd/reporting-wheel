@@ -1,0 +1,21 @@
+require 'open-uri'
+require 'json'
+
+answer 
+
+wheel_options = { :choices     => "[9 DIGITS]",
+                    :repeat      => 3,
+                    :timeout     => 7,
+                    :onBadChoice => lambda { say 'Invalid entry, please try again.' },
+                    :onTimeout   => lambda { say 'Timeout, please try again.' },
+                    :onChoice    => lambda { |code_choice|
+                                           wheel_url = 'http://<%= request.host_with_port %>/tropo/receive_code?Digits='
+                                           url = URI.encode(wheel_url + code_choice)
+
+                                           say open(url).read                                           
+                                         }
+                      }
+  
+ask 'Please enter the nine digit code you see on the right side of the wheel', wheel_options
+say 'Thats all. Goodbye.'
+hangup
