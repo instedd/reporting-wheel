@@ -26,7 +26,7 @@ class WheelController < ApplicationController
   @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
   @@stroke_width = 3              # width of borders
   
-  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :delete]
   
   def index
     @wheels = Wheel.all
@@ -52,7 +52,7 @@ class WheelController < ApplicationController
     @wheel = Wheel.new(params[:wheel])
     
     if @wheel.save
-      flash[:notice] = "Wheel Successfully created"
+      flash[:notice] = "Wheel \"#{@wheel.name}\" created"
       redirect_to :action => 'index'
     else
       render :action => 'new'
@@ -64,12 +64,19 @@ class WheelController < ApplicationController
   
   def update
     if @wheel.update_attributes(params[:wheel])
+      flash[:notice] = "Wheel \"#{@wheel.name}\" udpated"
       redirect_to :action => 'index'
     else
       render :action => 'edit'
     end
   end
- 
+  
+  def delete
+    @wheel.destroy
+    flash[:notice] = "Wheel \"#{@wheel.name}\" deleted"
+    redirect_to :action => 'index'
+  end
+  
   def draw_text
     pdf = PDF::Writer.new
 
@@ -221,7 +228,8 @@ class WheelController < ApplicationController
   end
   
   def find_wheel
-    @wheel = Wheel.find params[:id], :include => {:wheel_rows => :wheel_values}
+    @wheel = Wheel.find_by_id params[:id], :include => {:wheel_rows => :wheel_values}
+    redirect_to :action => :index if not @wheel
   end
   
 end
