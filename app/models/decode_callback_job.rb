@@ -1,6 +1,5 @@
 require 'net/http'
 require 'uri'
-require 'cgi'
 
 class DecodeCallbackJob
   
@@ -13,10 +12,9 @@ class DecodeCallbackJob
   end
   
   def perform
-    url = URI.parse(@url)
-    query_string = @query_parameters.map{|k,v| CGI::escape(k.to_s) + '=' + CGI::escape(v.to_s)}.join('&')
+    url = URI.parse @url
     
-    request = Net::HTTP.new(url.host, url.port)
-    response = request.post(url.path + '?' + query_string, @body)
+    request = Net::HTTP.new url.host, url.port
+    response = request.post "#{url.path}?#{@query_parameters.to_query}", @body
   end
 end

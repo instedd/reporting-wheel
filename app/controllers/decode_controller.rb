@@ -20,9 +20,7 @@ class DecodeController < ApplicationController
       metadata = metadata.merge comb.values.inject({}){|h,e| h[e.row.label] = e.value ; h}
       
       # Create callback job and enqueue it
-      if comb.wheel.has_callback?
-        Delayed::Job.enqueue DecodeCallbackJob.new(comb.wheel.url_callback, comb.message, metadata)
-      end
+      comb.enqueue_callback :metadata => metadata
       
       message = comb.message
     rescue Exception => e

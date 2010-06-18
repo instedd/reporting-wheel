@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class DecodeCallbackJobTest < ActiveSupport::TestCase
+
+  include Mocha::API
   
   def setup
     @url = 'http://www.domain.com/some/url'
@@ -27,7 +29,7 @@ class DecodeCallbackJobTest < ActiveSupport::TestCase
     response = mock('Net::HTTPResponse')
       
     Net::HTTP.expects(:new).with('www.domain.com', 80).returns(request)
-    request.expects(:post).with('/some/url?key1=value1&key2=value2', @body).returns(response)
+    request.expects(:post).with("/some/url?#{@query_parameters.to_query}", @body).returns(response)
     
     res = @job.perform
     

@@ -44,4 +44,11 @@ class WheelCombination
   def record!(options = {})
     WheelRecord.create! :wheel => @wheel, :code => @digits, :data => (options[:metadata] || "")
   end
+  
+  # Enqueues a callback job if the wheel has a callback url. Options can be:
+  # - :metadata = metadata related to the record
+  def enqueue_callback(options = {})
+    return unless @wheel.has_callback?
+    Delayed::Job.enqueue DecodeCallbackJob.new(@wheel.url_callback, @message, options[:metadata])
+  end
 end
