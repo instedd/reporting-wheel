@@ -35,7 +35,6 @@ class WheelController < ApplicationController
   def new
     @wheel = Wheel.new
     @wheel.ok_text = "Your report of {Quantity} {Type} of {Disease} was received. Thank you!"
-    @wheel.wrong_text = "You sent {N}, but it is not a valid report. Please check the numbers in the wheel."
     
     defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
     defaults.each do |values| 
