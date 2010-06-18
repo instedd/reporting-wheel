@@ -12,16 +12,15 @@ class DecodeController < ApplicationController
       comb = WheelCombination.new digits
       comb.record! :metadata => YAML.dump(metadata)
       
-      # Add GeoChat response headers
-      response.headers['X-GeoChat-Action'] = 'continue'
-      response.headers['X-GeoChat-Replace'] = 'true'
-      
       # Add raw decoded values to metadata
       metadata = metadata.merge comb.values.inject({}){|h,e| h[e.row.label] = e.value ; h}
       
       # Create callback job and enqueue it
       comb.enqueue_callback :metadata => metadata
       
+      # Add GeoChat response headers
+      response.headers['X-GeoChat-Action'] = 'continue'
+      response.headers['X-GeoChat-Replace'] = 'true'
       message = comb.message
     rescue Exception => e
       response.headers['X-GeoChat-Action'] = 'reply'
