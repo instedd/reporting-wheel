@@ -18,7 +18,7 @@ class DecodeControllerTest < ActionController::TestCase
     post :wheel
     
     assert_response :error
-    assert_equal @response.body, 'The number of digist must be a multiple of 3'
+    assert_equal @response.body, 'The number of digits must be a multiple of 3'
   end
   
   test "should fail if wheel is not found" do
