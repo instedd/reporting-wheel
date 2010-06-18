@@ -120,6 +120,10 @@ acronym {
   margin-top:8px;
 }
 
+.description {
+  font-style: italic;
+}
+
 #version {
   color: #bbbbbb;
   text-align: right;

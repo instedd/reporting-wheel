@@ -1,16 +1,42 @@
 <%= f.error_messages %>
+
+<h4>General information</h4>
+
 <p>
 	<%= f.label :name %><br/>
 	<%= f.text_field :name %><br/>
 </p>
 <p>
-	<%= f.label :url_callback %><br/>
+	<%= f.label :url_callback, 'URL callback <a href="http://code.google.com/p/reportingwheel/wiki/API#Callback" target="_blank"><img src="/images/question.png" width="14" height="14"/></a>' %><br/>
 	<%= f.text_field :url_callback, :size => 75 %>
 </p>
+
+<h4>Values to report</h4>
+
+<div class="description">Each label with its values will be printed in a disc of a wheel.</div>
+
 <% f.fields_for :wheel_rows do |builder| %>
 	<%= render 'wheel_row_fields', :f => builder %>
 <% end %>
-<p><%= link_to_add_fields "Add Row", f, :wheel_rows %></p>
+<p><%= link_to_add_fields "Add label", f, :wheel_rows %></p>
+
+<h4>SMS interaction</h4>
+
+<div class="description">
+Define the texts that will be sent to a user when he sends a report via SMS.<br/>
+You can refer to the reported value of a given label by writing the label name between brackets.<br/>
+You can refer to the reported number by writing {N}<br/>
+</div>
+
+<p>
+	<%= f.label :ok_text, '"Report understood" text' %><br/>
+	<%= f.text_field :ok_text, :size => 80 %><br/>
+</p>
+<p>
+	<%= f.label :wrong_text, '"Report not understood" text' %><br/>
+	<%= f.text_field :wrong_text, :size => 80 %><br/>
+</p>
+
 <p>
 	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
 </p>

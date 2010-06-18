@@ -2,12 +2,16 @@
 
 <table border="1">
 	<tr>
-		<th>Wheel Name</th><th>Actions</th>
+		<th>Wheel Name</th>
+		<th>Actions</th>
 	</tr>
 	<% @wheels.each do |wheel| %>
 		<tr>
 			<td><%= link_to wheel.name, :action => :show, :id => wheel.id %></td>
-			<td><%= link_to 'Edit', :action => :edit, :id => wheel.id %></td>
+			<td>
+			  <%= link_to 'edit', :action => :edit, :id => wheel.id %>
+			  <%= link_to 'download', :action => :draw, :id => wheel.id %>
+			</td>
 		</tr>
 	<% end %>
 </table>

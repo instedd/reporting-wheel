@@ -26,7 +26,7 @@ class WheelController < ApplicationController
   @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
   @@stroke_width = 3              # width of borders
   
-  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :show]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update]
   
   def index
     @wheels = Wheel.all
@@ -34,12 +34,16 @@ class WheelController < ApplicationController
   
   def new
     @wheel = Wheel.new
-    3.times do |i|
+    @wheel.ok_text = "Your report of {Quantity} {Type} of {Disease} was received. Thank you!"
+    @wheel.wrong_text = "You sent {N}, but it is not a valid report. Please check the numbers in the wheel."
+    
+    defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
+    defaults.each do |values| 
       row = @wheel.rows.build
-      row.label = "Row #{i}" 
-      5.times do |j|
-        value = row.values.build
-        value.value = "Value #{i} #{j}"
+      row.label = values[0] 
+      values[1 .. -1].each do |value|
+        row_value = row.values.build
+        row_value.value = value
       end
     end
   end
@@ -49,7 +53,7 @@ class WheelController < ApplicationController
     
     if @wheel.save
       flash[:notice] = "Wheel Successfully created"
-      redirect_to :action => 'show', :id => @wheel.id
+      redirect_to :action => 'index'
     else
       render :action => 'new'
     end
@@ -60,13 +64,10 @@ class WheelController < ApplicationController
   
   def update
     if @wheel.update_attributes(params[:wheel])
-      redirect_to :action => 'show', :id => @wheel.id
+      redirect_to :action => 'index'
     else
       render :action => 'edit'
     end
-  end
-  
-  def show
   end
  
   def draw_text
