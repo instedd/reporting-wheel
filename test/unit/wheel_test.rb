@@ -27,6 +27,18 @@ class WheelTest < ActiveSupport::TestCase
     end
   end
   
+  test "name should be unique" do
+    @wheel.save
+    
+    @wheel2 = Wheel.new :name => 'Test Wheel', :factors => [19].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
+    row1 = @wheel2.rows.build
+    row1.stubs(:valid?).returns(true)
+    
+    @wheel2.stubs(:calculate_factors).returns(nil)
+    
+    assert_false @wheel2.save
+  end 
+  
   test "should have at least one row" do
     @wheel.wheel_rows = []
     assert !@wheel.valid?

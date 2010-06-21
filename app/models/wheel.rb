@@ -6,6 +6,8 @@ class Wheel < ActiveRecord::Base
   has_many :wheel_rows, :dependent => :destroy
   
   validates_presence_of :name, :factors
+  validates_uniqueness_of :name
+  
   validates_length_of :wheel_rows, :minimum => 1
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
