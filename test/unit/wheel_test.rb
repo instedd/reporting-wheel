@@ -19,11 +19,27 @@ class WheelTest < ActiveSupport::TestCase
     
     File.new(FILE_PATH, "w").close
     @file = File.open(FILE_PATH, "r")
+    
+    @success_should_be_path = nil
+  end
+  
+  def setup_for_file_tests
+    @wheel.save!
+    @wheel.ok_voice = @file
+    @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
+    @success_should_be_path = @wheel_directory + "/audio/success.mp3"
   end
   
   def teardown
+    
+    @wheel.delete
+    
     File.delete(FILE_PATH)
     @file = nil
+    
+    #cleaning up...
+    File.delete(@success_should_be_path) unless @success_should_be_path.nil? or !File.exists?(@success_should_be_path)
+    FileUtils.rm_rf(@wheel_directory) unless @wheel_directory.nil? or !File.directory?(@wheel_directory)
   end
   
   test "should be valid with valid attributes" do
@@ -131,40 +147,32 @@ class WheelTest < ActiveSupport::TestCase
   end
   
   test "should have success_voice_response" do
+    setup_for_file_tests
+    @wheel.save_success_voice_response
+
     @wheel.success_voice_response
   end
   
   test "should retrieve success_voice_response" do
-    @wheel.save!
-    @wheel.ok_voice = @file
+    setup_for_file_tests
+    
     @wheel.save_success_voice_response
     
     ok_voice = @wheel.success_voice_response
     
     assert ok_voice.is_a?(File) and !ok_voice.nil? 
-    
-    success_should_be_path = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3"
-    
-    #cleaning up...
-    File.delete(success_should_be_path) if File.exists?(success_should_be_path)
   end
   
   test "should have save_success_voice_response when directory does not exist" do
-    @wheel.save!
-    @wheel.ok_voice = @file
-    @wheel.save_success_voice_response 
+    setup_for_file_tests
+    @wheel.save_success_voice_response
   end
   
   test "should save file" do
-    @wheel.save!
-    @wheel.ok_voice = @file
+    setup_for_file_tests
+    
     @wheel.save_success_voice_response
     
-    success_should_be_path = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3"
-    
-    assert File.exists?(success_should_be_path)
-    
-    #cleaning up...
-    File.delete(success_should_be_path) if File.exists?(success_should_be_path) 
+    assert File.exists?(@success_should_be_path) 
   end
 end
