@@ -32,6 +32,15 @@ You can refer to the reported value of a given label by writing the label name b
 	<%= f.text_field :ok_text, :size => 80 %><br/>
 </p>
 
+<h4>Voice interaction</h4>
+<div class="description">
+	Upload an MP3 file that will be played to a user when she sends a report via a phone call and it is understood.<br/>
+	If you do not upload any file, a standard (English) recording will be played instead.	
+</div>
+
+<p>
+	<%= f.label :ok_voice, '"Report understood" recording' %><br/>
+	<%= f.file_field :ok_voice %>
 <p>
 	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
 </p>

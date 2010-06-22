@@ -2,6 +2,8 @@ require 'test_helper'
 
 class WheelTest < ActiveSupport::TestCase
   
+  FILE_PATH = "#{RAILS_ROOT}/tmp/test/success"
+  
   def setup
     @wheel = Wheel.new :name => 'Test Wheel', :factors => [19,17,23].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
     
@@ -14,6 +16,14 @@ class WheelTest < ActiveSupport::TestCase
     @row3.stubs(:valid?).returns(true)
     
     @wheel.stubs(:calculate_factors).returns(nil)
+    
+    File.new(FILE_PATH, "w").close
+    @file = File.open(FILE_PATH, "r")
+  end
+  
+  def teardown
+    File.delete(FILE_PATH)
+    @file = nil
   end
   
   test "should be valid with valid attributes" do
@@ -120,4 +130,41 @@ class WheelTest < ActiveSupport::TestCase
     assert !@wheel.has_callback?
   end
   
+  test "should have success_voice_response" do
+    @wheel.success_voice_response
+  end
+  
+  test "should retrieve success_voice_response" do
+    @wheel.save!
+    @wheel.ok_voice = @file
+    @wheel.save_success_voice_response
+    
+    ok_voice = @wheel.success_voice_response
+    
+    assert ok_voice.is_a?(File) and !ok_voice.nil? 
+    
+    success_should_be_path = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3"
+    
+    #cleaning up...
+    File.delete(success_should_be_path) if File.exists?(success_should_be_path)
+  end
+  
+  test "should have save_success_voice_response when directory does not exist" do
+    @wheel.save!
+    @wheel.ok_voice = @file
+    @wheel.save_success_voice_response 
+  end
+  
+  test "should save file" do
+    @wheel.save!
+    @wheel.ok_voice = @file
+    @wheel.save_success_voice_response
+    
+    success_should_be_path = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3"
+    
+    assert File.exists?(success_should_be_path)
+    
+    #cleaning up...
+    File.delete(success_should_be_path) if File.exists?(success_should_be_path) 
+  end
 end

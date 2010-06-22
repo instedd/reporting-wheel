@@ -18,6 +18,10 @@ class Wheel < ActiveRecord::Base
   before_validation_on_create :calculate_factors
   before_validation_on_update :calculate_factors
   
+  before_save :save_success_voice_response
+  
+  attr_accessor :ok_voice
+  
   def self.find_for_factors(factors)
     Wheel.find :first, :conditions => {:factors => factors.join(',')}
   end
@@ -31,7 +35,31 @@ class Wheel < ActiveRecord::Base
     return !url_callback.nil? && !url_callback.blank?
   end
   
+  def success_voice_response
+    return nil unless File.exists?(success_path)
+    return File.open(success_path)  
+  end
+  
+  def save_success_voice_response
+    return if ok_voice.nil?
+    
+    wheel_directory = "#{RAILS_ROOT}/public/wheels/#{id}"
+    directory = "#{wheel_directory}/audio" 
+     
+    Dir.mkdir(wheel_directory) unless File.directory?(wheel_directory)
+    Dir.mkdir(directory) unless File.directory?(directory)
+    
+    File.open(success_path, "w") { |f| f.write(ok_voice.read); f.close }
+  end
+  
   private
+  
+  def success_path
+    name = "success.mp3"
+    wheel_directory = "#{RAILS_ROOT}/public/wheels/#{id}"
+    directory = "#{wheel_directory}/audio"
+    File.join(directory, name)
+  end
   
   def uniqueness_of_factors
     return if self.factors.nil? or self.factors.blank?
@@ -95,5 +123,4 @@ class Wheel < ActiveRecord::Base
     ceiling = @@max_field_code / (Prime.value_for(count-1))
     Prime.find_first_smaller_than ceiling
   end
-  
 end

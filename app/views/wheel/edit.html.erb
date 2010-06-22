@@ -1,5 +1,6 @@
 <h2>Edit wheel <%= @wheel.name %></h2>
 
-<% form_for @wheel, :url => {:action => :update, :id => @wheel.id} do |builder| %>
+<% form_for @wheel, :url => {:action => :update, :id => @wheel.id}, :html => { :multipart => true } do |builder| %>
 	<%= render 'form', :f => builder %>
 <% end %>
+
