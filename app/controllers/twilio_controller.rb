@@ -1,8 +1,10 @@
 require 'array'
 
 class TwilioController < ApplicationController
+  before_filter :set_locale
   
   def hello
+    @hello_response = VoiceChannel.hello_response 
     render :content_type => 'application/xml'
   end
   
@@ -38,5 +40,17 @@ class TwilioController < ApplicationController
       #end  
       
     render :content_type => 'application/xml'  
+  end
+  
+  private
+  
+  def set_locale
+    load_voice_channel
+    I18n.locale = @voice_channel.language
+  end
+  
+  def load_voice_channel
+    called_from = params[:Called]
+    @voice_channel = VoiceChannel.find :first, :conditions => { :number => called_from }
   end
 end

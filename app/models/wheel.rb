@@ -32,7 +32,7 @@ class Wheel < ActiveRecord::Base
   end
   
   def has_callback?
-    return !url_callback.nil? && !url_callback.blank?
+    return url_callback.present?
   end
   
   def success_voice_response
@@ -41,7 +41,8 @@ class Wheel < ActiveRecord::Base
   end
   
   def save_success_voice_response
-    return if ok_voice.nil?
+    # TODO erase the file?
+    return if ok_voice.blank?
     
     wheel_directory = "#{RAILS_ROOT}/public/wheels/#{id}"
     directory = "#{wheel_directory}/audio" 
