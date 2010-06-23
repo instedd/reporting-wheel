@@ -177,9 +177,8 @@ class WheelController < ApplicationController
   end
   
   def draw_blank_cover
-    pdf = PDF::Writer.new
-    draw_blank_cover_on pdf
-    send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}_blank_cover.pdf")
+    img_cover = blank_cover_image params[:rows_count].to_i, 'PNG'
+    send_data(img_cover.to_blob, :disposition => 'inline', :type => 'application/png', :filename => 'wheel_blank_cover.png')
   end
   
   private
@@ -194,6 +193,11 @@ class WheelController < ApplicationController
   
   def draw_blank_cover_on(pdf)
     # Draw wheel cover
+    img_cover = blank_cover_image(@wheel.rows.length, 'JPG')
+    pdf.add_image(img_cover.to_blob {self.quality = 100}, 0 ,0, img_cover.columns * 0.5, img_cover.rows * 0.5)
+  end
+  
+  def blank_cover_image(rows_count, format)
     rvg_cover = RVG.new(@@width, @@height) do |canvas|
       canvas.background_fill = 'white'
       
@@ -204,14 +208,13 @@ class WheelController < ApplicationController
         g.circle(@@initial_radius).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => @@stroke_width)
         
         # draw left boxes (boxes for values)
-        @wheel.rows.each_with_index do |row, i|
+        rows_count.times do |i|
           dx = - @@initial_radius + i * @@left_size + i * @@row_separation + i * @@inner_margin + @@outer_margin
           dy = - @@field_cover_height / 2 - 0.1.cm
           g.rect(@@left_size, @@field_cover_height, dx, dy).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => @@stroke_width)
         end
         
         # draw right box (box for code)
-        rows_count = @wheel.rows.count
         width = rows_count * @@right_size + (rows_count - 1) * (@@row_separation + @@inner_margin)
         height = @@field_cover_height
         dx = @@initial_radius - width - @@outer_margin
@@ -222,9 +225,8 @@ class WheelController < ApplicationController
     end
     
     img_cover = rvg_cover.draw
-    img_cover.format = "JPG"
-    
-    pdf.add_image(img_cover.to_blob {self.quality = 100}, 0 ,0, img_cover.columns * 0.5, img_cover.rows * 0.5)
+    img_cover.format = format
+    img_cover
   end
   
   def circle(container, left_radius, right_radius)
