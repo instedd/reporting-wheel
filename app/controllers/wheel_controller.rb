@@ -171,6 +171,29 @@ class WheelController < ApplicationController
     end
     
     # Draw wheel cover
+    draw_blank_cover_on pdf
+    
+    send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
+  end
+  
+  def draw_blank_cover
+    pdf = PDF::Writer.new
+    draw_blank_cover_on pdf
+    send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}_blank_cover.pdf")
+  end
+  
+  private
+  
+  def font_family
+    if RUBY_PLATFORM.include? "linux"
+      "Garuda"
+    else
+      "Kh Battambang"
+    end
+  end
+  
+  def draw_blank_cover_on(pdf)
+    # Draw wheel cover
     rvg_cover = RVG.new(@@width, @@height) do |canvas|
       canvas.background_fill = 'white'
       
@@ -202,18 +225,6 @@ class WheelController < ApplicationController
     img_cover.format = "JPG"
     
     pdf.add_image(img_cover.to_blob {self.quality = 100}, 0 ,0, img_cover.columns * 0.5, img_cover.rows * 0.5)
-    
-    send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
-  end
-  
-  private
-  
-  def font_family
-    if RUBY_PLATFORM.include? "linux"
-      "Garuda"
-    else
-      "Kh Battambang"
-    end
   end
   
   def circle(container, left_radius, right_radius)
