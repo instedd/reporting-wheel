@@ -9,5 +9,6 @@ xml.Response do
 	xml.Gather :numDigits => 9, :action => '/twilio/receive_code', :method => 'POST' do
 		xml.Say 'Please enter the nine digit code you see on the right side of the wheel'
 	end
+	xml.Say I18n.f("mymp3.mp3")
 end
 %><%= xml.target! %>

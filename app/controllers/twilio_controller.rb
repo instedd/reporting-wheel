@@ -1,6 +1,6 @@
 require 'array'
 
-class TwilioController < ActionController::Base
+class TwilioController < ApplicationController
   
   def hello
     render :content_type => 'application/xml'
