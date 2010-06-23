@@ -2,6 +2,7 @@ require 'test_helper'
 
 class WheelTest < ActiveSupport::TestCase
   
+  DIR_PATH = "#{RAILS_ROOT}/tmp/test"
   FILE_PATH = "#{RAILS_ROOT}/tmp/test/success"
   
   def setup
@@ -17,10 +18,9 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.stubs(:calculate_factors).returns(nil)
     
+    FileUtils.mkdir_p DIR_PATH
     File.new(FILE_PATH, "w").close
     @file = File.open(FILE_PATH, "r")
-    
-    @success_should_be_path = nil
   end
   
   def setup_for_file_tests
@@ -31,7 +31,6 @@ class WheelTest < ActiveSupport::TestCase
   end
   
   def teardown
-    
     @wheel.delete
     
     File.delete(FILE_PATH)
@@ -174,5 +173,14 @@ class WheelTest < ActiveSupport::TestCase
     @wheel.save_success_voice_response
     
     assert File.exists?(@success_should_be_path) 
+  end
+  
+  test "should work if ok_voice is nil" do
+    @wheel.save_success_voice_response
+  end
+  
+  test "should work if ok_voice is empty" do
+    @wheel.ok_voice = ''
+    @wheel.save_success_voice_response
   end
 end
