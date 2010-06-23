@@ -89,7 +89,7 @@ class WheelController < ApplicationController
            
       row.values.sort.each_with_index do |value, j|
         text = Magick::Draw.new
-        text.font_family = "Kh Battambang"
+        text.font_family = font_family
         text.encoding = "Unicode"
         
         logger.debug value.value
