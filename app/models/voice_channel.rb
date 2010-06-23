@@ -3,7 +3,7 @@ class VoiceChannel < ActiveRecord::Base
   validates_uniqueness_of :number
   
   def self.responses_path
-    return "/public/wheels/all/audio"
+    return "/wheels/all/audio"
   end
   
   def self.hello_response

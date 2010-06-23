@@ -3,8 +3,10 @@ require 'array'
 class TwilioController < ApplicationController
   before_filter :set_locale
   
+  protect_from_forgery :except => :hello
+  
   def hello
-    @hello_response = VoiceChannel.hello_response 
+    @hello_response = request.protocol + request.host + VoiceChannel.hello_response 
     render :content_type => 'application/xml'
   end
   
