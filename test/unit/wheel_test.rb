@@ -3,7 +3,6 @@ require 'test_helper'
 class WheelTest < ActiveSupport::TestCase
   
   DIR_PATH = "#{RAILS_ROOT}/tmp/test"
-  FILE_PATH = "#{RAILS_ROOT}/tmp/test/success"
   
   def setup
     @wheel = Wheel.new :name => 'Test Wheel', :factors => [19,17,23].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
@@ -19,30 +18,30 @@ class WheelTest < ActiveSupport::TestCase
     @wheel.stubs(:calculate_factors).returns(nil)
     
     FileUtils.mkdir_p DIR_PATH
-    File.new(FILE_PATH, "w").close
-    @file = File.open(FILE_PATH, "r")
   end
   
-  def setup_for_file_tests
+  def setup_for_ok_voice_file_tests
     @wheel.save!
-    @wheel.ok_voice = @file
+    
+    file_path = "#{RAILS_ROOT}/tmp/test/success"
+    File.new(file_path, "w").close
+    
+    @wheel.success_voice_file = File.open(file_path, "r")
     @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
-    @success_should_be_path = @wheel_directory + "/audio/success.mp3"
+    @success_voice_should_be_path = @wheel_directory + "/audio/success.mp3"
   end
   
   def teardown
     @wheel.delete
     
-    File.delete(FILE_PATH)
-    @file = nil
-    
     #cleaning up...
-    File.delete(@success_should_be_path) unless @success_should_be_path.nil? or !File.exists?(@success_should_be_path)
-    FileUtils.rm_rf(@wheel_directory) unless @wheel_directory.nil? or !File.directory?(@wheel_directory)
+    File.delete @success_voice_should_be_path if @success_voice_should_be_path and File.exists? @success_voice_should_be_path
+    FileUtils.rm_rf @wheel_directory if @wheel_directory and File.directory? @wheel_directory
+    FileUtils.rm_rf DIR_PATH if File.directory? DIR_PATH  
   end
   
   test "should be valid with valid attributes" do
-    assert @wheel.save!
+    assert @wheel.save
   end
   
   [:name, :factors].each do |field|
@@ -145,42 +144,24 @@ class WheelTest < ActiveSupport::TestCase
     assert !@wheel.has_callback?
   end
   
-  test "should have success_voice_response" do
-    setup_for_file_tests
-    @wheel.save_success_voice_response
-
-    @wheel.success_voice_response
-  end
-  
   test "should retrieve success_voice_response" do
-    setup_for_file_tests
+    setup_for_ok_voice_file_tests
     
-    @wheel.save_success_voice_response
+    @wheel.save!
     
-    ok_voice = @wheel.success_voice_response
-    
-    assert ok_voice.is_a?(File) and !ok_voice.nil? 
-  end
-  
-  test "should have save_success_voice_response when directory does not exist" do
-    setup_for_file_tests
-    @wheel.save_success_voice_response
+    assert_equal @success_voice_should_be_path, @wheel.success_voice_path
   end
   
   test "should save file" do
-    setup_for_file_tests
+    setup_for_ok_voice_file_tests
     
-    @wheel.save_success_voice_response
+    @wheel.save!
     
-    assert File.exists?(@success_should_be_path) 
-  end
-  
-  test "should work if ok_voice is nil" do
-    @wheel.save_success_voice_response
+    assert File.exists?(@success_voice_should_be_path)
   end
   
   test "should work if ok_voice is empty" do
-    @wheel.ok_voice = ''
-    @wheel.save_success_voice_response
+    @wheel.success_voice_file = ''
+    @wheel.save!
   end
 end

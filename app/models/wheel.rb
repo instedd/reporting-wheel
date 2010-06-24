@@ -18,16 +18,21 @@ class Wheel < ActiveRecord::Base
   before_validation_on_create :calculate_factors
   before_validation_on_update :calculate_factors
   
-  before_save :save_success_voice_response
-  
-  attr_accessor :ok_voice
+  before_save :save_success_voice
   
   def self.find_for_factors(factors)
     Wheel.find :first, :conditions => {:factors => factors.join(',')}
   end
   
-  def self.exists_for_factors(factors)
-    count = Wheel.count :all, :conditions => {:factors => factors.join(',')}
+  def self.exists_for_factors(factors, except_id = nil)
+    conditions = ["factors = ?", factors.join(',')]
+    
+    if except_id
+      conditions[0] << " AND id != ?"
+      conditions << except_id
+    end
+    
+    count = Wheel.count :all, :conditions => conditions
     count > 0
   end
   
@@ -35,38 +40,44 @@ class Wheel < ActiveRecord::Base
     return url_callback.present?
   end
   
-  def success_voice_response
-    return nil unless File.exists?(success_path)
-    return File.open(success_path)  
+  def success_voice_file=(value)
+    self[:success_voice] = value
   end
   
-  def save_success_voice_response
-    # TODO erase the file?
-    return if ok_voice.blank?
-    
-    wheel_directory = "#{RAILS_ROOT}/public/wheels/#{id}"
-    directory = "#{wheel_directory}/audio" 
-     
-    FileUtils.mkdir_p(wheel_directory)
-    FileUtils.mkdir_p(directory)
-    
-    File.open(success_path, "w") { |f| f.write(ok_voice.read); }
+  def success_voice_path
+    return File.exists?(audio_path('success')) ? audio_path('success') : nil
   end
   
   private
   
-  def success_path
-    name = "success.mp3"
-    wheel_directory = "#{RAILS_ROOT}/public/wheels/#{id}"
-    directory = "#{wheel_directory}/audio"
-    File.join(directory, name)
+  def audio_path(name)
+    "#{audio_directory}/#{name}.mp3"
+  end
+  
+  def save_success_voice
+    if self[:success_voice].blank?
+      File.delete(audio_path('success')) if File.exists?(audio_path('success'))
+      return
+    end
+     
+    FileUtils.mkdir_p(audio_directory)
+    
+    File.open(audio_path('success'), "w") { |f| f.write(self[:success_voice].read); }
+  end
+  
+  def wheel_directory
+    "#{RAILS_ROOT}/public/wheels/#{id}"
+  end
+  
+  def audio_directory
+    "#{wheel_directory}/audio" 
   end
   
   def uniqueness_of_factors
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors)
+    errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors, id)
   end
 
   def factors_are_primes

@@ -46,8 +46,8 @@ You can refer to the reported value of a given label by writing the label name b
 </div>
 
 <p>
-	<%= f.label :ok_voice, '"Report understood" recording' %><br/>
-	<%= f.file_field :ok_voice %>
+	<%= f.label :success_voice, '"Report understood" recording' %><br/>
+	<%= f.file_field :success_voice_file %>
 <p>
 	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
 </p>
