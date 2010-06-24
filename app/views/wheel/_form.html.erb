@@ -31,7 +31,7 @@ cover <%= link_to_function 'here', 'draw_wheel_blank_cover()' %>.
 if @wheel.cover_image_path
   %>
   <br/>
-  <%= image_tag @wheel.cover_image_path, :height => 60 %>
+  <%= link_to image_tag(@wheel.cover_image_path, :height => 60), @wheel.cover_image_path, :target => '_blank' %>
   <%
 end
 %>
