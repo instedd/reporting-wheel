@@ -5,6 +5,9 @@ class Wheel < ActiveRecord::Base
   
   has_many :wheel_rows, :dependent => :destroy
   
+  attr_accessor :dont_use_cover_image_file
+  attr_accessor :dont_use_success_voice_file
+  
   validates_presence_of :name, :factors
   validates_uniqueness_of :name
   
@@ -64,26 +67,38 @@ class Wheel < ActiveRecord::Base
   private
   
   def save_success_voice
+    absolute_path = absolute(audio_path('success'))
+  
+    if dont_use_success_voice_file == '1'
+      File.delete(absolute_path) if File.exists?(absolute_path)
+      return
+    end
+  
     return if self[:success_voice].blank?
      
     FileUtils.mkdir_p(absolute(audio_directory))
     
-    File.open(absolute(audio_path('success')), "w") { |f| f.write(self[:success_voice].read); }
+    File.open(absolute_path, "w") { |f| f.write(self[:success_voice].read); }
   end
   
   def save_cover_image
-    return if self[:cover_image].blank?
+    absolute_path = absolute(images_path('cover'))
     
-    path = absolute(images_path('cover'))
+    if dont_use_cover_image_file == '1'
+      File.delete(absolute_path) if File.exists?(absolute_path)
+      return
+    end
+  
+    return if self[:cover_image].blank?
      
     FileUtils.mkdir_p(absolute(images_directory))
     
-    File.open(path, "w") { |f| f.write(self[:cover_image].read); }
+    File.open(absolute_path, "w") { |f| f.write(self[:cover_image].read); }
     
     # Convert image to jpg
     begin
-      img = Magick::ImageList.new path
-      img.write path
+      img = Magick::ImageList.new absolute_path
+      img.write absolute_path
     rescue => ex
       Rails.logger.warn "Couldn't transform image to JPG: #{ex}"
     end

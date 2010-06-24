@@ -39,6 +39,14 @@ end
 <p>
 	<%= f.label :cover_image_file, 'Cover image:' %><br/>
 	<%= f.file_field :cover_image_file %>
+	<%
+	if @wheel.cover_image_path
+	  %>
+	  <br/><br/>
+	  <%= f.check_box :dont_use_cover_image_file %> <%= f.label :dont_use_cover_image_file, "Or just check this if you don't want to use a blank cover" %>
+	  <%
+	end
+	%>
 </p>
 
 <h4>SMS interaction</h4>
@@ -71,6 +79,14 @@ end
 <p>
 	<%= f.label :success_voice_file, '"Report understood" recording' %><br/>
 	<%= f.file_field :success_voice_file %>
+	<%
+	if @wheel.success_voice_path
+	  %>
+	  <br/><br/>
+	  <%= f.check_box :dont_use_success_voice_file %> <%= f.label :dont_use_success_voice_file, "Or just check this if you want to use a standard (English) recording" %>
+	  <%
+	end
+	%>
 </p>
 
 <p>

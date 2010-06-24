@@ -173,6 +173,16 @@ class WheelTest < ActiveSupport::TestCase
     @wheel.save!
   end
   
+  test "should delete success voice file" do
+    FileUtils.mkdir_p "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/"
+    File.open("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3", 'w') { |f| f.write 'foo' }
+  
+    @wheel.dont_use_success_voice_file = '1'
+    @wheel.save!
+    
+    assert_false File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3")
+  end
+  
   test "should retrieve cover image path" do
     setup_for_cover_image_file_tests
     
@@ -192,5 +202,15 @@ class WheelTest < ActiveSupport::TestCase
   test "should work if cover image file is empty" do
     @wheel.cover_image_file = ''
     @wheel.save!
+  end
+  
+  test "should delete cover image file" do
+    FileUtils.mkdir_p "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/"
+    File.open("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg", 'w') { |f| f.write 'foo' }
+  
+    @wheel.dont_use_cover_image_file = '1'
+    @wheel.save!
+    
+    assert_false File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg")
   end
 end
