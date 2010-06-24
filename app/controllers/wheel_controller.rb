@@ -201,8 +201,8 @@ class WheelController < ApplicationController
   end
   
   def circle(container, left_radius, right_radius)
-    container.path("M -#{left_radius},0 A#{left_radius},#{left_radius} 0 0,0 #{left_radius},0 L -#{left_radius},0").rotate(90).styles(:fill => '#94B487', :stroke => 'black', :stroke_width => @@stroke_width)
-    container.path("M -#{right_radius},0 A#{right_radius},#{right_radius} 0 0,0 #{right_radius},0 L -#{right_radius},0").rotate(-90).styles(:fill => '#94B487', :stroke => 'black', :stroke_width => @@stroke_width)
+    container.path("M -#{left_radius},0 A#{left_radius},#{left_radius} 0 0,0 #{left_radius},0 L -#{left_radius},0").rotate(90).styles(:fill => '#FFFFFF', :stroke => 'black', :stroke_width => @@stroke_width)
+    container.path("M -#{right_radius},0 A#{right_radius},#{right_radius} 0 0,0 #{right_radius},0 L -#{right_radius},0").rotate(-90).styles(:fill => '#FFFFFF', :stroke => 'black', :stroke_width => @@stroke_width)
     container
   end
   
