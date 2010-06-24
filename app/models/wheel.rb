@@ -55,10 +55,7 @@ class Wheel < ActiveRecord::Base
   end
   
   def save_success_voice
-    if self[:success_voice].blank?
-      File.delete(audio_path('success')) if File.exists?(audio_path('success'))
-      return
-    end
+    return if self[:success_voice].blank?
      
     FileUtils.mkdir_p(audio_directory)
     
