@@ -45,29 +45,33 @@ class Wheel < ActiveRecord::Base
   end
   
   def success_voice_path
-    return File.exists?(audio_path('success')) ? audio_path('success') : nil
+    return File.exists?(absolute(audio_path('success'))) ? audio_path('success') : nil
   end
   
   private
   
-  def audio_path(name)
-    "#{audio_directory}/#{name}.mp3"
-  end
-  
   def save_success_voice
     return if self[:success_voice].blank?
      
-    FileUtils.mkdir_p(audio_directory)
+    FileUtils.mkdir_p(absolute(audio_directory))
     
-    File.open(audio_path('success'), "w") { |f| f.write(self[:success_voice].read); }
+    File.open(absolute(audio_path('success')), "w") { |f| f.write(self[:success_voice].read); }
+  end
+  
+  def absolute(path)
+    "#{RAILS_ROOT}/public#{path}"
   end
   
   def wheel_directory
-    "#{RAILS_ROOT}/public/wheels/#{id}"
+    "/wheels/#{id}"
   end
   
   def audio_directory
     "#{wheel_directory}/audio" 
+  end
+  
+   def audio_path(name)
+    "#{audio_directory}/#{name}.mp3"
   end
   
   def uniqueness_of_factors

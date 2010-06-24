@@ -3,3 +3,7 @@ syntax: glob
 *.sqlite3
 *.tmp*~
 *.DS_Store
+*.swf
+*.mp3
+*.orig
+vendor

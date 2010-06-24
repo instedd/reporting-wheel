@@ -28,14 +28,12 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.success_voice_file = File.open(file_path, "r")
     @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
-    @success_voice_should_be_path = @wheel_directory + "/audio/success.mp3"
   end
   
   def teardown
     @wheel.delete
     
     #cleaning up...
-    File.delete @success_voice_should_be_path if @success_voice_should_be_path and File.exists? @success_voice_should_be_path
     FileUtils.rm_rf @wheel_directory if @wheel_directory and File.directory? @wheel_directory
     FileUtils.rm_rf DIR_PATH if File.directory? DIR_PATH  
   end
@@ -149,7 +147,7 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.save!
     
-    assert_equal @success_voice_should_be_path, @wheel.success_voice_path
+    assert_equal "/wheels/#{@wheel.id}/audio/success.mp3", @wheel.success_voice_path
   end
   
   test "should save file" do
@@ -157,7 +155,7 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.save!
     
-    assert File.exists?(@success_voice_should_be_path)
+    assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3")
   end
   
   test "should work if ok_voice is empty" do

@@ -45,6 +45,15 @@ You can refer to the reported value of a given label by writing the label name b
 	If you do not upload any file, a standard (English) recording will be played instead.	
 </div>
 
+<%
+if @wheel.success_voice_path
+  %>
+  <br/>
+  <%= mp3_player @wheel.success_voice_path %>
+  <%
+end
+%>
+
 <p>
 	<%= f.label :success_voice, '"Report understood" recording' %><br/>
 	<%= f.file_field :success_voice_file %>
