@@ -76,39 +76,6 @@ class WheelController < ApplicationController
     redirect_to :action => 'index'
   end
   
-  def draw_text
-    pdf = PDF::Writer.new
-
-    rvg = RVG.new(@@width, @@height) do |canvas|
-      canvas.background_fill = 'white'
-    end
-
-    @wheel.rows.sort.each_with_index do |row, i|
-      img = rvg.draw
-      img.format = 'JPG'
-           
-      row.values.sort.each_with_index do |value, j|
-        text = Magick::Draw.new
-        text.font_family = font_family
-        text.encoding = "Unicode"
-        
-        logger.debug value.value
-        
-        text.text(23, 14 * j,value.value)
-        text.draw(img)
-                
-        pdf.add_image(img.to_blob {self.quality = 100}, 0 ,0, img.columns * 0.5, img.rows * 0.5)
-      end
-      
-      send_data(img.to_blob, :disposition => 'inline', :type => 'application/jpeg', :filename => 'wheel.jpg')
-
-    end
-
-    #send_data(img.to_blob, :disposition => 'inline', :type => 'application/jpeg', :filename => 'wheel.name')
-  
-    #send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
-  end
-  
   def draw
     pdf = PDF::Writer.new
     
