@@ -20,13 +20,23 @@ class WheelTest < ActiveSupport::TestCase
     FileUtils.mkdir_p DIR_PATH
   end
   
-  def setup_for_ok_voice_file_tests
+  def setup_for_success_voice_file_tests
     @wheel.save!
     
     file_path = "#{RAILS_ROOT}/tmp/test/success"
     File.new(file_path, "w").close
     
     @wheel.success_voice_file = File.open(file_path, "r")
+    @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
+  end
+  
+   def setup_for_cover_image_file_tests
+    @wheel.save!
+    
+    file_path = "#{RAILS_ROOT}/tmp/test/cover"
+    File.new(file_path, "w").close
+    
+    @wheel.cover_image_file = File.open(file_path, "r")
     @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
   end
   
@@ -142,24 +152,45 @@ class WheelTest < ActiveSupport::TestCase
     assert !@wheel.has_callback?
   end
   
-  test "should retrieve success_voice_response" do
-    setup_for_ok_voice_file_tests
+  test "should retrieve success voice path" do
+    setup_for_success_voice_file_tests
     
     @wheel.save!
     
     assert_equal "/wheels/#{@wheel.id}/audio/success.mp3", @wheel.success_voice_path
   end
   
-  test "should save file" do
-    setup_for_ok_voice_file_tests
+  test "should save success voice file" do
+    setup_for_success_voice_file_tests
     
     @wheel.save!
     
     assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3")
   end
   
-  test "should work if ok_voice is empty" do
+  test "should work if success voice file is empty" do
     @wheel.success_voice_file = ''
+    @wheel.save!
+  end
+  
+  test "should retrieve cover image path" do
+    setup_for_cover_image_file_tests
+    
+    @wheel.save!
+    
+    assert_equal "/wheels/#{@wheel.id}/images/cover.jpg", @wheel.cover_image_path
+  end
+  
+  test "should save cover image file" do
+    setup_for_cover_image_file_tests
+    
+    @wheel.save!
+    
+    assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg")
+  end
+  
+  test "should work if cover image file is empty" do
+    @wheel.cover_image_file = ''
     @wheel.save!
   end
 end

@@ -27,6 +27,20 @@ You can upload a custom image to be used as the cover of the wheel. You can get 
 cover <%= link_to_function 'here', 'draw_wheel_blank_cover()' %>.
 </div>
 
+<%
+if @wheel.cover_image_path
+  %>
+  <br/>
+  <%= image_tag @wheel.cover_image_path, :height => 60 %>
+  <%
+end
+%>
+
+<p>
+	<%= f.label :cover_image_file, 'Cover image:' %><br/>
+	<%= f.file_field :cover_image_file %>
+</p>
+
 <h4>SMS interaction</h4>
 
 <div class="description">
@@ -35,7 +49,7 @@ You can refer to the reported value of a given label by writing the label name b
 </div>
 
 <p>
-	<%= f.label :ok_text, '"Report understood" text' %><br/>
+	<%= f.label :ok_text, '"Report understood" text:' %><br/>
 	<%= f.text_field :ok_text, :size => 80 %><br/>
 </p>
 
@@ -55,8 +69,10 @@ end
 %>
 
 <p>
-	<%= f.label :success_voice, '"Report understood" recording' %><br/>
+	<%= f.label :success_voice_file, '"Report understood" recording' %><br/>
 	<%= f.file_field :success_voice_file %>
+</p>
+
 <p>
 	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
 </p>

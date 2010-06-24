@@ -138,7 +138,11 @@ class WheelController < ApplicationController
     end
     
     # Draw wheel cover
-    draw_blank_cover_on pdf
+    if @wheel.cover_image_path
+      pdf.add_image_from_file(@wheel.absolute_cover_image_path, 0 ,0, @@width * 0.5, @@height * 0.5)
+    else
+      draw_blank_cover_on pdf
+    end
     
     send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
   end

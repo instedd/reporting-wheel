@@ -5,5 +5,6 @@ syntax: glob
 *.DS_Store
 *.swf
 *.mp3
+*.jpg
 *.orig
 vendor

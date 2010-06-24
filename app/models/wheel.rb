@@ -19,6 +19,7 @@ class Wheel < ActiveRecord::Base
   before_validation_on_update :calculate_factors
   
   before_save :save_success_voice
+  before_save :save_cover_image
   
   def self.find_for_factors(factors)
     Wheel.find :first, :conditions => {:factors => factors.join(',')}
@@ -48,6 +49,18 @@ class Wheel < ActiveRecord::Base
     return File.exists?(absolute(audio_path('success'))) ? audio_path('success') : nil
   end
   
+  def cover_image_file=(value)
+    self[:cover_image] = value
+  end
+  
+  def cover_image_path
+    return File.exists?(absolute(images_path('cover'))) ? images_path('cover') : nil
+  end
+  
+  def absolute_cover_image_path
+    absolute cover_image_path
+  end
+  
   private
   
   def save_success_voice
@@ -56,6 +69,24 @@ class Wheel < ActiveRecord::Base
     FileUtils.mkdir_p(absolute(audio_directory))
     
     File.open(absolute(audio_path('success')), "w") { |f| f.write(self[:success_voice].read); }
+  end
+  
+  def save_cover_image
+    return if self[:cover_image].blank?
+    
+    path = absolute(images_path('cover'))
+     
+    FileUtils.mkdir_p(absolute(images_directory))
+    
+    File.open(path, "w") { |f| f.write(self[:cover_image].read); }
+    
+    # Convert image to jpg
+    begin
+      img = Magick::ImageList.new path
+      img.write path
+    rescue => ex
+      Rails.logger.warn "Couldn't transform image to JPG: #{ex}"
+    end
   end
   
   def absolute(path)
@@ -70,8 +101,16 @@ class Wheel < ActiveRecord::Base
     "#{wheel_directory}/audio" 
   end
   
-   def audio_path(name)
+  def audio_path(name)
     "#{audio_directory}/#{name}.mp3"
+  end
+  
+  def images_directory
+    "#{wheel_directory}/images" 
+  end
+  
+  def images_path(name)
+    "#{images_directory}/#{name}.jpg"
   end
   
   def uniqueness_of_factors
