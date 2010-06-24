@@ -47,10 +47,10 @@ class Wheel < ActiveRecord::Base
     wheel_directory = "#{RAILS_ROOT}/public/wheels/#{id}"
     directory = "#{wheel_directory}/audio" 
      
-    Dir.mkdir(wheel_directory) unless File.directory?(wheel_directory)
-    Dir.mkdir(directory) unless File.directory?(directory)
+    FileUtils.mkdir_p(wheel_directory)
+    FileUtils.mkdir_p(directory)
     
-    File.open(success_path, "w") { |f| f.write(ok_voice.read); f.close }
+    File.open(success_path, "w") { |f| f.write(ok_voice.read); }
   end
   
   private
