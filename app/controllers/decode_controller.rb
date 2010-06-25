@@ -25,4 +25,10 @@ class DecodeController < ApplicationController
     
     render :text => message, :status => code or 200
   end
+  
+  def test
+    render :text => WheelCombination.new(params[:digits]).message
+  rescue RuntimeError => e
+    render :text => 'Report code not understood'
+  end
 end

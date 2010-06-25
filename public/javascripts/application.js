@@ -24,3 +24,11 @@ function draw_wheel_blank_cover() {
   }
   window.location = '/wheel/draw_blank_cover?rows_count=' + count;
 }
+
+function test_report_code() {
+  var code = $("#report_code").val();
+  $.get('/decode/test', {'digits':code}, function(data) {
+    $("#report_result").html(data);
+  });
+  return false;
+}

@@ -14,7 +14,7 @@ class WheelCombination
   # A human readable message of this combination
   attr_reader :message
   
-  def initialize(digits, metadata)
+  def initialize(digits, metadata = {})
     raise "Only number are allowed" unless /^\d+$/.match(digits)
     raise "The number of digits must be a multiple of 3" unless (digits.length % 3) == 0
    
