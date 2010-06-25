@@ -1,0 +1,27 @@
+<h2>Wheel <%= @wheel.name %></h2>
+
+<h4>Labels and values</h4>
+
+<%
+@wheel.rows.sort.each do |row|
+  %>
+  <table>
+    <tr>
+      <th align="center" colspan="<%= row.values.length %>"><%= row.label %></th>
+    </tr>
+    <tr>
+      <% row.values.sort.each do |value| %>
+        <th><%= value.value %></th>
+      <% end %>
+    </tr>
+    <tr>
+      <% row.values.sort.each do |value| %>
+        <td><%= value.code %></td>
+      <% end %>
+    </tr>
+  </table>
+  <%
+end
+%>
+
+<%= link_to 'Go back', :controller => :wheel, :action => :index %>

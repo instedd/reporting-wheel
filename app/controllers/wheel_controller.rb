@@ -26,7 +26,7 @@ class WheelController < ApplicationController
   @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
   @@stroke_width = 3              # width of borders
   
-  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :delete]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :show, :delete]
   
   def index
     @wheels = Wheel.all
@@ -68,6 +68,9 @@ class WheelController < ApplicationController
     else
       render :action => 'edit'
     end
+  end
+  
+  def show
   end
   
   def delete

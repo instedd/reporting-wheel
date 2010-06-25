@@ -3,3 +3,5 @@
 <% form_for @wheel, :url => {:action => :create} do |builder| %>
 	<%= render 'form', :f => builder %>
 <% end %>
+
+<%= link_to 'Go back', :controller => :wheel, :action => :index %>

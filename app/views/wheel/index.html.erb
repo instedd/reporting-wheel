@@ -11,7 +11,7 @@
 	</tr>
 	<% @wheels.each do |wheel| %>
 		<tr>
-			<td><%= wheel.name %></td>
+			<td><%= link_to wheel.name, :action => :show, :id => wheel.id %></td>
 			<td>
 			  <%= link_to 'edit', :action => :edit, :id => wheel.id %>
 			  <%= link_to 'download', :action => :draw, :id => wheel.id %>
