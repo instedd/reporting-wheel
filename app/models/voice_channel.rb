@@ -6,7 +6,11 @@ class VoiceChannel < ActiveRecord::Base
     return "/wheels/all/audio"
   end
   
+  def self.failure_response
+    return responses_path + I18n.f("/failure.mp3")
+  end
+  
   def self.hello_response
-    return responses_path + "/hello_#{I18n.locale}.mp3"
+    return responses_path + I18n.f("/hello.mp3")
   end
 end

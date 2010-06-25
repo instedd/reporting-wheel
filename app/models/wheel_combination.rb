@@ -14,9 +14,11 @@ class WheelCombination
   # A human readable message of this combination
   attr_reader :message
   
-  def initialize(digits)
+  def initialize(digits, metadata)
     raise "Only number are allowed" unless /^\d+$/.match(digits)
     raise "The number of digits must be a multiple of 3" unless (digits.length % 3) == 0
+   
+    @original_metadata = metadata
     
     @digits = digits
     
@@ -39,16 +41,21 @@ class WheelCombination
     @message = values.map{|v| v.row.label + ":" + v.value}.join(',')
   end
   
-  # Saves this combination as a WheelRecord. Options can be:
-  # - :metadata = metadata related to the record
-  def record!(options = {})
-    WheelRecord.create! :wheel => @wheel, :code => @digits, :data => (options[:metadata] || "")
+  # Saves this combination as a WheelRecord.
+  def record!
+    WheelRecord.create! :wheel => @wheel, :code => @digits, :data => (YAML.dump(@original_metadata) || "")
+    enqueue_callback
   end
   
-  # Enqueues a callback job if the wheel has a callback url. Options can be:
-  # - :metadata = metadata related to the record
-  def enqueue_callback(options = {})
+  private
+  
+  # Enqueues a callback job if the wheel has a callback url.
+  def enqueue_callback
     return unless @wheel.has_callback?
-    Delayed::Job.enqueue DecodeCallbackJob.new(@wheel.url_callback, @message, options[:metadata])
+    
+    # Add raw decoded values to metadata to push everything to the callback
+    callback_metadata = @original_metadata.merge @values.inject({}){|h,e| h[e.row.label] = e.value ; h}
+    
+    Delayed::Job.enqueue DecodeCallbackJob.new(@wheel.url_callback, @message, callback_metadata)
   end
 end
