@@ -1,24 +1,24 @@
 class Wheel < ActiveRecord::Base
 
   DefaultRenderConfigurationWithDescriptions = [
-    ['angle_separation', '', 4],
-    ['angle_modifier', '', 2],
-    ['initial_radius', '', 10.5],
-    ['row_separation', '', 0.1],
-    ['values_font_size', '', 14],
-    ['codes_font_size', '', 22],
-    ['values_width', '', 2],
-    ['values_width_field_1', '', 4],
-    ['values_width_field_2', '', 1], 
-    ['values_width_field_3', '', 1],
-    ['codes_width', '', 1],
-    ['field_cover_height', '', 0.8],
-    ['width', '', 22],
-    ['height', '', 22],
-    ['outer_margin', '', 0.5],
-    ['inner_margin', '', 0.2],
-    ['stroke_width', '', 3]
-  ].inject([]) {|m, o| m << {:key => o[0], :description => o[1], :value => o[2]}; m }
+    ['width', 'Width of the generated PDF (in cm)', 22, 0],
+    ['height', 'Height of the generated PDF (in cm)', 22, 1],
+    ['initial_radius', 'The radius of the biggest disc (in cm)', 10.5, 2],
+    ['stroke_width', 'Stroke with to use when drawing', 3, 3],
+    ['values_font_size', 'Font size to use for the values', 14, 4],
+    ['codes_font_size', 'Font size to use for the codes', 22, 5],
+    ['values_width', 'Width to reserve for values on discs after the third one (in cm)', 2, 6],
+    ['values_width_field_1', 'Width to reserve for values on the first (biggest) disc (in cm)', 4, 7],
+    ['values_width_field_2', 'Width to reserve for values on the second disc (in cm)', 1, 8], 
+    ['values_width_field_3', 'Width to reserve for values on the third (smallest) disc (in cm)', 1, 9],
+    ['codes_width', 'Width to reserve for codes in any disc (in cm)', 1, 10],
+    ['angle_separation', 'Angles to use when separating each value/code (in degrees)', 4, 11],
+    ['angle_modifier', 'Angles to use when separating each value/code for successive wheels (it\'s added, in degress)', 2, 12],    
+    ['row_separation', 'Separation from text to the next wheel disc (in cm)', 0.1, 13],
+    ['field_cover_height', 'Height of the boxes in the cover to show the values/codes (in cm)', 0.8, 14],    
+    ['outer_margin', 'Separation of text from disc border for the biggest disc (in cm)', 0.5, 15],
+    ['inner_margin', 'Separation of text from disc border for the other discs (in cm)', 0.2, 16]    
+  ].inject([]) {|m, o| m << {:key => o[0], :description => o[1], :value => o[2], :order => o[3]}; m }
   DefaultRenderConfiguration = DefaultRenderConfigurationWithDescriptions.inject({}) {|m, o| m[o[:key]] = o[:value]; m}
   
   @@max_field_code = 999
@@ -61,6 +61,14 @@ class Wheel < ActiveRecord::Base
     
     count = Wheel.count :all, :conditions => conditions
     count > 0
+  end
+  
+  def self.render_configuration_description(key)
+    DefaultRenderConfigurationWithDescriptions.select{|x| x[:key] == key}.first[:description]
+  end
+  
+  def self.render_configuration_order(key)
+    DefaultRenderConfigurationWithDescriptions.select{|x| x[:key] == key}.first[:order]
   end
   
   def has_callback?
