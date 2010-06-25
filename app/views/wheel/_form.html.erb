@@ -20,88 +20,10 @@
 <% end %>
 <p><%= link_to_add_fields "Add label", f, :wheel_rows %></p>
 
-<h4><%= link_to_function 'Print configuration (click to toggle)', "toggle('print_configuration')" %></h4>
-
-<div id="print_configuration" style="display:none">
-<% f.fields_for :render_configuration do |c| %>
-  <% @wheel.render_configuration.to_a.sort_by{|x| Wheel.render_configuration_order x[0] }.each do |key, value| %>
-    <p>
-		<%= Wheel.render_configuration_description key %><br/>
-		<%= c.text_field key, :value => value %>
-		</p>
-  <% end %>
-<% end %>
-</div>
-
-<h4>Cover</h4>
-
-<div class="description">
-You can upload a custom image to be used as the cover of the wheel. You can get the template of a blank
-cover <%= link_to_function 'here', 'draw_wheel_blank_cover()' %>.
-</div>
-
-<%
-if @wheel.cover_image_path
-  %>
-  <br/>
-  <%= link_to image_tag(@wheel.cover_image_path, :height => 60), @wheel.cover_image_path, :target => '_blank' %>
-  <%
-end
-%>
-
-<p>
-	<%= f.label :cover_image_file, 'Cover image:' %><br/>
-	<%= f.file_field :cover_image_file %>
-	<%
-	if @wheel.cover_image_path
-	  %>
-	  <br/><br/>
-	  <%= f.check_box :dont_use_cover_image_file %> <%= f.label :dont_use_cover_image_file, "Or just check this if you don't want to use a blank cover" %>
-	  <%
-	end
-	%>
-</p>
-
-<h4>SMS interaction</h4>
-
-<div class="description">
-Define the text that will be sent to a user when he sends a report via SMS and it is understood.<br/>
-You can refer to the reported value of a given label by writing the label name between brackets.<br/>
-</div>
-
-<p>
-	<%= f.label :ok_text, '"Report understood" text:' %><br/>
-	<%= f.text_field :ok_text, :size => 80 %><br/>
-</p>
-
-<h4>Voice interaction</h4>
-<div class="description">
-	Upload an MP3 file that will be played to a user when she sends a report via a phone call and it is understood.<br/>
-	If you do not upload any file, a standard (English) recording will be played instead.	
-</div>
-
-<%
-if @wheel.success_voice_path
-  %>
-  <br/>
-  <%= mp3_player @wheel.success_voice_path %>
-  <%
-end
-%>
-
-<p>
-	<%= f.label :success_voice_file, '"Report understood" recording' %><br/>
-	<%= f.file_field :success_voice_file %>
-	<%
-	if @wheel.success_voice_path
-	  %>
-	  <br/><br/>
-	  <%= f.check_box :dont_use_success_voice_file %> <%= f.label :dont_use_success_voice_file, "Or just check this if you want to use a standard (English) recording" %>
-	  <%
-	end
-	%>
-</p>
-
+<%= render :partial => 'print_configuration', :locals => {:f => f} %>
+<%= render :partial => 'cover', :locals => {:f => f} %>
+<%= render :partial => 'sms_interaction', :locals => {:f => f} %>
+<%= render :partial => 'voice_interaction', :locals => {:f => f} %>
 <p>
 	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
 </p>

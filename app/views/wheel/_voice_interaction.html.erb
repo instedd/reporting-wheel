@@ -1,0 +1,27 @@
+<h4>Voice interaction</h4>
+<div class="description">
+	Upload an MP3 file that will be played to a user when she sends a report via a phone call and it is understood.<br/>
+	If you do not upload any file, a standard (English) recording will be played instead.	
+</div>
+
+<%
+if @wheel.success_voice_path
+  %>
+  <br/>
+  <%= mp3_player @wheel.success_voice_path %>
+  <%
+end
+%>
+
+<p>
+	<%= f.label :success_voice_file, '"Report understood" recording' %><br/>
+	<%= f.file_field :success_voice_file %>
+	<%
+	if @wheel.success_voice_path
+	  %>
+	  <br/><br/>
+	  <%= f.check_box :dont_use_success_voice_file %> <%= f.label :dont_use_success_voice_file, "Or just check this if you want to use a standard (English) recording" %>
+	  <%
+	end
+	%>
+</p>

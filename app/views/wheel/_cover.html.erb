@@ -1,0 +1,28 @@
+<h4>Cover</h4>
+
+<div class="description">
+You can upload a custom image to be used as the cover of the wheel. You can get the template of a blank
+cover <%= link_to_function 'here', 'draw_wheel_blank_cover()' %>.
+</div>
+
+<%
+if @wheel.cover_image_path
+  %>
+  <br/>
+  <%= link_to image_tag(@wheel.cover_image_path, :height => 60), @wheel.cover_image_path, :target => '_blank' %>
+  <%
+end
+%>
+
+<p>
+	<%= f.label :cover_image_file, 'Cover image:' %><br/>
+	<%= f.file_field :cover_image_file %>
+	<%
+	if @wheel.cover_image_path
+	  %>
+	  <br/><br/>
+	  <%= f.check_box :dont_use_cover_image_file %> <%= f.label :dont_use_cover_image_file, "Or just check this if you don't want to use a blank cover" %>
+	  <%
+	end
+	%>
+</p>
