@@ -5,7 +5,7 @@
   <% @wheel.render_configuration.to_a.sort_by{|x| Wheel.render_configuration_order x[0] }.each do |key, value| %>
     <p>
 		<%= Wheel.render_configuration_description key %><br/>
-		<%= c.text_field key, :value => value %>
+		<%= c.text_field key, :value => value, :id => "pc_#{key}" %> <%= link_to_function 'use default', "$('#pc_#{key}').val('#{Wheel::DefaultRenderConfiguration[key]}')" %>
 		</p>
   <% end %>
 <% end %>
