@@ -6,26 +6,6 @@ RVG::dpi = 144
 
 class WheelController < ApplicationController
   
-  @@angle_separation = 4          # (initial) angle separation for values/codes 
-  @@angle_modifier = 2            # angle modifier (angle of row n will be "initial angle separation + n * angle modifier")
-  @@initial_radius = 10.5.cm      # radius of outer circle (row 0)
-  @@row_separation = 0.1.cm       # separation from text to the next wheel border
-  @@values_font_size = 14         # font size for values
-  @@codes_font_size = 22          # font size for codes
-  @@left_size = 2.cm              # size for text on the left side (values)
-  
-  @@left_size_field_1 = 4.cm            # size for text on the left side (values)
-  @@left_size_field_2 = 1.cm            # size for text on the left side (values)
-  @@left_size_field_3 = 1.cm            # size for text on the left side (values)
- 
-  @@right_size = 1.cm             # size for text on the right side (codes)
-  @@field_cover_height = 0.8.cm   # box height
-  @@width = 22.cm                 # width of image
-  @@height = 22.cm                # height of image
-  @@outer_margin = 0.5.cm         # separation from wheel border to text for row 0
-  @@inner_margin = 0.2.cm         # separation from wheel border to text for row i (i > 0)
-  @@stroke_width = 3              # width of borders
-  
   before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :show, :delete]
   
   def index
@@ -119,7 +99,7 @@ class WheelController < ApplicationController
             dx = - (left_radius - margin) * Math.cos(angle_rad)
             dy = - (left_radius - margin) * Math.sin(angle_rad)
             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => cfg[:values_font_size].to_f,
-             :font_family => font_family, :fill => 'black')
+             :font_family => cfg[:values_font_family], :fill => 'black')
 
             dx = (right_radius - margin) * Math.cos(angle_rad)
             dy = (right_radius - margin) * Math.sin(angle_rad)
@@ -129,7 +109,7 @@ class WheelController < ApplicationController
             
             #Force codes to have 3 digits (pad with leading zeros)
             group.text(dx, dy, "%03d" % value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => cfg[:codes_font_size].to_f, 
-             :font_family => 'helvetica', :fill => 'black')
+             :font_family => cfg[:codes_font_family], :fill => 'black')
           end
           
           group.circle(0.1.cm).styles(:fill => 'black')
@@ -160,14 +140,6 @@ class WheelController < ApplicationController
   
   private
   
-  def font_family
-    if RUBY_PLATFORM.include? "linux"
-      "Garuda"
-    else
-      "Kh Battambang"
-    end
-  end
-  
   def draw_blank_cover_on(pdf)
     # Draw wheel cover
     img_cover = blank_cover_image(@wheel.rows.length, 'JPG')
@@ -184,7 +156,7 @@ class WheelController < ApplicationController
         
         g.circle(0.1.cm).styles(:fill => 'black')
     
-        g.circle(cfg[:initial_radius].to_f.cm).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => @@stroke_width)
+        g.circle(cfg[:initial_radius].to_f.cm).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
         
         # draw left boxes (boxes for values)
         rows_count.times do |i|

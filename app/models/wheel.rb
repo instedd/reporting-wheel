@@ -5,8 +5,10 @@ class Wheel < ActiveRecord::Base
     ['height', 'Height of the generated PDF (in cm)', 22, 1],
     ['initial_radius', 'The radius of the biggest disc (in cm)', 10.5, 2],
     ['stroke_width', 'Stroke with to use when drawing', 3, 3],
-    ['values_font_size', 'Font size to use for the values', 14, 4],
-    ['codes_font_size', 'Font size to use for the codes', 22, 5],
+    ['values_font_family', 'Font family to use for the values', 'Garuda', 4],
+    ['values_font_size', 'Font size to use for the values', 14, 4.5],
+    ['codes_font_family', 'Font family to use for the codes', 'Helvetica', 5],
+    ['codes_font_size', 'Font size to use for the codes', 22, 5.5],
     ['values_width', 'Width to reserve for values on discs after the third one (in cm)', 2, 6],
     ['values_width_field_1', 'Width to reserve for values on the first (biggest) disc (in cm)', 4, 7],
     ['values_width_field_2', 'Width to reserve for values on the second disc (in cm)', 1, 8], 
@@ -76,7 +78,12 @@ class Wheel < ActiveRecord::Base
   end
   
   def render_configuration
-    (self[:render_configuration] || DefaultRenderConfiguration).with_indifferent_access
+    cfg = self[:render_configuration]
+    # This is to support future removal of keys/values
+    cfg.each{|k, v| cfg.delete k unless DefaultRenderConfiguration.has_key? k} 
+    # This is to support future additional of keys/values
+    DefaultRenderConfiguration.each{|k, v| cfg[k] = cfg[k] || v}
+    cfg
   end
   
   def success_voice_file=(value)
