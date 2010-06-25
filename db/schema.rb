@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100622065226) do
+ActiveRecord::Schema.define(:version => 20100625044823) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20100622065226) do
     t.string   "factors"
     t.string   "url_callback"
     t.string   "ok_text"
+    t.text     "render_configuration"
   end
 
 end

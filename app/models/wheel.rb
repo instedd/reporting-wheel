@@ -1,4 +1,25 @@
 class Wheel < ActiveRecord::Base
+
+  DefaultRenderConfigurationWithDescriptions = [
+    ['angle_separation', '', 4],
+    ['angle_modifier', '', 2],
+    ['initial_radius', '', 10.5],
+    ['row_separation', '', 0.1],
+    ['values_font_size', '', 14],
+    ['codes_font_size', '', 22],
+    ['values_width', '', 2],
+    ['values_width_field_1', '', 4],
+    ['values_width_field_2', '', 1], 
+    ['values_width_field_3', '', 1],
+    ['codes_width', '', 1],
+    ['field_cover_height', '', 0.8],
+    ['width', '', 22],
+    ['height', '', 22],
+    ['outer_margin', '', 0.5],
+    ['inner_margin', '', 0.2],
+    ['stroke_width', '', 3]
+  ].inject([]) {|m, o| m << {:key => o[0], :description => o[1], :value => o[2]}; m }
+  DefaultRenderConfiguration = DefaultRenderConfigurationWithDescriptions.inject({}) {|m, o| m[o[:key]] = o[:value]; m}
   
   @@max_field_code = 999
   @@url_regexp = Regexp.new('((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))', Regexp::IGNORECASE)
@@ -7,6 +28,8 @@ class Wheel < ActiveRecord::Base
   
   attr_accessor :dont_use_cover_image_file
   attr_accessor :dont_use_success_voice_file
+  
+  serialize :render_configuration, Hash
   
   validates_presence_of :name, :factors
   validates_uniqueness_of :name
@@ -42,6 +65,10 @@ class Wheel < ActiveRecord::Base
   
   def has_callback?
     return url_callback.present?
+  end
+  
+  def render_configuration
+    (self[:render_configuration] || DefaultRenderConfiguration).with_indifferent_access
   end
   
   def success_voice_file=(value)

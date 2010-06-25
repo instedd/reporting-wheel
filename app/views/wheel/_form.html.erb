@@ -20,6 +20,17 @@
 <% end %>
 <p><%= link_to_add_fields "Add label", f, :wheel_rows %></p>
 
+<h4>Print configuration</h4>
+
+<% f.fields_for :render_configuration do |c| %>
+  <% @wheel.render_configuration.each do |key, value| %>
+    <p>
+		<%= c.label key %><br/>
+		<%= c.text_field key, :value => value %>
+		</p>
+  <% end %>
+<% end %>
+
 <h4>Cover</h4>
 
 <div class="description">
