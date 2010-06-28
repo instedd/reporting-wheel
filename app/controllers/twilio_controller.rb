@@ -12,7 +12,6 @@ class TwilioController < ApplicationController
   
   def receive_code
     begin
-      
       @error = false
       
       digits = params[:Digits];
