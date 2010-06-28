@@ -11,4 +11,13 @@ module ApplicationHelper
     end
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"))
   end
+  
+  def app_version
+    begin
+      @@app_version = File.read('VERSION').strip unless defined? @@app_version
+    rescue Errno::ENOENT
+      @@app_version = 'Development'
+    end
+    @@app_version
+  end
 end
