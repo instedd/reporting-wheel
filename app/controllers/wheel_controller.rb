@@ -88,7 +88,9 @@ class WheelController < ApplicationController
           
           circle(group, left_radius, right_radius)
           
-          indexes = (0..row.values.count-1).map{|z| z - row.values.count/2}.reverse
+          row_values_count = row.values.length 
+          
+          indexes = (0..row_values_count-1).map{|z| z - row_values_count/2}.reverse
            
           row.values.sort.each_with_index do |value, j|
             angle = (cfg[:angle_separation].to_f + i * cfg[:angle_modifier].to_f) * indexes[j]
