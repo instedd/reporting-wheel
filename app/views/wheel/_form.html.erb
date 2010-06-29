@@ -1,25 +1,7 @@
 <%= f.error_messages %>
 
-<h4>General information</h4>
-
-<p>
-	<%= f.label :name %><br/>
-	<%= f.text_field :name %><br/>
-</p>
-<p>
-	<%= f.label :url_callback, 'URL callback <a href="http://code.google.com/p/reportingwheel/wiki/API#Callback" target="_blank"><img src="/images/question.png" width="14" height="14"/></a>' %><br/>
-	<%= f.text_field :url_callback, :size => 75 %>
-</p>
-
-<h4>Values to report</h4>
-
-<div class="description">Each label with its values will be printed in a disc of a wheel.</div>
-
-<% f.fields_for :wheel_rows do |builder| %>
-	<%= render 'wheel_row_fields', :f => builder %>
-<% end %>
-<p><%= link_to_add_fields "Add label", f, :wheel_rows %></p>
-
+<%= render :partial => 'general', :locals => {:f => f} %>
+<%= render :partial => 'values', :locals => {:f => f} %>
 <%= render :partial => 'print_configuration', :locals => {:f => f} %>
 <%= render :partial => 'cover', :locals => {:f => f} %>
 <%= render :partial => 'sms_interaction', :locals => {:f => f} %>

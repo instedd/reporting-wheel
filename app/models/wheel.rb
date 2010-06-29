@@ -78,7 +78,7 @@ class Wheel < ActiveRecord::Base
   end
   
   def render_configuration
-    cfg = self[:render_configuration]
+    cfg = self[:render_configuration]​ || {}
     # This is to support future removal of keys/values
     cfg.each{|k, v| cfg.delete k unless DefaultRenderConfiguration.has_key? k} 
     # This is to support future additional of keys/values

@@ -100,7 +100,7 @@ class WheelController < ApplicationController
             dy = - (left_radius - margin) * Math.sin(angle_rad)
             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => cfg[:values_font_size].to_f,
              :font_family => cfg[:values_font_family], :fill => 'black')
-
+             
             dx = (right_radius - margin) * Math.cos(angle_rad)
             dy = (right_radius - margin) * Math.sin(angle_rad)
             
