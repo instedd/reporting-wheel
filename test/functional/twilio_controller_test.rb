@@ -23,7 +23,7 @@ class TwilioControllerTest < ActionController::TestCase
   test "should indicate error if couldnt decode" do
     WheelCombination.expects(:new).raises RuntimeError, 'An error occurred'
     
-    get(:receive_code, { :Called => "123456789", :Digits => "foo" })
+    get(:receive_code, twilio_metadata)
     
     assert_equal(true, assigns(:error))
     assert_equal(@request.protocol + @request.host + VoiceChannel.failure_response, assigns(:error_message))
@@ -70,5 +70,9 @@ class TwilioControllerTest < ActionController::TestCase
   def teardown
     VoiceChannel.delete(@voice_channel.id)
   end
+  
+  def twilio_metadata
+    { :Called => "123456789", :Digits => "foo" }
+  end  
   
 end

@@ -3,7 +3,7 @@ require 'array'
 class TwilioController < ApplicationController
   before_filter :set_locale
   
-  protect_from_forgery :except => :hello
+  protect_from_forgery :except => [:hello, :receive_code]
   
   def hello
     @hello_response = request.protocol + request.host + VoiceChannel.hello_response 
@@ -12,7 +12,6 @@ class TwilioController < ApplicationController
   
   def receive_code
     begin
-      
       @error = false
       
       digits = params[:Digits];

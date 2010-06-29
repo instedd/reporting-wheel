@@ -20,10 +20,9 @@ class DecodeController < ApplicationController
     rescue RuntimeError => e
       response.headers['X-GeoChat-Action'] = 'reply'
       message = e
-      code = 500
     end
     
-    render :text => message, :status => code or 200
+    render :text => message
   end
   
   def test
