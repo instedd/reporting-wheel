@@ -213,4 +213,9 @@ class WheelTest < ActiveSupport::TestCase
     
     assert_false File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg")
   end
+  
+  test "access render configuration" do
+    w = Wheel.new
+    assert_equal Wheel::DefaultRenderConfiguration.length, w.render_configuration.length
+  end
 end
