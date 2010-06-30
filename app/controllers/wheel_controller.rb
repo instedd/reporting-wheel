@@ -88,7 +88,8 @@ class WheelController < ApplicationController
           
           circle(group, left_radius, right_radius)
           
-          indexes = (0..row.values.count-1).map{|z| z - row.values.count/2}.reverse
+          row_values_count = row.values.length
+          indexes = (0..row_values_count-1).map{|z| z - row_values_count/2}.reverse
            
           row.values.sort.each_with_index do |value, j|
             angle = (cfg[:angle_separation].to_f + i * cfg[:angle_modifier].to_f) * indexes[j]
@@ -96,18 +97,12 @@ class WheelController < ApplicationController
             
             margin = (i > 0 ? cfg[:inner_margin] : cfg[:outer_margin]).to_f.cm
 
-            dx = - (left_radius - margin) * Math.cos(angle_rad)
-            dy = - (left_radius - margin) * Math.sin(angle_rad)
+            dx, dy = point_for_angle(-(left_radius - margin), angle_rad)
             group.text(dx, dy, value.value).rotate(angle).styles(:text_anchor =>'start', :font_size => cfg[:values_font_size].to_f,
              :font_family => cfg[:values_font_family], :fill => 'black')
-
-            dx = (right_radius - margin) * Math.cos(angle_rad)
-            dy = (right_radius - margin) * Math.sin(angle_rad)
-            
-            #group.text(dx, dy, value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => @@codes_font_size, 
-            # :font_family => 'helvetica', :fill => 'black')
-            
+             
             #Force codes to have 3 digits (pad with leading zeros)
+            dx, dy = point_for_angle((right_radius - margin), angle_rad)
             group.text(dx, dy, "%03d" % value.code).rotate(angle).styles(:text_anchor => 'end', :font_size => cfg[:codes_font_size].to_f, 
              :font_family => cfg[:codes_font_family], :fill => 'black')
           end
@@ -148,27 +143,46 @@ class WheelController < ApplicationController
   
   def blank_cover_image(rows_count, format)
     cfg = @wheel.render_configuration
+    
+    initial_radius = cfg[:initial_radius].to_f
   
     rvg_cover = RVG.new(cfg[:width].to_f.cm, cfg[:height].to_f.cm) do |canvas|
       canvas.background_fill = 'white'
       
-      canvas.g.translate((cfg[:initial_radius].to_f + 0.1).cm, (cfg[:initial_radius].to_f + 0.1).cm) do |g|
+      canvas.g.translate(initial_radius.cm + 0.1.cm, initial_radius.cm + 0.1.cm) do |g|
         
         g.circle(0.1.cm).styles(:fill => 'black')
-    
-        g.circle(cfg[:initial_radius].to_f.cm).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+        
+        dx, dy = point_for_angle(initial_radius.cm, to_rad(60))
+        
+        g.path("M#{-initial_radius.cm},0 A#{initial_radius.cm},#{initial_radius.cm} 0 0,0 #{initial_radius.cm},0").rotate(180).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+        g.path("M#{initial_radius.cm},0 A#{initial_radius.cm},#{initial_radius.cm} 0 0,0 #{dx},#{-dy}").rotate(180).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+        g.path("M#{initial_radius.cm},0 A#{initial_radius.cm},#{initial_radius.cm} 0 0,0 #{dx},#{-dy}").rotate(60).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+        
+        minor_radius = 2.cm
+        
+        dx, dy = point_for_angle(minor_radius, to_rad(60))
+        g.path("M#{minor_radius},0 A#{minor_radius},#{minor_radius} 0 0,0 #{dx},#{-dy}").rotate(120).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+        
+        x1, y1 = point_for_angle(initial_radius.cm, to_rad(240))
+        x2, y2 = point_for_angle(minor_radius, to_rad(240))
+        g.line(x1, -y1, x2, -y2).styles(:stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+        
+        x1, y1 = point_for_angle(initial_radius.cm, to_rad(300))
+        x2, y2 = point_for_angle(minor_radius, to_rad(300))
+        g.line(x1, -y1, x2, -y2).styles(:stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
         
         # draw left boxes (boxes for values)
         rows_count.times do |i|
-          dx = (- cfg[:initial_radius].to_f + i * cfg[:values_width].to_f + i * cfg[:row_separation].to_f + i * cfg[:inner_margin].to_f + cfg[:outer_margin].to_f).cm
+          dx = (- initial_radius + accumulated_values_width_for_index(i) + i * cfg[:row_separation].to_f + i * cfg[:inner_margin].to_f + cfg[:outer_margin].to_f).cm
           dy = (- cfg[:field_cover_height].to_f / 2 - 0.1).cm
-          g.rect(cfg[:values_width].to_f.cm, cfg[:field_cover_height].to_f.cm, dx, dy).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+          g.rect(values_width_for_index(i).cm, cfg[:field_cover_height].to_f.cm, dx, dy).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
         end
         
         # draw right box (box for code)
         width = (rows_count * cfg[:codes_width].to_f + (rows_count - 1) * (cfg[:row_separation].to_f + cfg[:inner_margin].to_f)).cm
         height = cfg[:field_cover_height].to_f.cm
-        dx = cfg[:initial_radius].to_f.cm - width - cfg[:outer_margin].to_f.cm
+        dx = initial_radius.cm - width - cfg[:outer_margin].to_f.cm
         dy = - cfg[:field_cover_height].to_f.cm / 2 - 0.1.cm
         
         g.rect(width, height, dx, dy).styles(:fill => 'transparent', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
@@ -190,6 +204,33 @@ class WheelController < ApplicationController
   
   def to_rad(angle)
     angle * Math::PI / 180.0
+  end
+  
+  def point_for_angle(length, angle_rad)
+    [length * Math.cos(angle_rad), length * Math.sin(angle_rad)]
+  end
+  
+  def values_width_for_index(i)
+    case i
+    when 0
+      @wheel.render_configuration[:values_width_field_1].to_f
+    when 1
+      @wheel.render_configuration[:values_width_field_2].to_f
+    when 2
+      @wheel.render_configuration[:values_width_field_3].to_f
+    else
+      @wheel.render_configuration[:values_width].to_f
+    end
+  end
+  
+  def accumulated_values_width_for_index(i)
+    return 0 if i == 0
+  
+    sum = 0
+    0.upto(i - 1) do |x|
+      sum += values_width_for_index x
+    end
+    sum 
   end
   
   def find_wheel

@@ -78,7 +78,7 @@ class Wheel < ActiveRecord::Base
   end
   
   def render_configuration
-    cfg = self[:render_configuration]
+    cfg = self[:render_configuration] || Hash.new
     # This is to support future removal of keys/values
     cfg.each{|k, v| cfg.delete k unless DefaultRenderConfiguration.has_key? k} 
     # This is to support future additional of keys/values
@@ -200,23 +200,28 @@ class Wheel < ActiveRecord::Base
   end
 
   def calculate_factors
-    rows_count = rows.map{|r| r.values.length}
-    
-    # check that there isnt a row with no values, otherwise we will divide by 0
-    return if rows_count.min == 0
-    
-    factors = rows_count.map{|c| get_best_factor(c)}
-    
-    # TODO improve this
-    while true do
-      exists = Wheel.exists_for_factors factors
-      break if not exists
-      maxFactor = factors.max
-      factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
+    # Keep old factors when updating a wheel
+    if new_record?
+      rows_count = rows.map{|r| r.values.length}
+      
+      # check that there isnt a row with no values, otherwise we will divide by 0
+      return if rows_count.min == 0
+      
+      factors = rows_count.map{|c| get_best_factor(c)}
+      
+      # TODO improve this
+      while true do
+        exists = Wheel.exists_for_factors factors
+        break if not exists
+        maxFactor = factors.max
+        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
+      end
+      
+      # save factors
+      self.factors = factors.join ','
+    else
+      factors = self.factors.split(',').map &:to_i
     end
-    
-    # save factors
-    self.factors = factors.join(',')
     
     # calculate code for each value for each row
     rows.each_with_index do |row, row_index|
