@@ -220,7 +220,7 @@ class Wheel < ActiveRecord::Base
       # save factors
       self.factors = factors.join ','
     else
-      factors = self.factors.split ','
+      factors = self.factors.split(',').map &:to_i
     end
     
     # calculate code for each value for each row

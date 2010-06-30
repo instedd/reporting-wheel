@@ -237,5 +237,12 @@ class WheelTest < ActiveSupport::TestCase
     wheel.save!
     
     assert_equal old_factors, wheel.factors
+    
+    wheel.rows.each do |row|
+      first = row.values.sort.first
+      row.values.sort.each do |v|
+        assert_equal first.code * (v.index + 1), v.code
+      end
+    end
   end
 end
