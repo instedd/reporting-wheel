@@ -218,4 +218,24 @@ class WheelTest < ActiveSupport::TestCase
     w = Wheel.new
     assert_equal Wheel::DefaultRenderConfiguration.length, w.render_configuration.length
   end
+  
+  test "when saving keep same factors" do
+    wheel = Wheel.new
+    wheel.name = 'new wheel'
+    defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
+    defaults.each do |values| 
+      row = wheel.rows.build
+      row.label = values[0] 
+      values[1 .. -1].each do |value|
+        row_value = row.values.build
+        row_value.value = value
+      end
+    end
+    wheel.save!
+    
+    old_factors = wheel.factors
+    wheel.save!
+    
+    assert_equal old_factors, wheel.factors
+  end
 end
