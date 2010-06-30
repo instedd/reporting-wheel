@@ -8,7 +8,7 @@
 if @wheel.success_voice_path
   %>
   <br/>
-  <%= mp3_player @wheel.success_voice_path %>
+  <%= mp3_player "#{@wheel.success_voice_path}?#{rand}" %>
   <%
 end
 %>
