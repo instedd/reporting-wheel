@@ -16,13 +16,13 @@ class DecodeController < ApplicationController
       response.headers['X-GeoChat-Action'] = 'continue'
       response.headers['X-GeoChat-Replace'] = 'true'
       
-      message = comb.message
+      @message = comb.message
     rescue RuntimeError => e
       response.headers['X-GeoChat-Action'] = 'reply'
-      message = e
+      @message = I18n.t :wheel_error_message, :code => digits
     end
     
-    render :text => message
+    render :text => @message
   end
   
   def test

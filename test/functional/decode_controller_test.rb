@@ -3,6 +3,14 @@ require 'yaml'
 
 class DecodeControllerTest < ActionController::TestCase
   
+  test "should return error message in Thai" do
+    
+    @request.env['RAW_POST_DATA'] = 'foo'
+    post(:wheel, :locale => 'th')
+    
+    assert_equal((I18n.t :wheel_error_message, :code => 'foo', :locale => 'th'), assigns(:message))
+  end
+  
   test "should return a GeoChat action reply header in case of an error" do
     
     @request.env['RAW_POST_DATA'] = 'foo'
