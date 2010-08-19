@@ -34,7 +34,7 @@ test:
   database: reportingwheel_test
   pool: 5
   username: root
-  password: 
+  password: root
   #socket: /tmp/mysql.sock
 
 production:
