@@ -10,4 +10,8 @@ class WheelRecord < ActiveRecord::Base
     YAML.load(data)
   end
   
+  def data_str
+    self.data_value.map{|k,v| k.to_str + ": " + v}.join(', ')
+  end
+  
 end

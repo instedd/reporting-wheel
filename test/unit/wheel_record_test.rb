@@ -5,7 +5,7 @@ class WheelRecordTest < ActiveSupport::TestCase
   
   def setup
     wheel = Wheel.new
-    @data = {:from => 'John', :to => 'Mary'}
+    @data = {"from" => "John", "to" => "Mary"}
     code = '123456789'
     
     @record = WheelRecord.new :wheel => wheel, :data => YAML.dump(@data), :code => code
@@ -24,6 +24,10 @@ class WheelRecordTest < ActiveSupport::TestCase
   
   test "should return data value" do
     assert_equal @data, @record.data_value
+  end
+  
+  test "should return data value as human readable string" do
+    assert_equal 'from: John, to: Mary', @record.data_str
   end
   
 end

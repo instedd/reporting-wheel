@@ -1,0 +1,18 @@
+<h2>Records for wheel <%= @wheel.name %></h2>
+
+<table border="1">
+	<tr>
+		<th>Date</th>
+		<th>Code</th>
+		<th>Data</th>
+	</tr>
+	<% for record in @records %>
+		<tr>
+			<td><%= record.created_at %></td>
+			<td><%= record.code %></td>
+			<td><%= record.data_str %></td>
+		</tr>
+	<% end %>
+</table>
+<br/>
+<%= link_to 'Go back', root_url %>
