@@ -39,6 +39,7 @@ class WheelController < ApplicationController
   end
   
   def edit
+    @wheel.rows.sort!
   end
   
   def update
@@ -62,7 +63,7 @@ class WheelController < ApplicationController
   def draw
     cfg = @wheel.render_configuration
   
-    pdf = PDF::Writer.new
+    pdf = PDF::Writer.new(:paper => "A4")
     
     # Draw wheel rows
     @wheel.rows.sort.each_with_index do |row, i|
