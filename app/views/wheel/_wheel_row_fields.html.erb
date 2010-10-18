@@ -1,10 +1,13 @@
-<p>
-	<%= f.label :label %><br/>
-	<%= f.text_field :label %>
-</p>
-<div style="margin-left:30px">
-<% f.fields_for :wheel_values do |builder| %>
-	<%= render 'wheel_value_fields', :f => builder %>
-<% end %>
-<p><%= link_to_add_fields "Add Value", f, :wheel_values %></p>
+<div class="fields">
+	<p>
+		<%= f.label :label %><br/>
+		<%= f.text_field :label %>
+		<%= link_to_remove_fields "remove", f %>
+	</p>
+	<div style="margin-left:30px">
+	<% f.fields_for :wheel_values do |builder| %>
+		<%= render 'wheel_value_fields', :f => builder %>
+	<% end %>
+	<p><%= link_to_add_fields "Add Value", f, :wheel_values %></p>
+	</div>
 </div>
