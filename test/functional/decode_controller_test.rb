@@ -35,18 +35,6 @@ class DecodeControllerTest < ActionController::TestCase
     assert_header('X-GeoChat-Replace', 'true')
   end
   
-  test "should decode inline codes" do
-    @request.env['RAW_POST_DATA'] = 'Key1: Value1, 123456789, Key5: Value5, Key6: Value6'
-    wheel_combination = mock()
-    WheelCombination.expects(:new).with('123456789', anything).returns(wheel_combination)
-    wheel_combination.expects(:record!)
-    wheel_combination.expects(:message).returns('Key2: Value2, Key3: Value3, Key4: Value4')
-    
-    post :wheel
-    
-    assert_equal 'Key1: Value1, Key2: Value2, Key3: Value3, Key4: Value4, Key5: Value5, Key6: Value6', assigns(:message)
-  end
-  
   test "should decode a message with a plain code" do
     @request.env['RAW_POST_DATA'] = '123456789'
     wheel_combination = mock()

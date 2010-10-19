@@ -15,6 +15,6 @@ class DecodeCallbackJob
     url = URI.parse @url
     
     request = Net::HTTP.new url.host, url.port
-    response = request.post "#{url.path}?#{@query_parameters.to_query}", @body
+    response = request.post "#{url.path}?#{@query_parameters.to_query}", @body, {'Content-Type' => 'text/plain'} # what is the proper mime type for raw data?
   end
 end

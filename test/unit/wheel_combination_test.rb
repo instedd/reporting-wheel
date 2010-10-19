@@ -1,13 +1,13 @@
-require "test/unit"
+require 'test_helper'
 
-class WheelCombinationTest < Test::Unit::TestCase
+class WheelCombinationTest < ActiveSupport::TestCase
 
-  test "should fail if wheel code is not a number" do
-    assert_decode_fails 'foo', 'Only number are allowed'
+  test "should fail if the body has no wheel code" do
+    assert_decode_fails 'foo', 'No wheel code present in the message'
   end
   
   test "should fail if wheel code length is not multiple of 3" do
-    assert_decode_fails '12345', 'The number of digits must be a multiple of 3'
+    assert_decode_fails '12345', 'No wheel code present in the message'
   end
   
   test "should fail if wheel is not found" do
@@ -23,10 +23,19 @@ class WheelCombinationTest < Test::Unit::TestCase
     assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3', wheel_combination.message 
   end
   
+  test "should decode inline codes" do
+    setup_valid_request
+    
+    wheel_combination = WheelCombination.new(@wheel_code + ",Label4:Value4,Label5:Value5")
+    wheel_combination.record!
+    
+    assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3,Label4:Value4,Label5:Value5', wheel_combination.message
+  end
+  
   test "should enqueue a decode callback job" do
     setup_valid_request
     
-    wheel_combination = WheelCombination.new @wheel_code, {}
+    wheel_combination = WheelCombination.new @wheel_code, {'foo' => 'bar'}
     wheel_combination.record!
     
     jobs = Delayed::Job.all
@@ -37,7 +46,7 @@ class WheelCombinationTest < Test::Unit::TestCase
     assert_equal 'DecodeCallbackJob', job.class.to_s
     assert_equal 'http://www.domain.com/some/url', job.url
     assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3', job.body
-    assert_equal ({'Label1' => 'Value1', 'Label2' => 'Value2', 'Label3' => 'Value3'}), job.query_parameters
+    assert_equal ({'foo' => 'bar'}), job.query_parameters
   end
   
   private
@@ -79,10 +88,10 @@ class WheelCombinationTest < Test::Unit::TestCase
   
   def assert_decode_fails(wheel_code, expected_error_message)
     exception = assert_raise RuntimeError do
-      wheel_combination = WheelCombination.new 'foo', {}
+      wheel_combination = WheelCombination.new wheel_code, {}
     end
     
-    assert_equal exception.message, "Only number are allowed"
+    assert_equal expected_error_message, exception.message
   end
 
 
