@@ -8,14 +8,14 @@ class WheelRecordTest < ActiveSupport::TestCase
     @data = {"from" => "John", "to" => "Mary"}
     code = '123456789'
     
-    @record = WheelRecord.new :wheel => wheel, :data => YAML.dump(@data), :code => code
+    @record = WheelRecord.new :wheel => wheel, :data => YAML.dump(@data), :code => code, :original => code, :decoded => 'decoded message'
   end
   
   test "should be valid with valid attributes" do
     assert @record.valid?
   end
   
-  [:wheel, :code, :data].each do |field|
+  [:wheel, :code, :data, :original, :decoded].each do |field|
     test "should validate presence of #{field}" do
       @record.send("#{field}=", nil)
       assert !@record.valid?

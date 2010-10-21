@@ -5,12 +5,16 @@
 		<th>Date</th>
 		<th>Code</th>
 		<th>Data</th>
+		<th>Original</th>
+		<th>Decoded</th>
 	</tr>
 	<% for record in @records %>
 		<tr>
 			<td><%= record.created_at %></td>
 			<td><%= record.code %></td>
 			<td><%= record.data_str %></td>
+			<td><%= record.original %></td>
+			<td><%= record.decoded %></td>
 		</tr>
 	<% end %>
 </table>
