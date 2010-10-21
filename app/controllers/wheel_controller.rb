@@ -39,6 +39,7 @@ class WheelController < ApplicationController
   end
   
   def edit
+    @wheel.rows.sort!
   end
   
   def update
@@ -62,7 +63,7 @@ class WheelController < ApplicationController
   def draw
     cfg = @wheel.render_configuration
   
-    pdf = PDF::Writer.new
+    pdf = PDF::Writer.new(:paper => "A4")
     
     # Draw wheel rows
     @wheel.rows.sort.each_with_index do |row, i|
@@ -125,6 +126,10 @@ class WheelController < ApplicationController
       draw_blank_cover_on pdf
     end
     
+    # Draw wheel back cover
+    pdf.start_new_page
+    draw_back_cover_on pdf
+        
     send_data(pdf.render , :disposition => 'inline', :type => 'application/pdf', :filename => "wheel_#{@wheel.name}.pdf")
   end
   
@@ -134,6 +139,25 @@ class WheelController < ApplicationController
   end
   
   private
+  
+  def draw_back_cover_on(pdf)
+    cfg = @wheel.render_configuration
+    
+    rvg_back_cover = RVG.new(cfg[:width].to_f.cm, cfg[:height].to_f.cm) do |canvas|
+      canvas.background_fill = 'white'
+      radius = cfg[:initial_radius].to_f
+      
+      canvas.g.translate(radius.cm + 0.1.cm, radius.cm + 0.1.cm) do |g|
+         g.circle(radius.cm).styles(:fill => '#FFFFFF', :stroke => 'black', :stroke_width => cfg[:stroke_width].to_f)
+         g.circle(0.1.cm).styles(:fill => 'black')
+      end
+    end
+    
+    img_back_cover = rvg_back_cover.draw
+    img_back_cover.format = 'JPG'
+    
+    pdf.add_image(img_back_cover.to_blob {self.quality = 100}, 0 ,0, img_back_cover.columns * 0.5, img_back_cover.rows * 0.5)
+  end
   
   def draw_blank_cover_on(pdf)
     # Draw wheel cover

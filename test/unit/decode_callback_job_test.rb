@@ -29,7 +29,7 @@ class DecodeCallbackJobTest < ActiveSupport::TestCase
     response = mock('Net::HTTPResponse')
       
     Net::HTTP.expects(:new).with('www.domain.com', 80).returns(request)
-    request.expects(:post).with("/some/url?#{@query_parameters.to_query}", @body).returns(response)
+    request.expects(:post).with("/some/url?#{@query_parameters.to_query}", @body, anything).returns(response)
     
     res = @job.perform
     

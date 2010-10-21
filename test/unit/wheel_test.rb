@@ -104,17 +104,20 @@ class WheelTest < ActiveSupport::TestCase
     
     row1 = wheel.rows.build
     row1.label = 'Label 1'
+    row1.index = 1
     value11 = row1.values.build
     value11.value = 'Value 1 1'
     value12 = row1.values.build
     value12.value = 'Value 1 2'
     
     row2 = wheel.rows.build
+    row2.index = 2
     row2.label = 'Label 2'
     value21 = row2.values.build
     value21.value = 'Value 2 1'
     
     row3 = wheel.rows.build
+    row3.index = 3
     row3.label = 'Label 3'
     value31 = row3.values.build
     value31 = 'Value 3 1'
@@ -223,8 +226,9 @@ class WheelTest < ActiveSupport::TestCase
     wheel = Wheel.new
     wheel.name = 'new wheel'
     defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
-    defaults.each do |values| 
+    defaults.each_with_index do |values, index| 
       row = wheel.rows.build
+      row.index = index
       row.label = values[0] 
       values[1 .. -1].each do |value|
         row_value = row.values.build

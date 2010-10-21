@@ -22,6 +22,7 @@ class DecodeControllerTest < ActionController::TestCase
   end
   
   test "should return appropiate GeoChat responde headers" do
+    @request.env['RAW_POST_DATA'] = '123'
     
     wheel_combination = mock()
     WheelCombination.expects(:new).returns(wheel_combination)
@@ -32,6 +33,18 @@ class DecodeControllerTest < ActionController::TestCase
     
     assert_header('X-GeoChat-Action', 'continue')
     assert_header('X-GeoChat-Replace', 'true')
+  end
+  
+  test "should decode a message with a plain code" do
+    @request.env['RAW_POST_DATA'] = '123456789'
+    wheel_combination = mock()
+    WheelCombination.expects(:new).with('123456789', anything).returns(wheel_combination)
+    wheel_combination.expects(:record!)
+    wheel_combination.expects(:message).returns('Key1: Value1, Key2: Value2, Key3: Value3')
+    
+    post :wheel
+    
+    assert_equal 'Key1: Value1, Key2: Value2, Key3: Value3', assigns(:message)
   end
   
   def assert_header(header, value)
