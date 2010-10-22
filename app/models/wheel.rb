@@ -224,7 +224,7 @@ class Wheel < ActiveRecord::Base
     end
     
     # calculate code for each value for each row
-    rows.sort.each_with_index do |row, row_index|
+    rows.each_with_index do |row, row_index|
       row.index = row_index
       row.values.each_with_index do |value, value_index|
         value.index = value_index
