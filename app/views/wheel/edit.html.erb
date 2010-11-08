@@ -1,7 +1,9 @@
 <h2>Edit wheel <%= @wheel.name %></h2>
 
-<% form_for @wheel, :url => {:action => :update, :id => @wheel.id}, :html => { :multipart => true } do |builder| %>
+<% form_for @wheel, :url => {:action => :update, :id => @wheel.id}, :html => { :multipart => true, :id => 'edit_form' } do |builder| %>
 	<%= render 'form', :f => builder %>
+	<p>
+		<%= button_to_function 'Update', "should_recalculate_factors(#{@wheel.id})" %>
+	</p>
 <% end %>
-
 <%= link_to 'Go back', :controller => :wheel, :action => :index %>

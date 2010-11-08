@@ -30,6 +30,7 @@ class Wheel < ActiveRecord::Base
   
   attr_accessor :dont_use_cover_image_file
   attr_accessor :dont_use_success_voice_file
+  attr_accessor :recalculate_factors 
   
   serialize :render_configuration, Hash
   
@@ -104,6 +105,17 @@ class Wheel < ActiveRecord::Base
   
   def absolute_cover_image_path
     absolute cover_image_path
+  end
+  
+  def recalculate_factors?(rows_length)
+    # check number of rows
+    return true if self.rows.length != rows_length.length
+    # check number of values per row
+    self_values_per_row = self.rows.map{|r| r.values.length}
+    self.rows.length.times do |i|
+      return true if rows_length[i] > self_values_per_row[i]
+    end
+    false
   end
   
   private
@@ -201,7 +213,7 @@ class Wheel < ActiveRecord::Base
 
   def calculate_factors
     # Keep old factors when updating a wheel
-    if new_record?
+    if new_record? || recalculate_factors
       rows_count = rows.map{|r| r.values.length}
       
       # check that there isnt a row with no values, otherwise we will divide by 0
@@ -237,4 +249,5 @@ class Wheel < ActiveRecord::Base
     ceiling = @@max_field_code / (Prime.value_for(count-1))
     Prime.find_first_smaller_than ceiling
   end
+  
 end

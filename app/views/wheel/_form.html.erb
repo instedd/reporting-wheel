@@ -6,6 +6,3 @@
 <%= render :partial => 'cover', :locals => {:f => f} %>
 <%= render :partial => 'sms_interaction', :locals => {:f => f} %>
 <%= render :partial => 'voice_interaction', :locals => {:f => f} %>
-<p>
-	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
-</p>

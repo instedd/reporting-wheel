@@ -6,7 +6,7 @@ RVG::dpi = 144
 
 class WheelController < ApplicationController
   
-  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :show, :delete]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :edit, :update, :show, :delete, :should_recalculate]
   
   def index
     @wheels = Wheel.all
@@ -42,7 +42,12 @@ class WheelController < ApplicationController
     @wheel.rows.sort!
   end
   
-  def update
+  def should_recalculate
+    render :json => recalculate_factors(params[:wheel])
+  end
+  
+  def update 
+    @wheel.recalculate_factors = recalculate_factors(params[:wheel])
     if @wheel.update_attributes(params[:wheel])
       flash[:notice] = "Wheel \"#{@wheel.name}\" udpated"
       redirect_to :action => 'index'
@@ -139,6 +144,12 @@ class WheelController < ApplicationController
   end
   
   private
+  
+  def recalculate_factors(wheel_data)
+    # this is ugly, change when ActiveRecord::Dirty supports associations
+    row_lengths = wheel_data['wheel_rows_attributes'].select{|k,v|v['_destroy'] != '1'}.map{|k,v|v['wheel_values_attributes'].select{|k,v|v['_destroy'] != '1'}.length}
+    @wheel.recalculate_factors? row_lengths
+  end
   
   def draw_back_cover_on(pdf)
     cfg = @wheel.render_configuration
