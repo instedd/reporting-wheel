@@ -2,7 +2,7 @@
 
 <div class="description">
 You can upload a custom image to be used as the cover of the wheel. You can get the template of a blank
-cover <%= link_to_function 'here', 'draw_wheel_blank_cover()' %>.
+cover <%= link_to 'here', :action => :draw_blank_cover, :id => @wheel.id %>.
 </div>
 
 <%

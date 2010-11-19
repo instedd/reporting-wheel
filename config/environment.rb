@@ -25,6 +25,8 @@ Rails::Initializer.run do |config|
   config.gem "pdf-writer", :lib => 'pdf/writer'
   config.gem 'collectiveidea-delayed_job', :lib => 'delayed_job', :source => 'http://gems.github.com'
   config.gem 'daemons'
+  config.gem 'cairo'
+  config.gem 'pango'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

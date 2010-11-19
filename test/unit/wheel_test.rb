@@ -191,7 +191,7 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.save!
     
-    assert_equal "/wheels/#{@wheel.id}/images/cover.jpg", @wheel.cover_image_path
+    assert_equal "/wheels/#{@wheel.id}/images/cover.png", @wheel.cover_image_path
   end
   
   test "should save cover image file" do
@@ -199,7 +199,7 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.save!
     
-    assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg")
+    assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.png")
   end
   
   test "should work if cover image file is empty" do

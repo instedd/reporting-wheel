@@ -148,14 +148,6 @@ class Wheel < ActiveRecord::Base
     FileUtils.mkdir_p(absolute(images_directory))
     
     File.open(absolute_path, "w") { |f| f.write(self[:cover_image].read); }
-    
-    # Convert image to jpg
-    begin
-      img = Magick::ImageList.new absolute_path
-      img.write absolute_path
-    rescue => ex
-      Rails.logger.warn "Couldn't transform image to JPG: #{ex}"
-    end
   end
   
   def absolute(path)
@@ -179,7 +171,7 @@ class Wheel < ActiveRecord::Base
   end
   
   def images_path(name)
-    "#{images_directory}/#{name}.jpg"
+    "#{images_directory}/#{name}.png"
   end
   
   def uniqueness_of_factors
