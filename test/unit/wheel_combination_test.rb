@@ -20,7 +20,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
     wheel_combination = WheelCombination.new @wheel_code, {}
     wheel_combination.record!
     
-    assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3', wheel_combination.message 
+    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3', wheel_combination.message 
   end
   
   test "should decode inline codes" do
@@ -29,7 +29,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
     wheel_combination = WheelCombination.new("017017023,Label4:Value4,Label5:Value5")
     wheel_combination.record!
     
-    assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3,Label4:Value4,Label5:Value5', wheel_combination.message
+    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3,Label4:Value4,Label5:Value5', wheel_combination.message
   end
   
   test "should decode all codes present in the body" do
@@ -38,7 +38,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
     wheel_combination = WheelCombination.new("017017023 017017023")
     wheel_combination.record!
     
-    assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3 Label1:Value1,Label2:Value2,Label3:Value3', wheel_combination.message
+    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3 Label1:Value1, Label2:Value2, Label3:Value3', wheel_combination.message
   end
   
   test "should enqueue a decode callback job" do
@@ -54,7 +54,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
     job = YAML::load job.handler
     assert_equal 'DecodeCallbackJob', job.class.to_s
     assert_equal 'http://www.domain.com/some/url', job.url
-    assert_equal 'Label1:Value1,Label2:Value2,Label3:Value3', job.body
+    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3', job.body
     assert_equal ({'foo' => 'bar'}), job.query_parameters
   end
   
