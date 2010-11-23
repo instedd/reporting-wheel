@@ -1,17 +1,17 @@
 <% if !flash[:notice].nil? %>
-<div id="notice"><%= flash[:notice] %></div>
+	<div id="notice"><%= flash[:notice] %></div>
 <% end %>
 
-<h2><%= link_to 'Create a new Wheel!', :action => :new %></h2>
+<h4>Wheels</h4>
 
-<table border="1">
+<table>
 	<tr>
-		<th>Wheel Name</th>
+		<th>Name</th>
 		<th>Actions</th>
 	</tr>
 	<% @wheels.each do |wheel| %>
 		<tr>
-			<td><%= link_to wheel.name, :action => :show, :id => wheel.id %></td>
+			<td><strong><%= wheel.name %></strong></td>
 			<td>
 			  <%= link_to 'view', :action => :show, :id => wheel.id %>
 			  <%= link_to 'edit', :action => :edit, :id => wheel.id %>
@@ -22,3 +22,7 @@
 		</tr>
 	<% end %>
 </table>
+
+<br/>
+
+<%= link_to 'Create a new Whee!', :action => :new %>

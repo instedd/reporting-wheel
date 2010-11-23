@@ -11,7 +11,9 @@
 	<%= yield :head %>
 </head>
 <body>
-  <h1>Wheels</h1>
+	<div id="header">
+		<h1><%= link_to 'Reporting Wheel', root_url %></h1>
+	</div>
 	<div id="main">
 		<%= yield(:content) or yield %>
 	</div>

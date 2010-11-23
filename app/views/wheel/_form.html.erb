@@ -3,6 +3,8 @@
 <%= render :partial => 'general', :locals => {:f => f} %>
 <%= render :partial => 'values', :locals => {:f => f} %>
 <%= render :partial => 'print_configuration', :locals => {:f => f} %>
-<%= render :partial => 'cover', :locals => {:f => f} %>
+<% unless @wheel.new_record? %>
+	<%= render :partial => 'cover', :locals => {:f => f} %>
+<% end %>
 <%= render :partial => 'sms_interaction', :locals => {:f => f} %>
 <%= render :partial => 'voice_interaction', :locals => {:f => f} %>

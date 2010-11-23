@@ -1,4 +1,19 @@
-<h2>Wheel <%= @wheel.name %></h2>
+<h4>Wheel <%= @wheel.name %></h4>
+
+<p>
+	To submit reports use this url: <strong><%= decode_url %></strong>
+	<a href="http://code.google.com/p/reportingwheel/wiki/API#Callback" target="_blank">
+		<img src="/images/question.png" width="14" height="14"/>
+	</a>
+</p>
+
+<% if @wheel.has_callback? %>
+	<p><strong>URL Callback</strong>: <%= @wheel.url_callback %>
+		<a href="http://code.google.com/p/reportingwheel/wiki/API#Callback" target="_blank">
+			<img src="/images/question.png" width="14" height="14"/>
+		</a>
+	</p>
+<% end %>
 
 <h4>Labels and values</h4>
 

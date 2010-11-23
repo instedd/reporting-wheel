@@ -1,9 +1,7 @@
-<h2>Create a new Wheel</h2>
-
 <% form_for @wheel, :url => {:action => :create} do |builder| %>
 	<%= render 'form', :f => builder %>
 	<p>
-		<%= builder.submit "Create" %>
+		<%= builder.submit "Create Wheel" %>
 	</p>
 <% end %>
 
