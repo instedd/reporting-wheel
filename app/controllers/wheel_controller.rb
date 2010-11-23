@@ -2,7 +2,7 @@ require 'tempfile'
 
 class WheelController < ApplicationController
   
-  before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :edit, :update, :show, :delete, :should_recalculate]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :edit, :update, :show, :delete, :should_recalculate]
   
   def index
     @wheels = Wheel.all
@@ -75,6 +75,17 @@ class WheelController < ApplicationController
     drawer = WheelDrawer.new(@wheel, builder)
     drawer.draw_cover
     send_file(file, :disposition => 'attachment', :type => 'image/png', :filename => "wheel_#{@wheel.name}_cover.png")
+  end
+  
+  def draw_preview
+    file = temp_file
+    builder = CairoSvgBuilder.new(file)
+    drawer = WheelDrawer.new(@wheel, builder)
+    drawer.draw_preview
+    # send_file(file, :disposition => 'inline', :type => 'image/svg+xml', :filename => "wheel_#{@wheel.name}_preview.svg")
+    # render :text => File.open(file).read
+    @content = File.open(file).read[38..-1]
+    render :layout => false, :content_type => "application/xhtml+xml"
   end
   
   private
