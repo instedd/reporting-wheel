@@ -8,26 +8,28 @@
 	<script type="text/javascript">		
 		function update(id, value) {
 			target = $("#" + id).attr("target");
-			$("#" + target).animate({svgTransform: 'rotate(' + value + ',296.8,296.8)'}, 50);
+			$("#" + target).animate({svgTransform: 'rotate(' + value + ',296.8,296.8)'}, 10);
 		}
 		
 		$(function() {			
 			$(".slider").each(function(index, object) { $("#" + object.id).slider({
 				slide: function(event, ui) { update(object.id, ui.value);},
 				max: 90,
-				min: -90
+				min: -90,
+				orientation: "vertical"
 			});});
 		});
 	</script>
 </head>
 <body>
-	<div width="500px">
-		<% @wheel.rows.length.times do |i| %>
-			<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider"></div>
-		<% end %>
-	</div>
-	<div id="svg">
+	<div id="svg" style="float: left">
 		<%= @content %>
 	</div>
+	<div style="float:left; margin: 30px">
+	<% @wheel.rows.length.times do |i| %>
+		<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider" style="float:left; height:500px; margin: 10px"></div>
+	<% end %>
+	</div>
+	<div style="clear:both;"></div>
 </body>
 </html>
