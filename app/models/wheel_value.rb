@@ -2,7 +2,8 @@ class WheelValue < ActiveRecord::Base
   
   belongs_to :wheel_row
   
-  validates_presence_of :value, :index, :code
+  validates_presence_of :value, :message => "Value can't be blank"
+  validates_presence_of :index, :code
   validates_length_of :value, :maximum => 300
   
   alias :row :wheel_row

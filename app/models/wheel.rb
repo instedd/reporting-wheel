@@ -34,10 +34,11 @@ class Wheel < ActiveRecord::Base
   
   serialize :render_configuration, Hash
   
-  validates_presence_of :name, :factors
-  validates_uniqueness_of :name
+  validates_presence_of :name, :message => "Name can't be blank"
+  validates_presence_of :factors
+  validates_uniqueness_of :name, :message => "The name is already taken, please choose another name"
   
-  validates_length_of :wheel_rows, :minimum => 1
+  validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
   accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
@@ -193,7 +194,7 @@ class Wheel < ActiveRecord::Base
   
   def callback_is_url
     return if url_callback.nil? or url_callback.empty?
-    errors.add(:url_callback, "Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
+    errors.add(:url_callback, "URL Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
   end
   
   def length_of_factors_and_rows
