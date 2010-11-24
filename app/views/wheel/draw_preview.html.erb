@@ -2,42 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<link rel="stylesheet" href="/stylesheets/jquery-ui-1.8.6.custom.css" type="text/css"/>
-	<%= javascript_include_tag 'jquery-1.4.2.min', 'raphael-min', 'jquery.svg.min', 'jquery.svganim.min', 'jquery-ui-1.8.6.custom.min' %>
-	<script type="text/javascript">
-		degree = 0;
-		function up() {
-			degree += 1;
-			pepe = $('#surface1');
-			pepe.attr("transform", "rotate(" + degree + ",296.8,296.8)");
-		}
-		function down() {
-			degree -= 1;
-			pepe = $('#surface1');
-			pepe.attr("transform", "rotate(" + degree + ",296.8,296.8)");
-		}
-		function test() {
-			degree += 2;
-			pepe = $('#surface1');
-			pepe.animate({svgTransform: 'rotate('+ degree +',296.8,296.8)'}, 200);
+	
+	<%= javascript_include_tag 'jquery-1.4.2.min', 'jquery-ui-1.8.6.custom.min.js', 'jquery.svg.min', 'jquery.svganim.min' %>
+	
+	<script type="text/javascript">		
+		function update(id, value) {
+			target = $("#" + id).attr("target");
+			$("#" + target).animate({svgTransform: 'rotate(' + value + ',296.8,296.8)'}, 50);
 		}
 		
-		function update(target, value) {
-			$('#' + target).animate({svgTransform: 'rotate(' + value + ',296.8,296.8)'}, 1);
-		}
-		
-		function create_slider(id) {
-			placeholder = $('#' + id);
-			placeholder.slider({
-				slide: function(event, ui) { update(placeholder.attr('target'), ui.value) },
+		$(function() {			
+			$(".slider").each(function(index, object) { $("#" + object.id).slider({
+				slide: function(event, ui) { update(object.id, ui.value);},
 				max: 90,
 				min: -90
-			});
-		}
-		
-		$(function() {
-			//$('.slider').each(function(index, object) { create_slider(object) });
-			create_slider('slider1');
-			create_slider('slider2');
+			});});
 		});
 	</script>
 </head>
@@ -47,11 +26,8 @@
 			<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider"></div>
 		<% end %>
 	</div>
-	
-	<%= @content %>
-	
-	<button onclick="javascript:up();">Up</button>
-	<button onclick="javascript:down();">Down</button>
-	<button onclick="javascript:test();">Test</button>
+	<div id="svg">
+		<%= @content %>
+	</div>
 </body>
 </html>
