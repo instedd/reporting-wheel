@@ -16,7 +16,7 @@ function add_fields(link, association, content) {
 function test_report_code() {
   var code = $("#report_code").val();
   $.get('/decode/test', {'digits':code}, function(data) {
-    $("#report_result").html(data);
+    $("#report_result").text(data);
   });
   return false;
 }

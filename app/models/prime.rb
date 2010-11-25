@@ -18,7 +18,6 @@ class Prime
     @@values[index]
   end
   
-  # TODO improve this	
   def self.find_first_smaller_than(n)
     last = 0
     
@@ -30,6 +29,8 @@ class Prime
       end
     end
     
+    raise "No primes left" if last == 0
+    
     last
   end
   
@@ -38,6 +39,12 @@ class Prime
       return p if n % p == 0
     end
     raise "Prime not found"
+  end
+  
+  def self.max_length
+    # This represents the maximum length of a row. This value is taken because
+    # 17 * values[41] < 1000 and 17 * values[42] >= 1000
+    41
   end
   
 end

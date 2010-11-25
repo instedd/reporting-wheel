@@ -20,4 +20,9 @@ module ApplicationHelper
     end
     @@app_version
   end
+  
+  def decode_url
+    url = url_for :only_path => false, :controller => 'decode', :action => 'wheel'
+    url.gsub(/\?.*/,"")
+  end
 end

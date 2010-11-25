@@ -34,10 +34,11 @@ class Wheel < ActiveRecord::Base
   
   serialize :render_configuration, Hash
   
-  validates_presence_of :name, :factors
-  validates_uniqueness_of :name
+  validates_presence_of :name, :message => "Name can't be blank"
+  validates_presence_of :factors
+  validates_uniqueness_of :name, :message => "The name is already taken, please choose another name"
   
-  validates_length_of :wheel_rows, :minimum => 1
+  validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
   accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
@@ -178,7 +179,7 @@ class Wheel < ActiveRecord::Base
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors, id)
+    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors(factors, id)
   end
 
   def factors_are_primes
@@ -193,7 +194,7 @@ class Wheel < ActiveRecord::Base
   
   def callback_is_url
     return if url_callback.nil? or url_callback.empty?
-    errors.add(:url_callback, "Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
+    errors.add(:url_callback, "URL Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
   end
   
   def length_of_factors_and_rows
@@ -218,7 +219,7 @@ class Wheel < ActiveRecord::Base
         exists = Wheel.exists_for_factors factors
         break if not exists
         maxFactor = factors.max
-        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
+        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break
       end
       
       # save factors
