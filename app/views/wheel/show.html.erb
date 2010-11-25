@@ -47,7 +47,7 @@ end
 <% form_for :report, :html => {'onsubmit' => 'return test_report_code()'} do |f| %>
   <p>
 	  <%= f.label :code, 'Code:' %><br/>
-	  <%= f.text_field :code, :id => 'report_code' %> <span id="report_result" /><br/>
+	  <%= f.text_field :code, :id => 'report_code' %> <span id="report_result"></span><br/>
   </p>
 	<%= f.submit "Test report code" %>
 <% end %>
@@ -55,7 +55,7 @@ end
 <script>
 $(function() {
   $("#report_code").keydown(function() {
-    $("#report_result").html("");
+    $("#report_result").text("");
   });
 });
 </script>
