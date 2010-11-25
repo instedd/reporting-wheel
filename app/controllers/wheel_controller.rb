@@ -82,10 +82,21 @@ class WheelController < ApplicationController
     builder = CairoSvgBuilder.new(file)
     drawer = WheelDrawer.new(@wheel, builder)
     drawer.draw_preview
-    # send_file(file, :disposition => 'inline', :type => 'image/svg+xml', :filename => "wheel_#{@wheel.name}_preview.svg")
-    # render :text => File.open(file).read
     @content = File.open(file).read[38..-1]
-    render :layout => false, :content_type => "application/xhtml+xml"
+    render :action => "draw_preview", :content_type => "application/xhtml+xml"
+  end
+  
+  def update_print_configuration
+    @wheel = Wheel.find(params[:id])
+    @wheel.update_attributes(params[:wheel])
+    
+    file = temp_file
+    builder = CairoSvgBuilder.new(file)
+    drawer = WheelDrawer.new(@wheel, builder)
+    drawer.draw_preview
+    @content = File.open(file).read[38..-1]
+    
+    render :text => @content
   end
   
   private
