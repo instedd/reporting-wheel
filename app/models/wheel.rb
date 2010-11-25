@@ -179,7 +179,7 @@ class Wheel < ActiveRecord::Base
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors, id)
+    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors(factors, id)
   end
 
   def factors_are_primes
@@ -219,7 +219,7 @@ class Wheel < ActiveRecord::Base
         exists = Wheel.exists_for_factors factors
         break if not exists
         maxFactor = factors.max
-        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
+        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break
       end
       
       # save factors

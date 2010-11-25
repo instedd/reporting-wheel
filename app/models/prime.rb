@@ -18,7 +18,6 @@ class Prime
     @@values[index]
   end
   
-  # TODO improve this	
   def self.find_first_smaller_than(n)
     last = 0
     
@@ -29,6 +28,8 @@ class Prime
         break
       end
     end
+    
+    raise "No primes left" if last == 0
     
     last
   end
