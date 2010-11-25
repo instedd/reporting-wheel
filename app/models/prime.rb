@@ -40,4 +40,10 @@ class Prime
     raise "Prime not found"
   end
   
+  def self.max_length
+    # This represents the maximum length of a row. This value is taken because
+    # 17 * values[41] < 1000 and 17 * values[42] >= 1000
+    41
+  end
+  
 end
