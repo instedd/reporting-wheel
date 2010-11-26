@@ -9,13 +9,7 @@
 			$("#" + target).animate({svgTransform: 'rotate(' + value + ',296.8,296.8)'}, 10);
 		}
 		
-		$(function() {			
-			// $(".slider").each(function(index, object) { $("#" + object.id).slider({
-			// 				slide: function(event, ui) { update(object.id, ui.value);},
-			// 				max: 90,
-			// 				min: -90,
-			// 				orientation: "vertical"
-			// 			});});
+		$(function() {
 			$(".slider").slider({
 				slide: function(event, ui) { update(this.id, ui.value); },
 				max: 90,
