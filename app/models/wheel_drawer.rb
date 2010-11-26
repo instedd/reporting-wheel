@@ -79,13 +79,13 @@ class WheelDrawer
       @builder.arc(@@minor_radius, to_rad(60), to_rad(120))
       x, y = point_for_angle(initial_radius, to_rad(-240))
       @builder.line(x, y)
-      @builder.stroke
+      @builder.stroke(@cfg[:stroke_width].to_f)
       
       # draw left boxes (boxes for values)
       rows_count.times do |i|
         dx = (- initial_radius + accumulated_values_width_for_index(i) + i * @cfg[:row_separation].to_f + i * @cfg[:inner_margin].to_f + @cfg[:outer_margin].to_f) - @@small_space
         dy = - @cfg[:field_cover_height].to_f / 2
-        @builder.rect(dx, dy, values_width_for_index(i) + @@small_space, @cfg[:field_cover_height].to_f).stroke
+        @builder.rect(dx, dy, values_width_for_index(i) + @@small_space, @cfg[:field_cover_height].to_f).stroke(@cfg[:stroke_width].to_f)
       end
       
       # draw right box (box for code)
@@ -93,7 +93,7 @@ class WheelDrawer
       height = @cfg[:field_cover_height].to_f
       dx = initial_radius - width - @cfg[:outer_margin].to_f + @@small_space
       dy = - @cfg[:field_cover_height].to_f / 2      
-      @builder.rect(dx, dy, width, height).stroke
+      @builder.rect(dx, dy, width, height).stroke(@cfg[:stroke_width].to_f)
     end
   end
   
@@ -104,7 +104,7 @@ class WheelDrawer
   def draw_back_cover
     radius = @cfg[:initial_radius].to_f
     @builder.translate(radius + @@small_space, radius + @@small_space) do
-      @builder.circle(radius).stroke
+      @builder.circle(radius).stroke(@cfg[:stroke_width].to_f)
       @builder.circle(@@bullseye_size).fill
     end
   end
@@ -115,7 +115,7 @@ class WheelDrawer
     # radius for the right semicircle
     right_radius = @cfg[:initial_radius].to_f - i * @cfg[:codes_width].to_f - i * @cfg[:row_separation].to_f - ( i > 0 ? @cfg[:outer_margin].to_f : 0) - (i > 1 ? (i-1) * @cfg[:inner_margin].to_f : 0)
     
-    @builder.semi_circle(left_radius, right_radius).stroke
+    @builder.semi_circle(left_radius, right_radius).stroke(@cfg[:stroke_width].to_f)
     
     row_values_count = row.values.length
     indexes = (0..row_values_count-1).map{|z| z - row_values_count/2}.reverse

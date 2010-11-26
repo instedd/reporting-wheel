@@ -25,7 +25,8 @@ class CairoBuilder
     self
   end
   
-  def stroke
+  def stroke(line_width)
+    @context.set_line_width(line_width)
     @context.stroke
     self
   end

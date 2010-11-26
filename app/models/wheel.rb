@@ -4,7 +4,7 @@ class Wheel < ActiveRecord::Base
     ['width', 'Width of the generated PDF (in cm)', 22, 0],
     ['height', 'Height of the generated PDF (in cm)', 22, 1],
     ['initial_radius', 'The radius of the biggest disc (in cm)', 10.5, 2],
-    ['stroke_width', 'Stroke with to use when drawing', 3, 3],
+    ['stroke_width', 'Stroke with to use when drawing', 2, 3],
     ['values_font_family', 'Font family to use for the values', 'Garuda', 4],
     ['values_font_size', 'Font size to use for the values', 10, 4.5],
     ['codes_font_family', 'Font family to use for the codes', 'Helvetica', 5],
