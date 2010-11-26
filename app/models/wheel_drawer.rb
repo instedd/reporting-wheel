@@ -1,6 +1,8 @@
 class WheelDrawer
   
   @@minor_radius = 2
+  @@small_space = 0.1
+  @@bullseye_size = 0.1
   
   def initialize(wheel, builder)
     @wheel = wheel
@@ -13,7 +15,7 @@ class WheelDrawer
     
     # draw each row
     @wheel.rows.sort.each_with_index do |row, index|
-      @builder.translate((@cfg[:initial_radius].to_f + 0.1), (@cfg[:initial_radius].to_f + 0.1)) do
+      @builder.translate((@cfg[:initial_radius].to_f + @@small_space), (@cfg[:initial_radius].to_f + @@small_space)) do
         draw_row(row, index)
       end
       @builder.new_page
@@ -40,15 +42,35 @@ class WheelDrawer
     @builder.build
   end
   
+  def draw_preview
+    size = @cfg[:initial_radius].to_f * 2 + 0.2
+    
+    @builder.init(size, size)
+    
+    # draw each row
+    @wheel.rows.sort.each_with_index do |row, index|
+      @builder.translate((@cfg[:initial_radius].to_f + @@small_space), (@cfg[:initial_radius].to_f + @@small_space)) do
+        @builder.group do
+          draw_row(row, index)
+        end
+      end
+    end
+    
+    # draw front cover
+    draw_front_cover
+    
+    @builder.build
+  end
+  
   private
   
   def draw_front_cover
     initial_radius = @cfg[:initial_radius].to_f
     rows_count = @wheel.rows.length
     
-    @builder.translate(initial_radius + 0.1, initial_radius + 0.1) do
+    @builder.translate(initial_radius + @@small_space, initial_radius + @@small_space) do
       # draw bullseye
-      @builder.circle(0.1).fill
+      @builder.circle(@@bullseye_size).fill
       
       # border for cover
       @builder.arc(initial_radius, to_rad(-240), to_rad(60))
@@ -61,16 +83,16 @@ class WheelDrawer
       
       # draw left boxes (boxes for values)
       rows_count.times do |i|
-        dx = (- initial_radius + accumulated_values_width_for_index(i) + i * @cfg[:row_separation].to_f + i * @cfg[:inner_margin].to_f + @cfg[:outer_margin].to_f)
-        dy = (- @cfg[:field_cover_height].to_f / 2 - 0.1)
-        @builder.rect(dx, dy, values_width_for_index(i), @cfg[:field_cover_height].to_f).stroke
+        dx = (- initial_radius + accumulated_values_width_for_index(i) + i * @cfg[:row_separation].to_f + i * @cfg[:inner_margin].to_f + @cfg[:outer_margin].to_f) - @@small_space
+        dy = - @cfg[:field_cover_height].to_f / 2
+        @builder.rect(dx, dy, values_width_for_index(i) + @@small_space, @cfg[:field_cover_height].to_f).stroke
       end
       
       # draw right box (box for code)
-      width = (rows_count * @cfg[:codes_width].to_f + (rows_count - 1) * (@cfg[:row_separation].to_f + @cfg[:inner_margin].to_f))
+      width = (rows_count * @cfg[:codes_width].to_f + (rows_count - 1) * (@cfg[:row_separation].to_f + @cfg[:inner_margin].to_f)) + @@small_space
       height = @cfg[:field_cover_height].to_f
-      dx = initial_radius - width - @cfg[:outer_margin].to_f
-      dy = - @cfg[:field_cover_height].to_f / 2 - 0.1      
+      dx = initial_radius - width - @cfg[:outer_margin].to_f + @@small_space
+      dy = - @cfg[:field_cover_height].to_f / 2      
       @builder.rect(dx, dy, width, height).stroke
     end
   end
@@ -81,9 +103,9 @@ class WheelDrawer
   
   def draw_back_cover
     radius = @cfg[:initial_radius].to_f
-    @builder.translate(radius + 0.1, radius + 0.1) do
+    @builder.translate(radius + @@small_space, radius + @@small_space) do
       @builder.circle(radius).stroke
-      @builder.circle(0.1).fill
+      @builder.circle(@@bullseye_size).fill
     end
   end
   
@@ -113,7 +135,7 @@ class WheelDrawer
     end
     
     # draw bullseye
-    @builder.circle(0.1).fill
+    @builder.circle(@@bullseye_size).fill
   end
   
   def point_for_angle(length, angle_rad)
