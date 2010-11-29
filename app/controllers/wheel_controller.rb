@@ -82,24 +82,37 @@ class WheelController < ApplicationController
     builder = CairoSvgBuilder.new(file)
     drawer = WheelDrawer.new(@wheel, builder)
     drawer.draw_preview
-    @content = File.open(file).read[38..-1]
+    
+    content = File.open(file).read
+    @svg, @center_x, @center_y = prepare_svg content
+    
     render :action => "draw_preview", :content_type => "application/xhtml+xml"
   end
   
   def update_print_configuration
-    @wheel = Wheel.find(params[:id])
-    @wheel.update_attributes(params[:wheel])
+    wheel = Wheel.find(params[:id])
+    wheel.update_attributes(params[:wheel])
     
     file = temp_file
     builder = CairoSvgBuilder.new(file)
-    drawer = WheelDrawer.new(@wheel, builder)
+    drawer = WheelDrawer.new(wheel, builder)
     drawer.draw_preview
-    @content = File.open(file).read[38..-1]
     
-    render :text => @content
+    content = File.open(file).read
+    svg, center_x, center_y = prepare_svg content
+    
+    render :json => {:svg => svg, :center_x => center_x, :center_y => center_y}
   end
   
   private
+  
+  def prepare_svg(svg)
+    svg = svg[38..-1]
+    match = svg.match /1,0,0,1,(\d+\.\d+),(\d+.\d+)/
+    center_x = match[1]
+    center_y = match[2]
+    [svg, center_x, center_y]
+  end
   
   def recalculate_factors(wheel_data)
     # this is ugly, change when ActiveRecord::Dirty supports associations

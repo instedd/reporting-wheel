@@ -3,10 +3,14 @@
 	
 	<%= javascript_include_tag 'jquery-ui-1.8.6.custom.min.js', 'jquery.svg.min', 'jquery.svganim.min' %>
 	
-	<script type="text/javascript">		
+	<script type="text/javascript">
+		var center_x = <%= @center_x %>;
+		var center_y = <%= @center_y %>;
+	
 		function update(id, value) {
 			target = $("#" + id).attr("target");
-			$("#" + target).animate({svgTransform: 'rotate(' + value + ',296.8,296.8)'}, 10);
+			rotation = 'rotate(' + value + ',' + center_x + ',' + center_y + ')';
+			$("#" + target).animate({svgTransform: rotation}, 10);
 		}
 		
 		$(function() {
@@ -26,7 +30,10 @@
 			form = $("#update_form");
 			form_data = form.serialize();
 			$.post('/wheel/update_print_configuration/' + id, form_data, function(data) {
-				$("#svg").html(data);
+				data = eval(data);
+				$("#svg").html(data['svg']);
+				center_x = data['center_x'];
+				center_y = data['center_y'];
 				reset_sliders();
 				$(window).scrollTop($('#svg').offset().top);
 			});
@@ -37,7 +44,7 @@
 	<h4><%= link_to_function 'Wheel preview (click to show/hide)', "toggle('draw_preview')" %></h4>
 	<div id="draw_preview">
 		<div id="svg" style="float: left">
-			<%= @content %>
+			<%= @svg %>
 		</div>
 		<div style="float:left; margin: 30px">
 		<% @wheel.rows.length.times do |i| %>
