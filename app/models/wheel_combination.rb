@@ -48,7 +48,7 @@ class WheelCombination
       @values = codes.map_with_index{|c,i| WheelValue.find_for(@wheel, i, c)}
     
       # replace in message
-      @message[match.begin(1)..match.end(1)-1] = values.map{|v| v.row.label + ":" + v.value}.join(',')
+      @message[match.begin(1)..match.end(1)-1] = values.map{|v| v.row.label + ":" + v.value}.join(', ')
     end while (match = @@regexp.match @message)
   end
   

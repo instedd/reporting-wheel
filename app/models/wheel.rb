@@ -4,11 +4,11 @@ class Wheel < ActiveRecord::Base
     ['width', 'Width of the generated PDF (in cm)', 22, 0],
     ['height', 'Height of the generated PDF (in cm)', 22, 1],
     ['initial_radius', 'The radius of the biggest disc (in cm)', 10.5, 2],
-    ['stroke_width', 'Stroke with to use when drawing', 3, 3],
+    ['stroke_width', 'Stroke with to use when drawing', 2, 3],
     ['values_font_family', 'Font family to use for the values', 'Garuda', 4],
-    ['values_font_size', 'Font size to use for the values', 14, 4.5],
+    ['values_font_size', 'Font size to use for the values', 10, 4.5],
     ['codes_font_family', 'Font family to use for the codes', 'Helvetica', 5],
-    ['codes_font_size', 'Font size to use for the codes', 22, 5.5],
+    ['codes_font_size', 'Font size to use for the codes', 12, 5.5],
     ['values_width', 'Width to reserve for values on discs after the third one (in cm)', 2, 6],
     ['values_width_field_1', 'Width to reserve for values on the first (biggest) disc (in cm)', 4, 7],
     ['values_width_field_2', 'Width to reserve for values on the second disc (in cm)', 1, 8], 
@@ -30,13 +30,15 @@ class Wheel < ActiveRecord::Base
   
   attr_accessor :dont_use_cover_image_file
   attr_accessor :dont_use_success_voice_file
+  attr_accessor :recalculate_factors 
   
   serialize :render_configuration, Hash
   
-  validates_presence_of :name, :factors
-  validates_uniqueness_of :name
+  validates_presence_of :name, :message => "Name can't be blank"
+  validates_presence_of :factors
+  validates_uniqueness_of :name, :message => "The name is already taken, please choose another name"
   
-  validates_length_of :wheel_rows, :minimum => 1
+  validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
   accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
@@ -106,6 +108,17 @@ class Wheel < ActiveRecord::Base
     absolute cover_image_path
   end
   
+  def recalculate_factors?(rows_length)
+    # check number of rows
+    return true if self.rows.length != rows_length.length
+    # check number of values per row
+    self_values_per_row = self.rows.map{|r| r.values.length}
+    self.rows.length.times do |i|
+      return true if rows_length[i] > self_values_per_row[i]
+    end
+    false
+  end
+  
   private
   
   def save_success_voice
@@ -136,14 +149,6 @@ class Wheel < ActiveRecord::Base
     FileUtils.mkdir_p(absolute(images_directory))
     
     File.open(absolute_path, "w") { |f| f.write(self[:cover_image].read); }
-    
-    # Convert image to jpg
-    begin
-      img = Magick::ImageList.new absolute_path
-      img.write absolute_path
-    rescue => ex
-      Rails.logger.warn "Couldn't transform image to JPG: #{ex}"
-    end
   end
   
   def absolute(path)
@@ -167,14 +172,14 @@ class Wheel < ActiveRecord::Base
   end
   
   def images_path(name)
-    "#{images_directory}/#{name}.jpg"
+    "#{images_directory}/#{name}.png"
   end
   
   def uniqueness_of_factors
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:factors, "There is another wheel with the same factors") if Wheel.exists_for_factors(factors, id)
+    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors(factors, id)
   end
 
   def factors_are_primes
@@ -189,7 +194,7 @@ class Wheel < ActiveRecord::Base
   
   def callback_is_url
     return if url_callback.nil? or url_callback.empty?
-    errors.add(:url_callback, "Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
+    errors.add(:url_callback, "URL Callback must be a valid URL") if @@url_regexp.match(url_callback).nil?
   end
   
   def length_of_factors_and_rows
@@ -201,7 +206,7 @@ class Wheel < ActiveRecord::Base
 
   def calculate_factors
     # Keep old factors when updating a wheel
-    if new_record?
+    if new_record? || recalculate_factors
       rows_count = rows.map{|r| r.values.length}
       
       # check that there isnt a row with no values, otherwise we will divide by 0
@@ -214,7 +219,7 @@ class Wheel < ActiveRecord::Base
         exists = Wheel.exists_for_factors factors
         break if not exists
         maxFactor = factors.max
-        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor
+        factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break
       end
       
       # save factors
@@ -237,4 +242,5 @@ class Wheel < ActiveRecord::Base
     ceiling = @@max_field_code / (Prime.value_for(count-1))
     Prime.find_first_smaller_than ceiling
   end
+  
 end

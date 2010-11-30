@@ -1,11 +1,10 @@
-<%= f.error_messages %>
+<%= f.error_messages :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"] %>
 
 <%= render :partial => 'general', :locals => {:f => f} %>
 <%= render :partial => 'values', :locals => {:f => f} %>
 <%= render :partial => 'print_configuration', :locals => {:f => f} %>
-<%= render :partial => 'cover', :locals => {:f => f} %>
+<% unless @wheel.new_record? %>
+	<%= render :partial => 'cover', :locals => {:f => f} %>
+<% end %>
 <%= render :partial => 'sms_interaction', :locals => {:f => f} %>
 <%= render :partial => 'voice_interaction', :locals => {:f => f} %>
-<p>
-	<%= f.submit @wheel.new_record? ? "Create" : "Update" %>
-</p>

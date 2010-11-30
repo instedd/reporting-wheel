@@ -1,6 +1,7 @@
-<h2>Records for wheel <%= @wheel.name %></h2>
+<h4>Records for Wheel <%= @wheel.name %></h4>
 
-<table border="1">
+<% unless @records.empty? %>
+<table>
 	<tr>
 		<th>Date</th>
 		<th>Code</th>
@@ -18,5 +19,8 @@
 		</tr>
 	<% end %>
 </table>
+<% else %>
+<p><strong>There aren't any records yet for this wheel</strong></p>
+<% end %>
 <br/>
 <%= link_to 'Go back', root_url %>
