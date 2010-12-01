@@ -22,6 +22,11 @@ a:hover { color: #fff; background-color:#000; }
   display: table;
 }
 
+.clear {
+	clear: both;
+	height: 0px;
+}
+
 #errorExplanation {
   width: 400px;
   border: 2px solid red;
@@ -136,7 +141,14 @@ acronym {
 }
 
 #header h1 {
-	font-size: 15pt;
+	font-size: 18pt;
+	float: left;
+}
+
+#header h2 {
+	font-size: 12pt;
+	text-align: right;
+	float: right;
 }
 
 #header h1 a {

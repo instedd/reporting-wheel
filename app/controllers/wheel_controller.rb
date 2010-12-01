@@ -1,6 +1,6 @@
 require 'tempfile'
 
-class WheelController < ApplicationController
+class WheelController < AuthController
   
   before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :edit, :update, :show, :delete, :should_recalculate]
   
