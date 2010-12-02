@@ -3,6 +3,7 @@ module ErrorsHelper
       options = params.extract_options!.symbolize_keys
       
       exclude = options[:exclude] || []
+      show_fields = options[:show_fields].nil? ? true : options[:show_fields]
 
       if object = options.delete(:object)
         objects = Array.wrap(object)
@@ -33,7 +34,12 @@ module ErrorsHelper
           end
           
           message = options.include?(:message) ? options[:message] : locale.t(:body)
-          error_messages = objects.sum {|object| error_messages(object.errors,exclude).map {|msg| content_tag(:li, ERB::Util.html_escape(msg)) }}.join.html_safe
+          
+          if show_fields
+            error_messages = objects.sum {|object| object.errors.full_messages.map {|msg| content_tag(:li, ERB::Util.html_escape(msg)) } }.join.html_safe
+          else
+            error_messages = objects.sum {|object| error_messages(object.errors,exclude).map {|msg| content_tag(:li, ERB::Util.html_escape(msg)) }}.join.html_safe
+          end
           
           contents = ''
           contents << content_tag(options[:header_tag] || :h2, header_message) unless header_message.blank?
