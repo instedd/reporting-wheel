@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101201192747) do
+ActiveRecord::Schema.define(:version => 20101202155739) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20101201192747) do
     t.string   "url_callback"
     t.string   "ok_text"
     t.text     "render_configuration"
+    t.integer  "user_id"
   end
 
 end

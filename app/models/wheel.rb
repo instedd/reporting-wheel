@@ -27,6 +27,7 @@ class Wheel < ActiveRecord::Base
   @@url_regexp = Regexp.new('((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))', Regexp::IGNORECASE)
   
   has_many :wheel_rows, :dependent => :destroy
+  belongs_to :user
   
   attr_accessor :dont_use_cover_image_file
   attr_accessor :dont_use_success_voice_file
