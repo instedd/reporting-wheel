@@ -17,6 +17,8 @@ class WheelTest < ActiveSupport::TestCase
     
     @wheel.stubs(:calculate_factors).returns(nil)
     
+    @wheel.user = User.make
+    
     FileUtils.mkdir_p DIR_PATH
   end
   
@@ -225,6 +227,7 @@ class WheelTest < ActiveSupport::TestCase
   test "when saving keep same factors" do
     wheel = Wheel.new
     wheel.name = 'new wheel'
+    wheel.user = User.make
     defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
     defaults.each_with_index do |values, index| 
       row = wheel.rows.build
