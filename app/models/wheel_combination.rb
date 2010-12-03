@@ -1,6 +1,8 @@
 # Represents a particular combination of a wheel. That is, a wheel
 # with some values selected.
 class WheelCombination
+  # This regexp matches consecutives groups of 3 digits
+  # (not a digit or the beggining of the string) - ((three digits) one or more times) - (not a digit or the end of the string)
   @@regexp = /(?:[^\d]|^)((?:\d\d\d)+)(?:[^\d]|$)/
 
   # The wheel of this combination
@@ -18,7 +20,7 @@ class WheelCombination
   # A human readable message of this combination
   attr_reader :message
   
-  def initialize(body, metadata = {})
+  def initialize(user, body, metadata = {})
     match = @@regexp.match body
     raise "No wheel code present in the message" unless match
    
@@ -35,7 +37,7 @@ class WheelCombination
     factors = extract_codes(digits).map{|c| Prime.factorize c}
     
     # find wheel
-    @wheel = Wheel.find_for_factors factors
+    @wheel = Wheel.find_for_factors_and_user factors, user
     raise "Wheel not found" if @wheel.nil?
     
     # Decoding

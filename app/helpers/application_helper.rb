@@ -22,7 +22,7 @@ module ApplicationHelper
   end
   
   def decode_url
-    url = url_for :only_path => false, :controller => 'decode', :action => 'wheel'
+    url = url_for :only_path => false, :controller => 'decode', :action => 'wheel', :key => current_user.submit_url_key
     url.gsub(/\?.*/,"")
   end
 end

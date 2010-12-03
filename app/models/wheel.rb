@@ -52,8 +52,8 @@ class Wheel < ActiveRecord::Base
   before_save :save_success_voice
   before_save :save_cover_image
   
-  def self.find_for_factors(factors)
-    Wheel.find :first, :conditions => {:factors => factors.join(',')}
+  def self.find_for_factors_and_user(factors, user)
+    Wheel.find :first, :conditions => {:factors => factors.join(','), :user_id => user.id}
   end
   
   def self.exists_for_factors(factors, except_id = nil)
