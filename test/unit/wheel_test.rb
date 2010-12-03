@@ -54,7 +54,7 @@ class WheelTest < ActiveSupport::TestCase
     assert @wheel.save
   end
   
-  [:name, :factors].each do |field|
+  [:name, :factors, :user].each do |field|
     test "should validate presence of #{field}" do
       @wheel.send("#{field}=", nil)
       assert !@wheel.valid?
