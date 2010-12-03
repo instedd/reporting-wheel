@@ -37,7 +37,7 @@ class Wheel < ActiveRecord::Base
   
   validates_presence_of :name, :message => "Name can't be blank"
   validates_presence_of :factors
-  validates_uniqueness_of :name, :message => "The name is already taken, please choose another name"
+  validates_uniqueness_of :name, :scope => :user_id, :message => "The name is already taken, please choose another name"
   
   validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
