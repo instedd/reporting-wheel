@@ -1,23 +1,27 @@
 require 'test_helper'
 
 class WheelCombinationTest < ActiveSupport::TestCase
+  
+  def setup
+    @user = User.make
+  end
 
   test "should fail if the body has no wheel code" do
-    assert_decode_fails 'foo', 'No wheel code present in the message'
+    assert_decode_fails @user, 'foo', 'No wheel code present in the message'
   end
   
   test "should fail if wheel code length is not multiple of 3" do
-    assert_decode_fails '12345', 'No wheel code present in the message'
+    assert_decode_fails @user, '12345', 'No wheel code present in the message'
   end
   
   test "should fail if wheel is not found" do
-    assert_decode_fails '123456789', 'Wheel not found'
+    assert_decode_fails @user, '123456789', 'Wheel not found'
   end
   
   test "should succeed with appropiate values" do
     setup_valid_request
     
-    wheel_combination = WheelCombination.new @wheel_code, {}
+    wheel_combination = WheelCombination.new @user, @wheel_code, {}
     wheel_combination.record!
     
     assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3', wheel_combination.message 
@@ -26,7 +30,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
   test "should decode inline codes" do
     setup_valid_request
     
-    wheel_combination = WheelCombination.new("017017023,Label4:Value4,Label5:Value5")
+    wheel_combination = WheelCombination.new @user, "017017023,Label4:Value4,Label5:Value5"
     wheel_combination.record!
     
     assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3,Label4:Value4,Label5:Value5', wheel_combination.message
@@ -35,7 +39,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
   test "should decode all codes present in the body" do
     setup_valid_request
     
-    wheel_combination = WheelCombination.new("017017023 017017023")
+    wheel_combination = WheelCombination.new @user, "017017023 017017023"
     wheel_combination.record!
     
     assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3 Label1:Value1, Label2:Value2, Label3:Value3', wheel_combination.message
@@ -44,7 +48,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
   test "should enqueue a decode callback job" do
     setup_valid_request
     
-    wheel_combination = WheelCombination.new @wheel_code, {'foo' => 'bar'}
+    wheel_combination = WheelCombination.new @user, @wheel_code, {'foo' => 'bar'}
     wheel_combination.record!
     
     jobs = Delayed::Job.all
@@ -74,7 +78,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
     values = wheel_data.map{|d| mock()}
     codes = wheel_data.map{|d| d[:code]}
     
-    Wheel.stubs(:find_for_factors).with(codes).returns(wheel)
+    Wheel.stubs(:find_for_factors_and_user).with(codes, @user).returns(wheel)
     
     wheel_data.each_with_index do |d, index|
       WheelValue.stubs(:find_for).with(wheel,index,d[:code]).returns(values[index])
@@ -91,9 +95,9 @@ class WheelCombinationTest < ActiveSupport::TestCase
     end
   end
   
-  def assert_decode_fails(wheel_code, expected_error_message)
+  def assert_decode_fails(user, wheel_code, expected_error_message)
     exception = assert_raise RuntimeError do
-      wheel_combination = WheelCombination.new wheel_code, {}
+      wheel_combination = WheelCombination.new user, wheel_code, {}
     end
     
     assert_equal expected_error_message, exception.message

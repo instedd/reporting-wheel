@@ -9,7 +9,9 @@ class DecodeController < ApplicationController
       body = request.raw_post
       metadata = request.query_parameters
       
-      comb = WheelCombination.new body, metadata
+      user = User.find_by_submit_url_key params[:key]
+      
+      comb = WheelCombination.new user, body, metadata
       comb.record!
       
       # Add GeoChat response headers

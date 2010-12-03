@@ -27,6 +27,7 @@ class Wheel < ActiveRecord::Base
   @@url_regexp = Regexp.new('((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))', Regexp::IGNORECASE)
   
   has_many :wheel_rows, :dependent => :destroy
+  belongs_to :user
   
   attr_accessor :dont_use_cover_image_file
   attr_accessor :dont_use_success_voice_file
@@ -36,7 +37,8 @@ class Wheel < ActiveRecord::Base
   
   validates_presence_of :name, :message => "Name can't be blank"
   validates_presence_of :factors
-  validates_uniqueness_of :name, :message => "The name is already taken, please choose another name"
+  validates_presence_of :user, :message => nil
+  validates_uniqueness_of :name, :scope => :user_id, :message => "The name is already taken, please choose another name"
   
   validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
@@ -51,12 +53,12 @@ class Wheel < ActiveRecord::Base
   before_save :save_success_voice
   before_save :save_cover_image
   
-  def self.find_for_factors(factors)
-    Wheel.find :first, :conditions => {:factors => factors.join(',')}
+  def self.find_for_factors_and_user(factors, user)
+    Wheel.find :first, :conditions => {:factors => factors.join(','), :user_id => user.id}
   end
   
-  def self.exists_for_factors(factors, except_id = nil)
-    conditions = ["factors = ?", factors.join(',')]
+  def self.exists_for_factors_and_user(factors, user, except_id = nil)
+    conditions = ["factors = ? AND user_id = ?", factors.join(','), user.id]
     
     if except_id
       conditions[0] << " AND id != ?"
@@ -179,7 +181,7 @@ class Wheel < ActiveRecord::Base
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors(factors, id)
+    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors_and_user(factors, user, id)
   end
 
   def factors_are_primes
@@ -216,7 +218,7 @@ class Wheel < ActiveRecord::Base
       
       # TODO improve this
       while true do
-        exists = Wheel.exists_for_factors factors
+        exists = Wheel.exists_for_factors_and_user factors, user
         break if not exists
         maxFactor = factors.max
         factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break

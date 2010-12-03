@@ -30,7 +30,7 @@ class WheelValueTest < ActiveSupport::TestCase
   end
   
   test "should find a WheelValue by its Wheel, Row Index and Code" do
-    wheel = Wheel.new :name => 'Test Wheel'
+    wheel = Wheel.new :name => 'Test Wheel', :user => User.make
     row = wheel.rows.build
     row.label = 'Test Row'
     row.values << @wheel_value
