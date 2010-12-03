@@ -14,7 +14,25 @@ Sham.define do
 end
 
 User.blueprint do
-  username { Sham.username }
-  password { Sham.password }
+  username
+  password
   password_confirmation { password }
+end
+
+Wheel.blueprint do
+  name { Sham.username }
+  user
+  wheel_rows { 3.times.map {WheelRow.make_unsaved} }
+end
+
+WheelRow.blueprint do
+  label { Sham.username }
+  index {1}
+  wheel_values { 3.times.map {WheelValue.make_unsaved} }
+end
+
+WheelValue.blueprint do
+  index {1}
+  code {1}
+  value { Sham.username }
 end

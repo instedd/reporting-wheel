@@ -57,8 +57,8 @@ class Wheel < ActiveRecord::Base
     Wheel.find :first, :conditions => {:factors => factors.join(','), :user_id => user.id}
   end
   
-  def self.exists_for_factors(factors, except_id = nil)
-    conditions = ["factors = ?", factors.join(',')]
+  def self.exists_for_factors_and_user(factors, user, except_id = nil)
+    conditions = ["factors = ? AND user_id = ?", factors.join(','), user.id]
     
     if except_id
       conditions[0] << " AND id != ?"
@@ -181,7 +181,7 @@ class Wheel < ActiveRecord::Base
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors(factors, id)
+    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors_and_user(factors, user, id)
   end
 
   def factors_are_primes
@@ -218,7 +218,7 @@ class Wheel < ActiveRecord::Base
       
       # TODO improve this
       while true do
-        exists = Wheel.exists_for_factors factors
+        exists = Wheel.exists_for_factors_and_user factors, user
         break if not exists
         maxFactor = factors.max
         factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break

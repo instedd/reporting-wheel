@@ -54,7 +54,7 @@ class WheelTest < ActiveSupport::TestCase
     assert @wheel.save
   end
   
-  [:name, :factors, :user].each do |field|
+  [:name, :factors].each do |field|
     test "should validate presence of #{field}" do
       @wheel.send("#{field}=", nil)
       assert !@wheel.valid?
@@ -65,6 +65,7 @@ class WheelTest < ActiveSupport::TestCase
     @wheel.save
     
     @wheel2 = Wheel.new :name => 'Test Wheel', :factors => [19].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
+    @wheel2.user = @wheel.user
     row1 = @wheel2.rows.build
     row1.stubs(:valid?).returns(true)
     
@@ -79,7 +80,7 @@ class WheelTest < ActiveSupport::TestCase
   end
   
   test "should validate uniqueness of factors" do
-    Wheel.expects(:exists_for_factors).returns(true)
+    Wheel.expects(:exists_for_factors_and_user).returns(true)
     assert !@wheel.valid?
   end
   
@@ -103,6 +104,7 @@ class WheelTest < ActiveSupport::TestCase
   
   test "should calculate factors and update rows and values when saved" do
     wheel = Wheel.new :name => 'Save Test Wheel'
+    wheel.user = User.make
     
     row1 = wheel.rows.build
     row1.label = 'Label 1'
@@ -134,7 +136,7 @@ class WheelTest < ActiveSupport::TestCase
       wheel.expects(:get_best_factor).with(r.values.length).returns(factors[i])
     end
     wheel.stubs(:uniqueness_of_factors).returns(nil)
-    Wheel.expects(:exists_for_factors).with(factors).returns(false)
+    Wheel.expects(:exists_for_factors_and_user).with(factors, wheel.user).returns(false)
     
     wheel.save
     
@@ -252,4 +254,13 @@ class WheelTest < ActiveSupport::TestCase
       end
     end
   end
+  
+  test "should let two wheel with same factors and different user" do
+    wheel1 = Wheel.make
+    wheel2 = Wheel.make
+    
+    assert_equal wheel1.factors, wheel2.factors
+    assert_not_equal wheel1.user.username, wheel2.user.username
+  end
+  
 end
