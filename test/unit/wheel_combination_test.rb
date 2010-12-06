@@ -4,6 +4,8 @@ class WheelCombinationTest < ActiveSupport::TestCase
   
   def setup
     @user = User.make
+    @wheel = Wheel.make :user => @user
+    @code = @wheel.rows.inject(""){|s,r| s + r.values.first.code.to_s}
   end
 
   test "should fail if the body has no wheel code" do
@@ -19,36 +21,37 @@ class WheelCombinationTest < ActiveSupport::TestCase
   end
   
   test "should succeed with appropiate values" do
-    setup_valid_request
+    code, values = code_and_values(@wheel)
     
-    wheel_combination = WheelCombination.new @user, @wheel_code, {}
+    wheel_combination = WheelCombination.new @user, code
     wheel_combination.record!
     
-    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3', wheel_combination.message 
+    assert_equal values, wheel_combination.message 
   end
   
   test "should decode inline codes" do
-    setup_valid_request
+    code, values = code_and_values(@wheel)
     
-    wheel_combination = WheelCombination.new @user, "017017023,Label4:Value4,Label5:Value5"
+    wheel_combination = WheelCombination.new @user, "#{code},Label4:Value4,Label5:Value5"
     wheel_combination.record!
     
-    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3,Label4:Value4,Label5:Value5', wheel_combination.message
+    assert_equal "#{values},Label4:Value4,Label5:Value5", wheel_combination.message
   end
   
   test "should decode all codes present in the body" do
-    setup_valid_request
+    code, values = code_and_values(@wheel)
     
-    wheel_combination = WheelCombination.new @user, "017017023 017017023"
+    wheel_combination = WheelCombination.new @user, "#{code} #{code}"
     wheel_combination.record!
     
-    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3 Label1:Value1, Label2:Value2, Label3:Value3', wheel_combination.message
+    assert_equal "#{values} #{values}", wheel_combination.message
   end
   
   test "should enqueue a decode callback job" do
-    setup_valid_request
+    wheel = Wheel.make :user => @user, :url_callback => "http://www.domain.com/some/url"
+    code, values = code_and_values(wheel)
     
-    wheel_combination = WheelCombination.new @user, @wheel_code, {'foo' => 'bar'}
+    wheel_combination = WheelCombination.new @user, code, {'foo' => 'bar'}
     wheel_combination.record!
     
     jobs = Delayed::Job.all
@@ -58,42 +61,20 @@ class WheelCombinationTest < ActiveSupport::TestCase
     job = YAML::load job.handler
     assert_equal 'DecodeCallbackJob', job.class.to_s
     assert_equal 'http://www.domain.com/some/url', job.url
-    assert_equal 'Label1:Value1, Label2:Value2, Label3:Value3', job.body
+    assert_equal values, job.body
     assert_equal ({'foo' => 'bar'}), job.query_parameters
   end
   
+  test "should look for the code in the entire message" do
+    code, values = code_and_values(@wheel)
+    
+    wheel_combination = WheelCombination.new @user, "123 #{code}"
+    
+    assert_equal @wheel, wheel_combination.wheel
+    assert_equal "123 #{values}", wheel_combination.message
+  end
+  
   private
-  
-  def setup_valid_request
-    wheel_data = [{:code => 23, :label => 'Label1', :value => 'Value1'},
-                  {:code => 17, :label => 'Label2', :value => 'Value2'},
-                  {:code => 17, :label => 'Label3', :value => 'Value3'}]
-    @wheel_code = '017017023'
-    setup_wheel(wheel_data, 'http://www.domain.com/some/url')
-  end
-  
-  def setup_wheel(wheel_data, callback = nil)
-    wheel = mock()
-    rows = wheel_data.map{|d| mock()}
-    values = wheel_data.map{|d| mock()}
-    codes = wheel_data.map{|d| d[:code]}
-    
-    Wheel.stubs(:find_for_factors_and_user).with(codes, @user).returns(wheel)
-    
-    wheel_data.each_with_index do |d, index|
-      WheelValue.stubs(:find_for).with(wheel,index,d[:code]).returns(values[index])
-      values[index].stubs(:row).returns(rows[index])
-      rows[index].stubs(:label).returns(d[:label])
-      values[index].stubs(:value).returns(d[:value])
-    end
-    
-    WheelRecord.expects(:create!).returns(nil)
-    
-    wheel.expects(:has_callback?).returns(!callback.nil?)
-    unless callback.nil?
-      wheel.expects(:url_callback).returns(callback)
-    end
-  end
   
   def assert_decode_fails(user, wheel_code, expected_error_message)
     exception = assert_raise RuntimeError do
@@ -101,6 +82,19 @@ class WheelCombinationTest < ActiveSupport::TestCase
     end
     
     assert_equal expected_error_message, exception.message
+  end
+  
+  def code_and_values(wheel)
+    codes = []
+    values = []
+    wheel.rows.sort.each do |row|
+      index = rand(row.values.length)
+      value = row.values[index]
+      codes << value.code
+      values << row.label + ":" + value.value
+    end
+    
+    [codes.reverse.join,values.join(', ')]
   end
 
 
