@@ -122,6 +122,10 @@ class Wheel < ActiveRecord::Base
     false
   end
   
+  def values_for(codes)
+    codes.map_with_index{|c,i| WheelValue.find_for(self, i, c)}
+  end
+  
   private
   
   def save_success_voice

@@ -37,7 +37,7 @@ class WheelCombination
       codes = extract_codes(match[1])
       
       # find values
-      values = codes.map_with_index{|c,i| WheelValue.find_for(@wheel, i, c)}
+      values = @wheel.values_for(codes)
 
       if (values.length == @wheel_size) && (!values.include?(nil))
         end_pos = match.begin(1) - 1
