@@ -1,4 +1,4 @@
-<%= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"] %>
+<%= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"], :header_message => nil %>
 
 <%= render :partial => 'general', :locals => {:f => f} %>
 <%= render :partial => 'values', :locals => {:f => f} %>
