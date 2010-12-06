@@ -1,25 +1,25 @@
 class Wheel < ActiveRecord::Base
 
   DefaultRenderConfigurationWithDescriptions = [
-    ['width', 'Width of the generated PDF (in cm)', 22, 0],
-    ['height', 'Height of the generated PDF (in cm)', 22, 1],
-    ['initial_radius', 'The radius of the biggest disc (in cm)', 10.5, 2],
-    ['stroke_width', 'Stroke with to use when drawing', 2, 3],
-    ['values_font_family', 'Font family to use for the values', 'Garuda', 4],
-    ['values_font_size', 'Font size to use for the values', 10, 4.5],
-    ['codes_font_family', 'Font family to use for the codes', 'Helvetica', 5],
-    ['codes_font_size', 'Font size to use for the codes', 12, 5.5],
-    ['values_width', 'Width to reserve for values on discs after the third one (in cm)', 2, 6],
-    ['values_width_field_1', 'Width to reserve for values on the first (biggest) disc (in cm)', 4, 7],
-    ['values_width_field_2', 'Width to reserve for values on the second disc (in cm)', 1, 8], 
-    ['values_width_field_3', 'Width to reserve for values on the third (smallest) disc (in cm)', 1, 9],
-    ['codes_width', 'Width to reserve for codes in any disc (in cm)', 1, 10],
-    ['angle_separation', 'Angles to use when separating each value/code (in degrees)', 4, 11],
-    ['angle_modifier', 'Angles to use when separating each value/code for successive wheels (it\'s added, in degress)', 2, 12],    
-    ['row_separation', 'Separation from text to the next wheel disc (in cm)', 0.1, 13],
-    ['field_cover_height', 'Height of the boxes in the cover to show the values/codes (in cm)', 0.8, 14],    
-    ['outer_margin', 'Separation of text from disc border for the biggest disc (in cm)', 0.5, 15],
-    ['inner_margin', 'Separation of text from disc border for the other discs (in cm)', 0.2, 16]    
+    [:width, 'Width of the generated PDF (in cm)', 22, 0],
+    [:height, 'Height of the generated PDF (in cm)', 22, 1],
+    [:initial_radius, 'The radius of the biggest disc (in cm)', 10.5, 2],
+    [:stroke_width, 'Stroke with to use when drawing', 2, 3],
+    [:values_font_family, 'Font family to use for the values', 'Garuda', 4],
+    [:values_font_size, 'Font size to use for the values', 10, 4.5],
+    [:codes_font_family, 'Font family to use for the codes', 'Helvetica', 5],
+    [:codes_font_size, 'Font size to use for the codes', 12, 5.5],
+    [:values_width, 'Width to reserve for values on discs after the third one (in cm)', 2, 6],
+    [:values_width_field_1, 'Width to reserve for values on the first (biggest) disc (in cm)', 4, 7],
+    [:values_width_field_2, 'Width to reserve for values on the second disc (in cm)', 1, 8], 
+    [:values_width_field_3, 'Width to reserve for values on the third (smallest) disc (in cm)', 1, 9],
+    [:codes_width, 'Width to reserve for codes in any disc (in cm)', 1, 10],
+    [:angle_separation, 'Angles to use when separating each value/code (in degrees)', 4, 11],
+    [:angle_modifier, 'Angles to use when separating each value/code for successive wheels (it\'s added, in degress)', 2, 12],    
+    [:row_separation, 'Separation from text to the next wheel disc (in cm)', 0.1, 13],
+    [:field_cover_height, 'Height of the boxes in the cover to show the values/codes (in cm)', 0.8, 14],    
+    [:outer_margin, 'Separation of text from disc border for the biggest disc (in cm)', 0.5, 15],
+    [:inner_margin, 'Separation of text from disc border for the other discs (in cm)', 0.2, 16]    
   ].inject([]) {|m, o| m << {:key => o[0], :description => o[1], :value => o[2], :order => o[3]}; m }
   DefaultRenderConfiguration = DefaultRenderConfigurationWithDescriptions.inject({}) {|m, o| m[o[:key]] = o[:value]; m}
   
@@ -83,11 +83,12 @@ class Wheel < ActiveRecord::Base
   
   def render_configuration
     cfg = self[:render_configuration] || Hash.new
+    cfg = cfg.symbolize_keys
     # This is to support future removal of keys/values
     cfg.each{|k, v| cfg.delete k unless DefaultRenderConfiguration.has_key? k} 
     # This is to support future additional of keys/values
     DefaultRenderConfiguration.each{|k, v| cfg[k] = cfg[k] || v}
-    cfg
+    cfg.to_struct
   end
   
   def success_voice_file=(value)
