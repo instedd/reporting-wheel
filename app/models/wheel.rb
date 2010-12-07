@@ -219,7 +219,7 @@ class Wheel < ActiveRecord::Base
       # check that there isnt a row with no values, otherwise we will divide by 0
       return if rows_count.min == 0
       
-      factors = rows_count.map{|c| get_best_factor(c)}
+      factors = rows_count.map{|c| get_best_factor(c)} rescue return
       
       # TODO improve this
       while true do
