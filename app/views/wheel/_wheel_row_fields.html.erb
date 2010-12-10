@@ -1,3 +1,29 @@
+<div class="label_box">
+
+	<div class="delete_box">
+		<%= link_to_remove_label f %>
+	</div><!-- /delete_box -->
+    
+    <div class="title_three">
+		<%= f.object.label %>
+		<%= f.hidden_field :label %>
+	</div><!-- /title_three -->
+    
+    <div class="left">
+		<input type="text" class="smallsize" placeholder="Add Value" />
+		<%= link_to_add_value "Add value", f, :wheel_values %>
+	</div><!-- /left -->  
+    
+	<div class="values">
+		<% f.fields_for :wheel_values do |builder| %>
+			<%= render 'wheel_value_fields', :f => builder %>
+		<% end %>
+    </div><!-- /values -->                        
+    
+    <div class="clear"></div><!-- /clear -->
+
+</div><!-- /label_box -->
+<!-->
 <div class="fields">
 	<p>
 		<%= f.label :label %><br/>
@@ -11,3 +37,4 @@
 	<p><%= link_to_add_fields "Add Value", f, :wheel_values %></p>
 	</div>
 </div>
+<-->

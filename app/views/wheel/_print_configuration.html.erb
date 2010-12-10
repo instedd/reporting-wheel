@@ -1,6 +1,4 @@
-<h4><%= link_to_function 'Print configuration (click to show/hide)', "toggle('print_configuration')" %></h4>
-
-<div id="print_configuration" style="display:none">
+<div id="print_configuration">
 <% f.fields_for :render_configuration do |c| %>
   <% @wheel.render_configuration.to_a.sort_by{|x| Wheel.render_configuration_order x[0] }.each do |key, value| %>
     <p>

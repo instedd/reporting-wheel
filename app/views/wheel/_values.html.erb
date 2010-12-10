@@ -1,12 +1,15 @@
-<h4><%= link_to_function 'Values to report', "toggle('values_to_report')" %></h4>
+<div id="labels">
+	<div class="title_two">Each label with its values will be printed in a disc of a wheel.</div><!-- /title_two -->
 
-<div id="values_to_report">
+	<div>
+		Label<br />
+		<input type="text" class="medsize" id="label_name" placeholder="Enter a new label" />
+		<%= button_to_add_label "Add Label", f, :wheel_rows %>
+	</div>
 
-<div class="description">Each label with its values will be printed in a disc of a wheel.</div>
+	<br/>
 
-<% f.fields_for :wheel_rows do |builder| %>
-	<%= render 'wheel_row_fields', :f => builder %>
-<% end %>
-<p><%= link_to_add_fields "Add label", f, :wheel_rows %></p>
-
+	<% f.fields_for :wheel_rows do |builder| %>
+		<%= render 'wheel_row_fields', :f => builder %>
+	<% end %>
 </div>

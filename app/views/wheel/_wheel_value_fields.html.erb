@@ -1,7 +1,5 @@
-<div class="fields">
-	<p>
-		<%= f.label :value %>
-		<%= f.text_field :value %>
-		<%= link_to_remove_fields "remove", f %>
-	</p>
-</div>
+<span>
+	<%= f.object.value %> 
+	<%= f.hidden_field :value %>	
+	<%= link_to_remove_value f %>
+</span>
