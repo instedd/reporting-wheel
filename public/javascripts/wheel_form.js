@@ -1,6 +1,9 @@
 $(function(){
 	$("#Main_Table").tabs();
 	prepare_events();
+	$("#submit").click(function(){
+		$("#wheel_form").submit();
+	});
 });
 
 function prepare_events() {
@@ -59,7 +62,7 @@ function add_value(link, association, content) {
 }
 
 function should_recalculate_factors(id) {
-	form = $('#edit_form');
+	form = $('#wheel_form');
 	form_data = form.serialize();
 	$.post('/wheel/should_recalculate/' + id, form_data, function(data) {
 		response = eval(data);

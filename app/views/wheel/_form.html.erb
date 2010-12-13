@@ -60,7 +60,11 @@
     
     <div class="butt_create">
 		<%= link_to '<span class="butt_cancel"></span>', :controller => :wheel, :action => :index %>
-    	<a href="#"><span class="butt_create_wheel"></span></a>
+		<% if @wheel.new_record? %>
+    		<a id="submit"><span class="butt_create_wheel"></span></a>
+		<% else %>
+			<%= button_to_function 'Update', "should_recalculate_factors(#{@wheel.id})" %>
+		<% end %>
     </div><!-- /butt_create -->            
 
 
