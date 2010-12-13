@@ -1,11 +1,11 @@
 require 'tempfile'
 
-class WheelController < ApplicationController
+class WheelController < AuthController
   
   before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :edit, :update, :show, :delete, :should_recalculate]
   
   def index
-    @wheels = Wheel.all
+    @wheels = Wheel.find(:all, :conditions => {:user_id => current_user.id})
   end
   
   def new
@@ -25,6 +25,7 @@ class WheelController < ApplicationController
   
   def create
     @wheel = Wheel.new(params[:wheel])
+    @wheel.user = current_user
     
     if @wheel.save
       flash[:notice] = "Wheel \"#{@wheel.name}\" created"
@@ -107,7 +108,9 @@ class WheelController < ApplicationController
   private
   
   def prepare_svg(svg)
+    # remove xml header from svg content
     svg = svg[38..-1]
+    # capture center of translation so we know where is the center of the wheel
     match = svg.match /1,0,0,1,(\d+\.\d+),(\d+.\d+)/
     center_x = match[1]
     center_y = match[2]
@@ -115,13 +118,13 @@ class WheelController < ApplicationController
   end
   
   def recalculate_factors(wheel_data)
-    # this is ugly, change when ActiveRecord::Dirty supports associations
+    # TODO: this is ugly, change when ActiveRecord::Dirty supports associations
     row_lengths = wheel_data['wheel_rows_attributes'].select{|k,v|v['_destroy'] != '1'}.map{|k,v|v['wheel_values_attributes'].select{|k,v|v['_destroy'] != '1'}.length}
     @wheel.recalculate_factors? row_lengths
   end
     
   def find_wheel
-    @wheel = Wheel.find_by_id params[:id], :include => {:wheel_rows => :wheel_values}
+    @wheel = Wheel.find_by_id_and_user_id params[:id], current_user.id, :include => {:wheel_rows => :wheel_values}
     redirect_to :action => :index if not @wheel
   end
   

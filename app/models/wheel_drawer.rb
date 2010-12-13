@@ -15,7 +15,7 @@ class WheelDrawer
     
     # draw each row
     @wheel.rows.sort.each_with_index do |row, index|
-      @builder.translate((@cfg[:initial_radius].to_f + @@small_space), (@cfg[:initial_radius].to_f + @@small_space)) do
+      @builder.translate((initial_radius + @@small_space), (initial_radius + @@small_space)) do
         draw_row(row, index)
       end
       @builder.new_page
@@ -43,13 +43,13 @@ class WheelDrawer
   end
   
   def draw_preview
-    size = @cfg[:initial_radius].to_f * 2 + 0.2
+    size = initial_radius * 2 + 0.2
     
     @builder.init(size, size)
     
     # draw each row
     @wheel.rows.sort.each_with_index do |row, index|
-      @builder.translate((@cfg[:initial_radius].to_f + @@small_space), (@cfg[:initial_radius].to_f + @@small_space)) do
+      @builder.translate((initial_radius + @@small_space), (initial_radius + @@small_space)) do
         @builder.group do
           draw_row(row, index)
         end
@@ -65,7 +65,6 @@ class WheelDrawer
   private
   
   def draw_front_cover
-    initial_radius = @cfg[:initial_radius].to_f
     rows_count = @wheel.rows.length
     
     @builder.translate(initial_radius + @@small_space, initial_radius + @@small_space) do
@@ -79,21 +78,21 @@ class WheelDrawer
       @builder.arc(@@minor_radius, to_rad(60), to_rad(120))
       x, y = point_for_angle(initial_radius, to_rad(-240))
       @builder.line(x, y)
-      @builder.stroke(@cfg[:stroke_width].to_f)
+      @builder.stroke(stroke_width)
       
       # draw left boxes (boxes for values)
       rows_count.times do |i|
-        dx = (- initial_radius + accumulated_values_width_for_index(i) + i * @cfg[:row_separation].to_f + i * @cfg[:inner_margin].to_f + @cfg[:outer_margin].to_f) - @@small_space
-        dy = - @cfg[:field_cover_height].to_f / 2
-        @builder.rect(dx, dy, values_width_for_index(i) + @@small_space, @cfg[:field_cover_height].to_f).stroke(@cfg[:stroke_width].to_f)
+        dx = (- initial_radius + accumulated_values_width_for_index(i) + i * row_separation + i * inner_margin + outer_margin) - @@small_space
+        dy = - field_cover_height / 2
+        @builder.rect(dx, dy, values_width_for_index(i) + @@small_space, field_cover_height).stroke(stroke_width)
       end
       
       # draw right box (box for code)
-      width = (rows_count * @cfg[:codes_width].to_f + (rows_count - 1) * (@cfg[:row_separation].to_f + @cfg[:inner_margin].to_f)) + @@small_space
-      height = @cfg[:field_cover_height].to_f
-      dx = initial_radius - width - @cfg[:outer_margin].to_f + @@small_space
-      dy = - @cfg[:field_cover_height].to_f / 2      
-      @builder.rect(dx, dy, width, height).stroke(@cfg[:stroke_width].to_f)
+      width = (rows_count * codes_width + (rows_count - 1) * (row_separation + inner_margin)) + @@small_space
+      height = field_cover_height
+      dx = initial_radius - width - outer_margin + @@small_space
+      dy = - field_cover_height / 2      
+      @builder.rect(dx, dy, width, height).stroke(stroke_width)
     end
   end
   
@@ -102,36 +101,36 @@ class WheelDrawer
   end
   
   def draw_back_cover
-    radius = @cfg[:initial_radius].to_f
+    radius = initial_radius
     @builder.translate(radius + @@small_space, radius + @@small_space) do
-      @builder.circle(radius).stroke(@cfg[:stroke_width].to_f)
+      @builder.circle(radius).stroke(stroke_width)
       @builder.circle(@@bullseye_size).fill
     end
   end
   
   def draw_row(row, i)
     # radius for the left semicircle
-    left_radius = @cfg[:initial_radius].to_f - row_left_offset(i) - i * @cfg[:row_separation].to_f - ( i > 0 ? @cfg[:outer_margin].to_f : 0) - (i > 1 ? (i-1) * @cfg[:inner_margin].to_f : 0)
+    left_radius = initial_radius - row_left_offset(i) - i * row_separation - ( i > 0 ? outer_margin : 0) - (i > 1 ? (i-1) * inner_margin : 0)
     # radius for the right semicircle
-    right_radius = @cfg[:initial_radius].to_f - i * @cfg[:codes_width].to_f - i * @cfg[:row_separation].to_f - ( i > 0 ? @cfg[:outer_margin].to_f : 0) - (i > 1 ? (i-1) * @cfg[:inner_margin].to_f : 0)
+    right_radius = initial_radius - i * codes_width - i * row_separation - ( i > 0 ? outer_margin : 0) - (i > 1 ? (i-1) * inner_margin : 0)
     
-    @builder.semi_circle(left_radius, right_radius).stroke(@cfg[:stroke_width].to_f)
+    @builder.semi_circle(left_radius, right_radius).stroke(stroke_width)
     
     row_values_count = row.values.length
     indexes = (0..row_values_count-1).map{|z| z - row_values_count/2}.reverse
      
     row.values.sort.each_with_index do |value, j|
-      angle = (@cfg[:angle_separation].to_f + i * @cfg[:angle_modifier].to_f) * indexes[j]
+      angle = (angle_separation + i * angle_modifier) * indexes[j]
       angle_rad = to_rad angle
       
-      margin = (i > 0 ? @cfg[:inner_margin] : @cfg[:outer_margin]).to_f
+      margin = i > 0 ? inner_margin : outer_margin
     
       dx, dy = point_for_angle(-(left_radius - margin), angle_rad)
-      @builder.text(value.value, @cfg[:values_font_size].to_i, @cfg[:values_font_family], dx, dy, angle_rad, :left)
+      @builder.text(value.value, values_font_size, values_font_family, dx, dy, angle_rad, :left)
        
       #Force codes to have 3 digits (pad with leading zeros)
       dx, dy = point_for_angle((right_radius - margin), angle_rad)
-      @builder.text("%03d" % value.code, @cfg[:codes_font_size].to_i, @cfg[:codes_font_family], dx, dy, angle_rad, :right)
+      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, dx, dy, angle_rad, :right)
     end
     
     # draw bullseye
@@ -180,6 +179,58 @@ class WheelDrawer
   
   def to_rad(angle)
     angle * Math::PI / 180.0
+  end
+  
+  def initial_radius
+    @cfg.initial_radius.to_f
+  end
+  
+  def stroke_width
+    @cfg.stroke_width.to_f
+  end
+  
+  def row_separation
+    @cfg.row_separation.to_f
+  end
+  
+  def inner_margin
+    @cfg.inner_margin.to_f
+  end
+  
+  def outer_margin
+    @cfg.outer_margin.to_f
+  end
+  
+  def field_cover_height
+    @cfg.field_cover_height.to_f
+  end
+  
+  def codes_width
+    @cfg.codes_width.to_f
+  end
+  
+  def angle_separation
+    @cfg.angle_separation.to_f
+  end
+  
+  def angle_modifier
+    @cfg.angle_modifier.to_f
+  end
+  
+  def values_font_size
+    @cfg.values_font_size.to_i
+  end
+  
+  def values_font_family
+    @cfg.values_font_family
+  end
+  
+  def codes_font_size
+    @cfg.codes_font_size.to_i
+  end
+  
+  def codes_font_family
+    @cfg.codes_font_family
   end
   
 end

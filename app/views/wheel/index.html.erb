@@ -2,6 +2,14 @@
 	<div id="notice"><%= flash[:notice] %></div>
 <% end %>
 
+<h4>Settings</h4>
+
+<div id="settings">
+	<ul>
+  		<li><%= link_to "Edit account", edit_user_path(:current) %></li>
+	</ul>
+</div>
+
 <h4>Wheels</h4>
 
 <table>

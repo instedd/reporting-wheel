@@ -1,0 +1,18 @@
+<h4>Edit settings</h4>
+
+<% form_for @user do |f| %>
+  <%= f.error_messages %>
+  <p>
+  	<b>Leave blank if you don't want to change the password</b><br/>
+  	<%= f.label :password %><br/>
+  	<%= f.password_field :password, :autocomplete => :off %>
+  </p>
+  <p>
+  	<%= f.label :password_confirmation %><br/>
+  	<%= f.password_field :password_confirmation, :autocomplete => :off %>
+  </p>
+  <hr />
+  <%= f.submit 'Update' %>
+<% end %>
+
+<%= link_to 'Go back', root_url %>

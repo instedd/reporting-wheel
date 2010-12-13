@@ -27,6 +27,8 @@ Rails::Initializer.run do |config|
   config.gem 'daemons'
   config.gem 'cairo'
   config.gem 'pango'
+  config.gem 'authlogic'
+  config.gem "guid"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
