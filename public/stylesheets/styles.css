@@ -15,6 +15,7 @@ li { margin:0; padding:0; list-style:none }
 #Footer { font-size:0.8em; color:#FFF; width:1000px; margin:10px auto 50px auto }
 
 #Logo { background:url(../images/logo_reporting_wheels.gif) no-repeat; width:119px; height:53px; margin-left:8px; position:relative; top:20px }
+#Account { float: right;}
 
 #Main_Table { padding:20px }
 

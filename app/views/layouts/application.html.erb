@@ -12,9 +12,9 @@
 <div id="Main">
     <div id="Content_container">
         <div id="Header">
-            <div id="Logo" title="Reporting Wheels"></div><!-- /Logo -->
+            <a href="/"><div id="Logo" title="Reporting Wheels"></div><!-- /Logo --></a>
 			<% if logged_in? %>
-				<h2><%= current_user.username %> | <%= link_to 'Logout', logout_url %></h2>
+				<div id="Account"><%= link_to current_user.username, edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></div>
 			<% end %>
         </div><!-- /Header -->
         <div id="Content">

@@ -2,14 +2,6 @@
 	<div id="notice"><%= flash[:notice] %></div>
 <% end %>
 
-<h4>Settings</h4>
-
-<div id="settings">
-	<ul>
-  		<li><%= link_to "Edit account", edit_user_path(:current) %></li>
-	</ul>
-</div>
-
 <div id="Main_Table">
 	<table id="TopTable" cellpadding="0" cellspacing="0" ><tr><td class="bleft"></td><td class="bmid"><div><span class="butt01l"></span><span class="butt01m"><%= link_to 'Create a new wheel', :action => 'new' %></span><span class="butt01r"></span></div></td><td class="bright"></td></tr></table><!-- /TopTable -->
 
