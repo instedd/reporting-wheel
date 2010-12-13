@@ -1,17 +1,6 @@
 <% content_for :head do %>
-	<%= javascript_include_tag 'jquery-ui-1.8.7.min.js', 'jquery.placeholder.js' %>
+	<%= javascript_include_tag 'jquery-ui-1.8.7.min.js', 'jquery.placeholder.js', 'wheel_form.js' %>
 	<link rel="stylesheet" href="/stylesheets/jquery.ui.base.css" type="text/css"/>
-	
-	<script type="text/javascript">
-		$(function(){
-			$("#Main_Table").tabs();
-			do_watermarks();
-		});
-		
-		function do_watermarks() {
-			$("input[placeholder]").placeholder();
-		}
-	</script>
 <% end %>
 
 <%= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"] %>
