@@ -1,7 +1,9 @@
 <% content_for :head do %>
-	<link rel="stylesheet" href="/stylesheets/jquery-ui-1.8.6.custom.css" type="text/css"/>
+	<link rel="stylesheet" href="/stylesheets/jquery.ui.base.css" type="text/css"/>
+	<link rel="stylesheet" href="/stylesheets/jquery.ui.theme.css" type="text/css"/>
+	<link rel="stylesheet" href="/stylesheets/draw_preview.css" type="text/css"/>
 	
-	<%= javascript_include_tag 'jquery-ui-1.8.6.custom.min.js', 'jquery.svg.min', 'jquery.svganim.min' %>
+	<%= javascript_include_tag 'jquery-ui-1.8.7.min.js', 'jquery.svg.min', 'jquery.svganim.min' %>
 	
 	<script type="text/javascript">
 		var center_x = <%= @center_x %>;
@@ -18,12 +20,18 @@
 				slide: function(event, ui) { update(this.id, ui.value); },
 				max: 90,
 				min: -90,
-				orientation: "vertical"
+				orientation: "horizontal"
 			});
+			
+			resize_svg();
 		});
 		
 		function reset_sliders() {
 			$(".slider").slider("option", "value", 0);
+		}
+		
+		function resize_svg() {
+			$("svg").width("500px").height("500px");
 		}
 		
 		function update_print_configuration(id) {
@@ -34,31 +42,31 @@
 				$("#svg").html(data['svg']);
 				center_x = data['center_x'];
 				center_y = data['center_y'];
+				resize_svg();
 				reset_sliders();
-				$(window).scrollTop($('#svg').offset().top);
 			});
 		}
 	</script>
 <% end %>
 <% content_for :content do %>
-	<h4><%= link_to_function 'Wheel preview (click to show/hide)', "toggle('draw_preview')" %></h4>
 	<div id="draw_preview">
-		<div id="svg" style="float: left">
-			<%= @svg %>
+		<div id="left">
+			<div id="svg">
+				<%= @svg %>
+			</div>
+			<div id="sliders">
+			<% @wheel.rows.length.times do |i| %>
+				<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider"></div>
+			<% end %>
+			</div>
 		</div>
-		<div style="float:left; margin: 30px">
-		<% @wheel.rows.length.times do |i| %>
-			<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider" style="float:left; height:500px; margin: 10px"></div>
-		<% end %>
+		<div id="right">
+			<% form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
+				<%= render "print_configuration", :f => builder %>
+				<%= button_to_function 'Update', "update_print_configuration(#{@wheel.id})" %>
+			<% end %>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<% form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
-		<%= render "print_configuration", :f => builder %>
-		<p>
-			<%= button_to_function 'Update', "update_print_configuration(#{@wheel.id})" %>
-		</p>
-	<% end %>
 	<%= link_to 'Done', :controller => :wheel, :action => :index %>
 <% end %>

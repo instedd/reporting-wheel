@@ -1,8 +1,3 @@
-<% form_for @wheel, :url => {:action => :create} do |builder| %>
+<% form_for @wheel, :url => {:action => :create}, :html => {:id => "wheel_form"} do |builder| %>
 	<%= render 'form', :f => builder %>
-	<p>
-		<%= builder.submit "Create Wheel" %>
-	</p>
 <% end %>
-
-<%= link_to 'Go back', :controller => :wheel, :action => :index %>

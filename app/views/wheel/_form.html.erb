@@ -1,10 +1,62 @@
+<% content_for :head do %>
+	<%= javascript_include_tag 'jquery-ui-1.8.7.min.js', 'jquery.placeholder.js', 'wheel_form.js' %>
+	<link rel="stylesheet" href="/stylesheets/jquery.ui.base.css" type="text/css"/>
+<% end %>
+
 <%= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"], :header_message => nil %>
 
-<%= render :partial => 'general', :locals => {:f => f} %>
-<%= render :partial => 'values', :locals => {:f => f} %>
-<%= render :partial => 'print_configuration', :locals => {:f => f} %>
-<% unless @wheel.new_record? %>
-	<%= render :partial => 'cover', :locals => {:f => f} %>
-<% end %>
-<%= render :partial => 'sms_interaction', :locals => {:f => f} %>
-<%= render :partial => 'voice_interaction', :locals => {:f => f} %>
+<div id="Main_Table">
+	
+	<table id="TopTable" cellpadding="0" cellspacing="0" >
+		<tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
+	</table><!-- /TopTable -->
+	
+	<div id="tabs">
+		<ul>
+			<li><a href="#tabs-general">General Information</a></li>
+			<li><a href="#tabs-values">Values to report</a></li>
+			<li><a href="#tabs-print">Print configuration</a></li>
+			<% unless @wheel.new_record? %>
+				<li><a href="#tabs-cover">Cover</a></li>
+			<% end %>
+			<li><a href="#tabs-sms">SMS interaction</a></li>
+			<li><a href="#tabs-voice">Voice interaction</a></li>
+		</ul>
+	</div>
+
+	<div class="menu_content">
+		<div id="tabs-general">
+			<%= render :partial => 'general', :locals => {:f => f} %>
+		</div>
+		<div id="tabs-values">
+			<%= render :partial => 'values', :locals => {:f => f} %>
+		</div>
+		<div id="tabs-print">
+			<%= render :partial => 'print_configuration', :locals => {:f => f} %>
+		</div>
+		<% unless @wheel.new_record? %>
+			<div id="tabs-cover">
+				<%= render :partial => 'cover', :locals => {:f => f} %>
+			</div>
+		<% end %>
+		<div id="tabs-sms">
+			<%= render :partial => 'sms_interaction', :locals => {:f => f} %>
+		</div>
+		<div id="tabs-voice">
+			<%= render :partial => 'voice_interaction', :locals => {:f => f} %>
+		</div>
+    </div><!-- /menu_content --> 
+    
+    <div class="butt_create">
+		<%= link_to '<span class="butt_cancel"></span>', :controller => :wheel, :action => :index %>
+		<% if @wheel.new_record? %>
+    		<a id="submit"><span class="butt_create_wheel"></span></a>
+		<% else %>
+			<%= button_to_function 'Update', "should_recalculate_factors(#{@wheel.id})" %>
+		<% end %>
+    </div><!-- /butt_create -->            
+
+
+</div><!-- /Main_Table -->
+
+
