@@ -1,11 +1,9 @@
-<h4>SMS interaction</h4>
+<div class="title_two">
+	Define the text that will be sent to a user when he sends a report via SMS and it is understood.<br />
+	You can refer to the reported value of a given label by writing the label name between brackets.
+</div><!-- /title_two -->
 
-<div class="description">
-Define the text that will be sent to a user when he sends a report via SMS and it is understood.<br/>
-You can refer to the reported value of a given label by writing the label name between brackets.<br/>
-</div>
+<br />
 
-<p>
-	<%= f.label :ok_text, '"Report understood" text:' %><br/>
-	<%= f.text_field :ok_text, :size => 80 %><br/>
-</p>
+<div class="title_four"><%= f.label :ok_text, '"Report understood" text:' %></div>
+<div><%= f.text_field :ok_text, :class => "largesize" %></div>

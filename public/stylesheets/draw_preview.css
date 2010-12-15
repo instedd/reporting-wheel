@@ -1,0 +1,12 @@
+#draw_preview { margin-top: 30px; }
+
+#draw_preview ul { display: inline; }
+#draw_preview ul li { display: inline; float: left; width: 215px; padding-right: 10px; padding-bottom: 10px; }
+#draw_preview ul li input { width: 180px;}
+
+#sliders { margin-top: 10px; }
+#sliders .slider { width:500px; margin: 10px }
+
+#left { float: left; width: 500px; }
+
+#right { float: right; width: 450px; padding-left: 50px; font-size: 0.8em; }
