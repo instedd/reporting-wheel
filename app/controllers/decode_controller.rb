@@ -9,9 +9,10 @@ class DecodeController < ApplicationController
       body = request.raw_post
       metadata = request.query_parameters
       
-      user = User.find_by_submit_url_key params[:key]
+      # TODO this hardcodes decoding of wheels to wheels of the default pool, remove when we add pool selection 
+      pool = Pool.first
       
-      comb = WheelCombination.new user, body, metadata
+      comb = WheelCombination.new pool, body, metadata
       comb.record!
       
       # Add GeoChat response headers

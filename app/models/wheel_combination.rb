@@ -17,7 +17,7 @@ class WheelCombination
   # A human readable message of this combination
   attr_reader :message
   
-  def initialize(user, body, metadata = {})    
+  def initialize(pool, body, metadata = {})    
     match = @@regexp.match body
     raise "No wheel code present in the message" unless match
     
@@ -25,7 +25,7 @@ class WheelCombination
     @original = String.new(body)
     @digits = []
     @message = body
-    @user = user
+    @pool = pool
     
     @wheel = find_wheel(@message)
     @wheel_size = @wheel.rows.length
@@ -67,7 +67,7 @@ class WheelCombination
     message.scan(/[\d\d\d]+/) do |match|
       # factorize codes to find factors
       factors = extract_codes(match).map{|c| Prime.factorize c}
-      wheel = Wheel.find_for_factors_and_user factors, @user
+      wheel = Wheel.find_for_factors_and_pool factors, @pool
       return wheel unless wheel.nil?
     end
     raise "Wheel not found"

@@ -18,6 +18,7 @@ class WheelTest < ActiveSupport::TestCase
     @wheel.stubs(:calculate_factors).returns(nil)
     
     @wheel.user = User.make
+    @wheel.pool = Pool.make
     
     FileUtils.mkdir_p DIR_PATH
   end
@@ -64,7 +65,7 @@ class WheelTest < ActiveSupport::TestCase
   test "name should be unique" do
     @wheel.save
     
-    @wheel2 = Wheel.new :name => 'Test Wheel', :factors => [19].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
+    @wheel2 = Wheel.new :name => 'Test Wheel', :factors => [19].join(','), :url_callback => 'http://www.domain.com/a/valid/url', :pool => Pool.make
     @wheel2.user = @wheel.user
     row1 = @wheel2.rows.build
     row1.stubs(:valid?).returns(true)
@@ -80,7 +81,7 @@ class WheelTest < ActiveSupport::TestCase
   end
   
   test "should validate uniqueness of factors" do
-    Wheel.expects(:exists_for_factors_and_user).returns(true)
+    Wheel.expects(:exists_for_factors_and_pool).returns(true)
     assert !@wheel.valid?
   end
   
@@ -105,6 +106,7 @@ class WheelTest < ActiveSupport::TestCase
   test "should calculate factors and update rows and values when saved" do
     wheel = Wheel.new :name => 'Save Test Wheel'
     wheel.user = User.make
+    wheel.pool = Pool.make
     
     row1 = wheel.rows.build
     row1.label = 'Label 1'
@@ -136,7 +138,7 @@ class WheelTest < ActiveSupport::TestCase
       wheel.expects(:get_best_factor).with(r.values.length).returns(factors[i])
     end
     wheel.stubs(:uniqueness_of_factors).returns(nil)
-    Wheel.expects(:exists_for_factors_and_user).with(factors, wheel.user).returns(false)
+    Wheel.expects(:exists_for_factors_and_pool).with(factors, wheel.pool).returns(false)
     
     wheel.save
     
@@ -230,6 +232,7 @@ class WheelTest < ActiveSupport::TestCase
     wheel = Wheel.new
     wheel.name = 'new wheel'
     wheel.user = User.make
+    wheel.pool = Pool.make
     defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
     defaults.each_with_index do |values, index| 
       row = wheel.rows.build
@@ -255,7 +258,7 @@ class WheelTest < ActiveSupport::TestCase
     end
   end
   
-  test "should let two wheel with same factors and different user" do
+  test "should let two wheel with same factors and different pool" do
     wheel1 = Wheel.make
     wheel2 = Wheel.make
     

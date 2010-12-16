@@ -28,6 +28,7 @@ class Wheel < ActiveRecord::Base
   
   has_many :wheel_rows, :dependent => :destroy
   belongs_to :user
+  belongs_to :pool
   
   attr_accessor :dont_use_cover_image_file
   attr_accessor :dont_use_success_voice_file
@@ -38,6 +39,7 @@ class Wheel < ActiveRecord::Base
   validates_presence_of :name, :message => "Name can't be blank"
   validates_presence_of :factors
   validates_presence_of :user, :message => nil
+  validates_presence_of :pool, :message => nil
   validates_uniqueness_of :name, :scope => :user_id, :message => "The name is already taken, please choose another name"
   
   validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
@@ -53,12 +55,12 @@ class Wheel < ActiveRecord::Base
   before_save :save_success_voice
   before_save :save_cover_image
   
-  def self.find_for_factors_and_user(factors, user)
-    Wheel.find :first, :conditions => {:factors => factors.join(','), :user_id => user.id}
+  def self.find_for_factors_and_pool(factors, pool)
+    Wheel.find :first, :conditions => {:factors => factors.join(','), :pool_id => pool.id}
   end
   
-  def self.exists_for_factors_and_user(factors, user, except_id = nil)
-    conditions = ["factors = ? AND user_id = ?", factors.join(','), user.id]
+  def self.exists_for_factors_and_pool(factors, pool, except_id = nil)
+    conditions = ["factors = ? AND pool_id = ?", factors.join(','), pool.id]
     
     if except_id
       conditions[0] << " AND id != ?"
@@ -186,7 +188,7 @@ class Wheel < ActiveRecord::Base
     return if self.factors.nil? or self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors_and_user(factors, user, id)
+    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors_and_pool(factors, pool, id)
   end
 
   def factors_are_primes
@@ -223,7 +225,7 @@ class Wheel < ActiveRecord::Base
       
       # TODO improve this
       while true do
-        exists = Wheel.exists_for_factors_and_user factors, user
+        exists = Wheel.exists_for_factors_and_pool factors, pool
         break if not exists
         maxFactor = factors.max
         factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break
