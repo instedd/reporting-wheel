@@ -31,7 +31,7 @@ class DecodeController < ApplicationController
   end
   
   def test
-    render :text => WheelCombination.new(params[:digits]).message
+    render :text => WheelCombination.new(Pool.first, params[:digits]).message
   rescue RuntimeError => e
     render :text => 'Report code not understood'
   end
