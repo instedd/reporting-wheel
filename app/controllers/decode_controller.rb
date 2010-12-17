@@ -20,7 +20,8 @@ class DecodeController < ApplicationController
       response.headers['X-GeoChat-Replace'] = 'true'
       response.headers['X-GeoChat-ReplaceWith'] = comb.message
       
-      @message = I18n.t :wheel_success_message, :reports => comb.digits.length
+      codes = comb.digits
+      @message = I18n.t :wheel_success_message, :number_of_reports => codes.length, :reports => codes.join(', ')
     rescue RuntimeError => e
       response.headers['X-GeoChat-Action'] = 'reply'
       @message = I18n.t :wheel_error_message, :code => body

@@ -57,7 +57,7 @@ class DecodeControllerTest < ActionController::TestCase
     
     post :wheel
     
-    assert_equal((I18n.t :wheel_success_message, :reports => '3'), assigns(:message))
+    assert_equal((I18n.t :wheel_success_message, :number_of_reports => 3, :reports => '123, 456, 789'), assigns(:message))
   end
   
   def assert_header(header, value)
