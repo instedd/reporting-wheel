@@ -68,10 +68,20 @@ class WheelCombinationTest < ActiveSupport::TestCase
   test "should look for the code in the entire message" do
     code, values = code_and_values(@wheel)
     
-    wheel_combination = WheelCombination.new @pool, "123 #{code}"
+    wheel_combination = WheelCombination.new @pool, "123123123 #{code}"
     
     assert_equal @wheel, wheel_combination.wheel
-    assert_equal "123 #{values}", wheel_combination.message
+    assert_equal "123123123 #{values}", wheel_combination.message
+  end
+  
+  test "should extract codes from the message" do
+    code1, values1 = code_and_values(@wheel)
+    code2, values2 = code_and_values(@wheel)
+    code3, values3 = code_and_values(@wheel)
+    
+    wheel_combination = WheelCombination.new @pool, "#{code1} #{code2} #{code3}"
+    
+    assert_equal [code1, code2, code3], wheel_combination.digits
   end
   
   private

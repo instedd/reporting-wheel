@@ -2,4 +2,5 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  wheel_error_message: "You sent %{code}, but your report was not understood. Please verify the code in your wheel and try again. No data was reported. "
+  wheel_error_message: "You sent %{code}, but your report was not understood. Please verify the code in your wheel and try again. No data was reported."
+  wheel_success_message: "Your report was sent. %{reports} report codes were understood."

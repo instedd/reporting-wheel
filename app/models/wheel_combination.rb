@@ -66,9 +66,13 @@ class WheelCombination
   def find_wheel(message)
     message.scan(/[\d\d\d]+/) do |match|
       # factorize codes to find factors
-      factors = extract_codes(match).map{|c| Prime.factorize c}
-      wheel = Wheel.find_for_factors_and_pool factors, @pool
-      return wheel unless wheel.nil?
+      begin
+        factors = extract_codes(match).map{|c| Prime.factorize c}
+        wheel = Wheel.find_for_factors_and_pool factors, @pool
+        return wheel unless wheel.nil?
+      rescue
+        next
+      end
     end
     raise "Wheel not found"
   end
