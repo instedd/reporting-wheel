@@ -2,7 +2,7 @@ ActionController::Routing::Routes.draw do |map|
   # The priority is based upon order of creation: first created -> highest priority.
   map.logout "logout", :controller => "user_sessions", :action => "destroy"
   map.home "home", :controller => "home", :action => "index"
-  map.decode "/decode/:key", :controller => "decode", :action => "wheel"
+  # map.decode "/decode/:key", :controller => "decode", :action => "wheel"
   map.resources :user_sessions
   map.resources :users
   

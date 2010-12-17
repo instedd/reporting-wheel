@@ -9,16 +9,19 @@ class DecodeController < ApplicationController
       body = request.raw_post
       metadata = request.query_parameters
       
-      user = User.find_by_submit_url_key params[:key]
+      # TODO this hardcodes decoding of wheels to wheels of the default pool, remove when we add pool selection 
+      pool = Pool.first
       
-      comb = WheelCombination.new user, body, metadata
+      comb = WheelCombination.new pool, body, metadata
       comb.record!
       
       # Add GeoChat response headers
-      response.headers['X-GeoChat-Action'] = 'continue'
+      response.headers['X-GeoChat-Action'] = 'reply-and-continue'
       response.headers['X-GeoChat-Replace'] = 'true'
+      response.headers['X-GeoChat-ReplaceWith'] = comb.message
       
-      @message = comb.message
+      codes = comb.digits
+      @message = I18n.t :wheel_success_message, :number_of_reports => codes.length, :reports => codes.join(', ')
     rescue RuntimeError => e
       response.headers['X-GeoChat-Action'] = 'reply'
       @message = I18n.t :wheel_error_message, :code => body

@@ -26,6 +26,8 @@ class WheelController < AuthController
   def create
     @wheel = Wheel.new(params[:wheel])
     @wheel.user = current_user
+    # TODO this hardcodes wheels to a default pool, remove when we add selection of pools
+    @wheel.pool = Pool.first
     
     if @wheel.save
       flash[:notice] = "Wheel \"#{@wheel.name}\" created"

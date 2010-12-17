@@ -22,6 +22,7 @@ end
 Wheel.blueprint do
   name { Sham.username }
   user
+  pool
   wheel_rows { 3.times.map {WheelRow.make_unsaved} }
 end
 
@@ -35,4 +36,9 @@ WheelValue.blueprint do
   index {1}
   code {1}
   value { Sham.username }
+end
+
+Pool.blueprint do
+  name { Sham.username }
+  description { Sham.address }
 end
