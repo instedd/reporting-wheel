@@ -24,6 +24,7 @@ Wheel.blueprint do
   user
   pool
   wheel_rows { 3.times.map {WheelRow.make_unsaved} }
+  allow_free_text { false }
 end
 
 WheelRow.blueprint do
