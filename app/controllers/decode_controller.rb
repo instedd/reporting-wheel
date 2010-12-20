@@ -16,12 +16,10 @@ class DecodeController < ApplicationController
       comb.record!
       
       # Add GeoChat response headers
-      response.headers['X-GeoChat-Action'] = 'reply-and-continue'
+      response.headers['X-GeoChat-Action'] = 'continue'
       response.headers['X-GeoChat-Replace'] = 'true'
-      response.headers['X-GeoChat-ReplaceWith'] = comb.message
       
-      codes = comb.digits
-      @message = I18n.t :wheel_success_message, :number_of_reports => codes.length, :reports => codes.join(', ')
+      @message = comb.message
     rescue RuntimeError => e
       response.headers['X-GeoChat-Action'] = 'reply'
       @message = I18n.t :wheel_error_message, :code => body

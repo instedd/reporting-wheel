@@ -23,36 +23,13 @@ class WheelCombination
     
     @original_metadata = metadata
     @original = String.new(body)
-    @digits = []
-    @message = body
     @pool = pool
     
-    @wheel = find_wheel(@message)
-    @wheel_size = @wheel.rows.length
+    @wheel = find_wheel(body)
     
-    # Decoding
-    output_str = ""
-    while (match = @@regexp.match(@message))
-      # extract codes
-      codes = extract_codes(match[1])
-      
-      # find values
-      values = @wheel.values_for(codes)
-
-      if (values.length == @wheel_size) && (!values.include?(nil))
-        end_pos = match.begin(1) - 1
-        output_str += @message[0..end_pos] if end_pos >= 0
-        output_str += values.map{|v| v.row.label + ":" + v.value}.join(', ')
-        @digits.push(match[1])
-      else
-        end_pos = match.end(1) - 1
-        output_str += @message[0..end_pos] if end_pos >= 0
-      end
-      
-      @message = @message[match.end(1)..-1]
-    end
+    decoder = @wheel.allow_free_text ? FreeTextDecoder : StrictDecoder
     
-    @message = output_str + @message
+    @message, @digits = decoder.new(@pool, @wheel, body).decode
   end
   
   # Saves this combination as a WheelRecord.

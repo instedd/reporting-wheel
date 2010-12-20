@@ -26,12 +26,11 @@ class DecodeControllerTest < ActionController::TestCase
     WheelCombination.expects(:new).returns(wheel_combination)
     wheel_combination.expects(:record!)
     wheel_combination.expects(:message).returns('Wheel Decoded Message')
-    wheel_combination.expects(:digits).returns(['123'])
     
     post :wheel
     
-    assert_header('X-GeoChat-Action', 'reply-and-continue')
-    assert_header('X-GeoChat-ReplaceWith', 'Wheel Decoded Message')
+    assert_header('X-GeoChat-Action', 'continue')
+    assert_header('X-GeoChat-Replace', 'true')
   end
   
   test "should decode a message with a plain code" do
@@ -41,24 +40,23 @@ class DecodeControllerTest < ActionController::TestCase
     WheelCombination.expects(:new).with(anything, '123456789', anything).returns(wheel_combination)
     wheel_combination.expects(:record!)
     wheel_combination.expects(:message).returns('Key1: Value1, Key2: Value2, Key3: Value3')
-    wheel_combination.expects(:digits).returns(['123456789'])
     
     post :wheel
     
-    assert_header('X-GeoChat-ReplaceWith', 'Key1: Value1, Key2: Value2, Key3: Value3')
+    assert_equal 'Key1: Value1, Key2: Value2, Key3: Value3', assigns(:message)
   end
   
-  test "should return success message with number of understanded codes" do
-    wheel_combination = mock()
-    WheelCombination.expects(:new).returns(wheel_combination)
-    wheel_combination.stubs(:record!)
-    wheel_combination.stubs(:message)
-    wheel_combination.expects(:digits).returns(['123','456','789'])
-    
-    post :wheel
-    
-    assert_equal((I18n.t :wheel_success_message, :number_of_reports => 3, :reports => '123, 456, 789'), assigns(:message))
-  end
+  # test "should return success message with number of understanded codes" do
+  #   wheel_combination = mock()
+  #   WheelCombination.expects(:new).returns(wheel_combination)
+  #   wheel_combination.stubs(:record!)
+  #   wheel_combination.stubs(:message)
+  #   wheel_combination.expects(:digits).returns(['123','456','789'])
+  #   
+  #   post :wheel
+  #   
+  #   assert_equal((I18n.t :wheel_success_message, :number_of_reports => 3, :reports => '123, 456, 789'), assigns(:message))
+  # end
   
   def assert_header(header, value)
     assert_equal @response.headers[header], value
