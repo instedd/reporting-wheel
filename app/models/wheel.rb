@@ -185,10 +185,13 @@ class Wheel < ActiveRecord::Base
   end
   
   def uniqueness_of_factors
-    return if self.factors.nil? or self.factors.blank?
+    return if self.factors.nil? || self.factors.blank?
     
     factors = self.factors.split(',')
-    errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels") if Wheel.exists_for_factors_and_pool(factors, pool, id)
+    
+    if Wheel.exists_for_factors_and_pool(factors, pool, id)
+      errors.add(:base, "The wheel has too many values. Please try to reduce the number of values in at least one of the labels")
+    end
   end
 
   def factors_are_primes
