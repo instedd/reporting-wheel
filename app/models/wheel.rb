@@ -214,7 +214,6 @@ class Wheel < ActiveRecord::Base
   end
 
   def calculate_factors
-    # Keep old factors when updating a wheel
     if new_record? || recalculate_factors
       rows_count = rows.map{|r| r.values.length}
       
@@ -225,7 +224,7 @@ class Wheel < ActiveRecord::Base
       
       # TODO improve this
       while true do
-        exists = Wheel.exists_for_factors_and_pool factors, pool
+        exists = Wheel.exists_for_factors_and_pool factors, pool, new_record? ? nil : self.id
         break if not exists
         maxFactor = factors.max
         factors[factors.index maxFactor] = Prime.find_first_smaller_than maxFactor rescue break
