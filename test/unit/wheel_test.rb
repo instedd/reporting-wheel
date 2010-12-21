@@ -138,7 +138,7 @@ class WheelTest < ActiveSupport::TestCase
       wheel.expects(:get_best_factor).with(r.values.length).returns(factors[i])
     end
     wheel.stubs(:uniqueness_of_factors).returns(nil)
-    Wheel.expects(:exists_for_factors_and_pool).with(factors, wheel.pool).returns(false)
+    Wheel.expects(:exists_for_factors_and_pool).with(factors, wheel.pool, nil).returns(false)
     
     wheel.save
     
