@@ -22,7 +22,7 @@ class Prime
     last = 0
     
     @@primes.each do |p|
-      if p < n:
+      if p < n
         last = p
       else
         break
