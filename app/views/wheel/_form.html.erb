@@ -48,14 +48,13 @@
     </div><!-- /menu_content --> 
     
     <div class="butt_create">
-		<%= link_to '<span class="butt_cancel"></span>', :controller => :wheel, :action => :index %>
 		<% if @wheel.new_record? %>
     		<a id="submit"><span class="butt_create_wheel"></span></a>
 		<% else %>
-			<%= button_to_function 'Update', "should_recalculate_factors(#{@wheel.id})" %>
+			<a onclick="should_recalculate_factors(<%=@wheel.id%>)"><span class="butt_update"></span></a>
 		<% end %>
-    </div><!-- /butt_create -->            
-
+		<%= link_to '<span class="butt_cancel"></span>', :controller => :wheel, :action => :index %>
+    </div><!-- /butt_create -->
 
 </div><!-- /Main_Table -->
 

@@ -21,8 +21,6 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'test-unit', :lib => 'test/unit'
   config.gem "mocha", :lib => 'mocha'
-  config.gem "rmagick", :lib => "RMagick"
-  config.gem "pdf-writer", :lib => 'pdf/writer'
   config.gem 'collectiveidea-delayed_job', :lib => 'delayed_job', :source => 'http://gems.github.com'
   config.gem 'daemons'
   config.gem 'cairo'
