@@ -66,10 +66,11 @@
 	function to_float($val, $field_name)
 	{
 		if ($val == NULL) return;
-		
+		return floatval($val);
+		/*
 		if (is_numeric($val))
-			return floatval($val);
+			
 		else
-			throw new Exception("Could not parse {$field_name} as float");
+			throw new Exception("Could not parse {$field_name} as float");*/
 	}
 ?>
