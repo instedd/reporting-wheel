@@ -16,7 +16,7 @@
 	function insert_log($desc)
 	{
 		$conn = open_db();
-		mysql_query("insert into " . DB_TABLE_LOG . "(date,description) VALUES (now(), '{$desc}')", $conn);
+		mysql_query("INSERT INTO `" . DB_TABLE_LOG . "`(date,description) VALUES (now(), '{$desc}')", $conn);
 		close_db($conn);
 	}
 	

@@ -13,8 +13,8 @@
 	define("POST_ONSET_DATE","OnsetDate");
 	define("POST_ADMIT_DATE","AdmitDate");
 	define("POST_DISEASE","Disease");
-	define("POST_AGE","Age");
-	define("POST_HOUSE_NUMBER","House");
+	define("POST_AGE","age");
+	define("POST_HOUSE_NUMBER","house");
 	define("POST_LAT","lat");
 	define("POST_LON","lon");
 	define("POST_SENDER","sender");
