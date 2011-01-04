@@ -5,6 +5,7 @@
 	{
 		$conn = mysql_connect(DB_HOST . ':' . DB_PORT,DB_USERNAME,DB_PASSWORD) or die('Could not connect to database');
 		mysql_select_db(DB_SCHEMA, $conn);
+		mysql_query("SET NAMES 'utf8'", $conn);
 		return $conn;
 	}
 	
