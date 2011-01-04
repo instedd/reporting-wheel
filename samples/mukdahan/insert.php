@@ -16,6 +16,9 @@
 	$sender = var_from_post(POST_SENDER);
 	
 	// Remove quotes and parse
+	$disease = remove_quotes($disease);
+	$onset_date = remove_quotes($onset_date);
+	$admit_date = remove_quotes($admit_date);
 	$lat = to_float(remove_quotes($lat), POST_LAT);
 	$lon = to_float(remove_quotes($lon), POST_LON);
 	$sender = remove_quotes($sender);
