@@ -5,6 +5,7 @@
 	{
 		$conn = mysql_connect(DB_HOST . ':' . DB_PORT,DB_USERNAME,DB_PASSWORD) or die('Could not connect to database');
 		mysql_select_db(DB_SCHEMA, $conn);
+		mysql_query("SET NAMES 'utf8'", $conn);
 		return $conn;
 	}
 	
@@ -16,7 +17,7 @@
 	function insert_log($desc)
 	{
 		$conn = open_db();
-		mysql_query("insert into " . DB_TABLE_LOG . "(date,description) VALUES (now(), '{$desc}')", $conn);
+		mysql_query("INSERT INTO `" . DB_TABLE_LOG . "`(date,description) VALUES (now(), '{$desc}')", $conn);
 		close_db($conn);
 	}
 	
@@ -44,6 +45,8 @@
 	
 	function get_location($lat, $lon)
 	{
+		if ($lat == NULL || $lon == NULL) return NULL;
+		
 		$minimum_distance = 100000;
 		
 		$conn = open_db();
@@ -75,9 +78,14 @@
 	
 	function insert_report($disease_code, $onset_date, $admit_date, $age, $location, $house_number, $sender)
 	{
+		$onset_date = isset($onset_date) ? "'{$onset_date}'" : "NULL";
 		$admit_date = isset($admit_date) ? "'{$admit_date}'" : "NULL";
+		$age = isset($age) ? "{$age}" : "NULL";
+		$location = isset($location) ? "'{$location}'" : "NULL";
+		$house_number = isset($house_number) ? "'{$house_number}'" : "NULL";
+		$sender = isset($sender) ? "'{$sender}'" : "NULL";
 		
-		$query = "INSERT INTO " . DB_TABLE_REPORT . "(disease_code, report_date, onset_date, admit_date, age, location, house_number, sender) VALUES ({$disease_code}, NOW(), '{$onset_date}', {$admit_date}, {$age}, '{$location}', '{$house_number}', '{$sender}')";
+		$query = "INSERT INTO " . DB_TABLE_REPORT . "(disease_code, report_date, onset_date, admit_date, age, location, house_number, sender) VALUES ({$disease_code}, NOW(), {$onset_date}, {$admit_date}, {$age}, {$location}, {$house_number}, {$sender})";
 		echo $query;
 		
 		$conn = open_db();

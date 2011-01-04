@@ -130,7 +130,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
       index = rand(row.values.length)
       value = row.values[index]
       codes << value.code
-      values << row.label + ":" + value.value
+      values << row.label + ':"' + value.value + '"'
     end
     
     [codes.reverse.join,values.join(', ')]

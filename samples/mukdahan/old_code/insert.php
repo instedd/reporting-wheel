@@ -18,7 +18,7 @@ set_exception_handler('exception_handler');
 
 require 'api.php';
 
-$con = mysql_connect("localhost","geochat","geochatmuk");
+$con = mysql_connect("localhost","root","root");
 if (!$con)
   {
   die('Could not connect: ' . mysql_error());

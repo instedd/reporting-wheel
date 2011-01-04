@@ -11,7 +11,7 @@ class StrictDecoder < BaseDecoder
       codes = extract_codes(digits)
       values = @wheel.values_for(codes)
       if (values.length == @wheel_size) && (!values.include?(nil))
-        values.map{|v| v.row.label + ":" + v.value}.join(', ')
+        values.map{|v| v.row.label + ':"' + v.value + '"'}.join(', ')
       else
         raise "Code not found"
       end
