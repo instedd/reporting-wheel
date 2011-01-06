@@ -11,7 +11,7 @@ class WheelDrawer
   end
   
   def draw
-    @builder.init(25,25)
+    @builder.init(width, height)
     
     # draw each row
     @wheel.rows.sort.each_with_index do |row, index|
@@ -37,7 +37,7 @@ class WheelDrawer
   end
   
   def draw_cover
-    @builder.init(25,25)
+    @builder.init(width, height)
     draw_front_cover
     @builder.build
   end
@@ -231,6 +231,14 @@ class WheelDrawer
   
   def codes_font_family
     @cfg.codes_font_family
+  end
+  
+  def width
+    @cfg.width.to_f
+  end
+  
+  def height
+    @cfg.height.to_f
   end
   
 end
