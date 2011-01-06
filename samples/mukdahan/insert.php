@@ -84,6 +84,6 @@
 	function remove_quotes($val)
 	{		
 		if ($val == NULL) return NULL;
-		return str_replace(array('"', "/", "\\"), '', $val);
+		return str_replace(array('"', "\\"), '', $val);
 	}
 ?>
