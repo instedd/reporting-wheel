@@ -68,7 +68,8 @@
 		if (is_numeric($val))
 			return intval($val);
 		else
-			throw new Exception("Could not parse {$field_name} as integer, value is {$val}");
+			return NULL;
+			//throw new Exception("Could not parse {$field_name} as integer, value is {$val}");
 	}
 	
 	function to_float($val, $field_name)
@@ -78,7 +79,8 @@
 		if (is_numeric($val))
 			return floatval($val);
 		else
-			throw new Exception("Could not parse {$field_name} as float, value is {$val}");
+			return NULL;
+			//throw new Exception("Could not parse {$field_name} as float, value is {$val}");
 	}
 	
 	function remove_quotes($val)
