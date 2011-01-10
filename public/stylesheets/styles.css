@@ -85,6 +85,9 @@ a { outline: none; }
 .butt_update  { background:url(../images/b_update.png) no-repeat top; width:83px; height:29px; display:inline-block; cursor: pointer; }
 .butt_update:hover { background:url(../images/b_update.png) no-repeat bottom; width:83px; height:29px; display:inline-block }
 
+.butt_done  { background:url(../images/b_done.png) no-repeat top; width:76px; height:29px; display:inline-block }
+.butt_done:hover { background:url(../images/b_done.png) no-repeat bottom; width:76px; height:29px; display:inline-block }
+
 /* -------- Gral Classes ---------*/
 .clear { clear:both; margin:0; padding:0 }
 .left { float:left }
