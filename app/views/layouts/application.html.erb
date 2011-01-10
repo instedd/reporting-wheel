@@ -5,7 +5,18 @@
 	<title>Reporting Wheels</title>
 	
 	<link href="/stylesheets/styles.css" rel="stylesheet" type="text/css" />
-	<%= javascript_include_tag 'application', 'jquery-1.4.2.min' %>
+	<link href="/stylesheets/jquery.jgrowl.css" rel="stylesheet" type="text/css" />
+	
+	<%= javascript_include_tag 'application', 'jquery-1.4.2.min', 'jquery.jgrowl.min' %>
+	
+	<% if !flash[:notice].nil? %>
+	<script type="text/javascript">
+		$(function() {
+			$.jGrowl('<%= flash[:notice] %>', { sticky: true });
+		});
+	</script>
+	<% end %>
+	
 	<%= yield :head %>
 </head>
 <body>
