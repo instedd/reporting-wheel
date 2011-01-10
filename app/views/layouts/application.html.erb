@@ -14,7 +14,11 @@
         <div id="Header">
             <a href="/"><div id="Logo" title="Reporting Wheels"></div><!-- /Logo --></a>
 			<% if logged_in? %>
-				<div id="Account"><%= link_to current_user.username, edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></div>
+				<div id="User">
+					<b><%= current_user.username %></b>
+					<br />
+					<span><%= link_to "Settings", edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></span>
+				</div>
 			<% end %>
         </div><!-- /Header -->
         <div id="Content">

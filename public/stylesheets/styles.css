@@ -10,13 +10,15 @@ a { outline: none; }
 /*  -------- Main Structure  --------  */
 #Main { background:#fff; padding-bottom:40px }
 #Content_container { width:1000px; margin:0 auto }
-#Header { height:65px }
+#Header { height:65px; position:relative }
 #Content { padding:10px 0 0 0 }
 #Footer { font-size:0.8em; color:#FFF; width:1000px; margin:10px auto 50px auto }
 
 #Logo { background:url(../images/logo_reporting_wheels.gif) no-repeat; width:119px; height:53px; margin-left:8px; position:relative; top:20px }
-#Account { float: right; }
-#Notice { font-weight: bold; margin-top: 20px; padding-left: 20px; }
+#User { color:#000; position:absolute; top:10px; right:0; text-align:right }
+#User span { font-size:0.7em }
+#User a { color:#666 }
+#User a:hover { color:#000 }
 
 #Main_Table { padding:20px }
 
@@ -65,6 +67,8 @@ a { outline: none; }
 .values span { margin: 0 12px 2px 0; display:inline-block }
 .butt_create { text-align:right; margin:12px 6px 0 0 }
 
+#TopTitle { background:#a8a8a8; font-size:1.6em; letter-spacing:-0.02em; color:#FFF; padding:8px 10px }
+
 /* -------- Buttons ---------*/
 .butt01l { background:url(../images/butt01_l.png) no-repeat; width:9px; height:29px; display:inline-block }
 .butt01m { background:url(../images/butt01_m.png) repeat-x; font-size:14px; font-weight:bold; padding:5px 14px 0 14px; height:24px; display:inline-block; vertical-align:top }
@@ -78,7 +82,7 @@ a { outline: none; }
 .butt_cancel  { background:url(../images/b_cancel.png) no-repeat top; width:76px; height:29px; display:inline-block }
 .butt_cancel:hover { background:url(../images/b_cancel.png) no-repeat bottom; width:76px; height:29px; display:inline-block }
 
-.butt_update  { background:url(../images/b_update.png) no-repeat top; width:83px; height:29px; display:inline-block }
+.butt_update  { background:url(../images/b_update.png) no-repeat top; width:83px; height:29px; display:inline-block; cursor: pointer; }
 .butt_update:hover { background:url(../images/b_update.png) no-repeat bottom; width:83px; height:29px; display:inline-block }
 
 /* -------- Gral Classes ---------*/
