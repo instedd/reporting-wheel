@@ -19,7 +19,8 @@ class Wheel < ActiveRecord::Base
     [:row_separation, 'Separation from text to the next wheel disc (in cm)', 0.1, 13],
     [:field_cover_height, 'Height of the boxes in the cover to show the values/codes (in cm)', 0.8, 14],    
     [:outer_margin, 'Separation of text from disc border for the biggest disc (in cm)', 0.5, 15],
-    [:inner_margin, 'Separation of text from disc border for the other discs (in cm)', 0.2, 16]    
+    [:inner_margin, 'Separation of text from disc border for the other discs (in cm)', 0.2, 16],
+    [:alternate_colors, 'Alternate value/code colors', true, 17]
   ].inject([]) {|m, o| m << {:key => o[0], :description => o[1], :value => o[2], :order => o[3]}; m }
   DefaultRenderConfiguration = DefaultRenderConfigurationWithDescriptions.inject({}) {|m, o| m[o[:key]] = o[:value]; m}
   

@@ -1,8 +1,10 @@
 class WheelDrawer
   
-  @@minor_radius = 2
+  @@cover_window_radius = 3
   @@small_space = 0.1
   @@bullseye_size = 0.1
+  @@color_black = "#000000"
+  @@color_grey = "#666666"
   
   def initialize(wheel, builder)
     @wheel = wheel
@@ -72,10 +74,11 @@ class WheelDrawer
       @builder.circle(@@bullseye_size).fill
       
       # border for cover
+      minor_radius =  [calculate_right_radius(rows_count), @@cover_window_radius].min
       @builder.arc(initial_radius, to_rad(-240), to_rad(60))
-      x, y = point_for_angle(@@minor_radius, to_rad(60))
+      x, y = point_for_angle(minor_radius, to_rad(60))
       @builder.line(x,y)
-      @builder.arc(@@minor_radius, to_rad(60), to_rad(120))
+      @builder.arc(minor_radius, to_rad(60), to_rad(120))
       x, y = point_for_angle(initial_radius, to_rad(-240))
       @builder.line(x, y)
       @builder.stroke(stroke_width)
@@ -110,9 +113,9 @@ class WheelDrawer
   
   def draw_row(row, i)
     # radius for the left semicircle
-    left_radius = initial_radius - row_left_offset(i) - i * row_separation - ( i > 0 ? outer_margin : 0) - (i > 1 ? (i-1) * inner_margin : 0)
+    left_radius = calculate_left_radius i
     # radius for the right semicircle
-    right_radius = initial_radius - i * codes_width - i * row_separation - ( i > 0 ? outer_margin : 0) - (i > 1 ? (i-1) * inner_margin : 0)
+    right_radius = calculate_right_radius i
     
     @builder.semi_circle(left_radius, right_radius).stroke(stroke_width)
     
@@ -124,17 +127,26 @@ class WheelDrawer
       angle_rad = to_rad angle
       
       margin = i > 0 ? inner_margin : outer_margin
+      color = alternate_colors && j % 2 == 0 ?  @@color_grey : @@color_black
     
       dx, dy = point_for_angle(-(left_radius - margin), angle_rad)
-      @builder.text(value.value, values_font_size, values_font_family, dx, dy, angle_rad, :left)
+      @builder.text(value.value, values_font_size, values_font_family, color, dx, dy, angle_rad, :left)
        
       #Force codes to have 3 digits (pad with leading zeros)
       dx, dy = point_for_angle((right_radius - margin), angle_rad)
-      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, dx, dy, angle_rad, :right)
+      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, color, dx, dy, angle_rad, :right)
     end
     
     # draw bullseye
     @builder.circle(@@bullseye_size).fill
+  end
+  
+  def calculate_left_radius(i)
+    initial_radius - row_left_offset(i) - i * row_separation - ( i > 0 ? outer_margin : 0) - (i > 1 ? (i-1) * inner_margin : 0)
+  end
+  
+  def calculate_right_radius(i)
+    initial_radius - i * codes_width - i * row_separation - ( i > 0 ? outer_margin : 0) - (i > 1 ? (i-1) * inner_margin : 0)
   end
   
   def point_for_angle(length, angle_rad)
@@ -239,6 +251,10 @@ class WheelDrawer
   
   def height
     @cfg.height.to_f
+  end
+  
+  def alternate_colors
+    @cfg.alternate_colors == "true"
   end
   
 end

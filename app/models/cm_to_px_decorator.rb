@@ -30,8 +30,8 @@ class CmToPxDecorator
     @decorated.line(px(x), px(y))
   end
   
-  def text(text, font_size, font_family, x, y, angle, anchor)
-    @decorated.text(text, font_size, font_family, px(x), px(y), angle, anchor)
+  def text(text, font_size, font_family, color, x, y, angle, anchor)
+    @decorated.text(text, font_size, font_family, color, px(x), px(y), angle, anchor)
   end
   
   def rect(x, y, width, height)

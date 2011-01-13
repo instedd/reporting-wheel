@@ -66,18 +66,19 @@ class CairoBuilder
     @context.restore
   end
   
-  def text(text, font_size, font_family, x, y, angle, anchor)
+  def text(text, font_size, font_family, color, x, y, angle, anchor)
     tmp = @context.matrix
     @context.translate(x, y)
     @context.rotate(angle)
     
     pango_layout = @context.create_pango_layout
-    pango_layout.text = text
     
     pango_font_description = Pango::FontDescription.new
     pango_font_description.family = font_family
     pango_font_description.absolute_size = font_size * Pango::SCALE
     pango_layout.font_description = pango_font_description
+    
+    pango_layout.markup = '<span foreground="' + color + '">' + text + '</span>'
     
     # correct position of text
     size_x, size_y = pango_layout.size.map{|e| e / Pango::SCALE}
