@@ -57,16 +57,33 @@ class NewRowDrawer < BaseRowDrawer
       # Margin from wheel border to text, use outer_margin for the first row, else inner_margin
       margin = i > 0 ? inner_margin : outer_margin
       
-      # Color for the value/code text
-      color = alternate_colors && j % 2 == 0 ?  @@color_grey : @@color_black
+      if alternate_colors && j % 2 == 0
+        # Background for value
+        dx = - radius + margin - @@small_space
+        dy = - field_cover_height / 2
+        width = values_width_for_index(i) + @@small_space
+        height = field_cover_height
+        @builder.rotate(angle_rad) do
+          @builder.rect(dx, dy, width, height).fill(@@color_grey)
+        end
+        
+        # Background for code
+        dx = radius - margin - values_width_for_index(i) - value_code_space - codes_width + @@small_space
+        dy = - field_cover_height / 2
+        width = codes_width + @@small_space
+        height = field_cover_height
+        @builder.rotate(angle_rad) do
+          @builder.rect(dx, dy, width, height).fill(@@color_grey)
+        end
+      end
       
       # Draw value
-      dx, dy = point_for_angle(-(radius - margin), angle_rad)
-      @builder.text(value.value, values_font_size, values_font_family, color, dx, dy, angle_rad, :left)
+      dx, dy = point_for_angle(- radius + margin, angle_rad)
+      @builder.text(value.value, values_font_size, values_font_family, dx, dy, angle_rad, :left)
        
       # Draw code (padded with ceros to be 3 digits length)
       dx, dy = point_for_angle((radius - margin - values_width_for_index(i) - value_code_space), angle_rad)
-      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, color, dx, dy, angle_rad, :right)
+      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, dx, dy, angle_rad, :right)
     end
     
     # Draw bullseye

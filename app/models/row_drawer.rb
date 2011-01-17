@@ -25,7 +25,7 @@ class RowDrawer < BaseRowDrawer
       end
       
       # draw right box (box for code)
-      width = (rows_count * codes_width + (rows_count - 1) * (row_separation + inner_margin)) + @@small_space
+      width = rows_count * codes_width + (rows_count - 1) * (row_separation + inner_margin) + @@small_space
       height = field_cover_height
       dx = initial_radius - width - outer_margin + @@small_space
       dy = - field_cover_height / 2      
@@ -49,14 +49,33 @@ class RowDrawer < BaseRowDrawer
       angle_rad = to_rad angle
       
       margin = i > 0 ? inner_margin : outer_margin
-      color = alternate_colors && j % 2 == 0 ?  @@color_grey : @@color_black
+      
+      if alternate_colors && j % 2 == 0
+        # Background for value
+        dx = - left_radius + margin - @@small_space
+        dy = - field_cover_height / 2
+        width = values_width_for_index(i) + @@small_space
+        height = field_cover_height
+        @builder.rotate(angle_rad) do
+          @builder.rect(dx, dy, width, height).fill(@@color_grey)
+        end
+        
+        # Background for code
+        dx = right_radius - margin - codes_width
+        dy = - field_cover_height / 2
+        width = codes_width + row_separation 
+        height = field_cover_height
+        @builder.rotate(angle_rad) do
+          @builder.rect(dx, dy, width, height).fill(@@color_grey)
+        end
+      end
     
       dx, dy = point_for_angle(-(left_radius - margin), angle_rad)
-      @builder.text(value.value, values_font_size, values_font_family, color, dx, dy, angle_rad, :left)
+      @builder.text(value.value, values_font_size, values_font_family, dx, dy, angle_rad, :left)
        
       #Force codes to have 3 digits (pad with leading zeros)
       dx, dy = point_for_angle((right_radius - margin), angle_rad)
-      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, color, dx, dy, angle_rad, :right)
+      @builder.text("%03d" % value.code, codes_font_size, codes_font_family, dx, dy, angle_rad, :right)
     end
     
     # draw bullseye

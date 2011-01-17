@@ -4,7 +4,7 @@ class BaseRowDrawer
   @@cover_window_radius = 3
   @@small_space = 0.1
   @@color_black = "#000000"
-  @@color_grey = "#666666"
+  @@color_grey = "#aaaaaa"
   
   def initialize(wheel, builder)
     @wheel = wheel
