@@ -88,6 +88,11 @@ a { outline: none; }
 
 #report_result { margin-left: 10px; }
 
+/* -------- Edit Wheel ---------*/
+
+#tabs-print ul li { display: inline-block; width: 250px; padding-right: 10px; padding-bottom: 30px; }
+#tabs-print ul li input { width: 170px;}
+
 /* -------- Buttons ---------*/
 .butt01l { background:url(../images/butt01_l.png) no-repeat; width:9px; height:29px; display:inline-block }
 .butt01m { background:url(../images/butt01_m.png) repeat-x; font-size:14px; font-weight:bold; padding:5px 14px 0 14px; height:24px; display:inline-block; vertical-align:top }
