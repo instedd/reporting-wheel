@@ -12,7 +12,7 @@
 	<% if !flash[:notice].nil? %>
 	<script type="text/javascript">
 		$(function() {
-			$.jGrowl('<%= flash[:notice] %>', { sticky: true });
+			$.jGrowl('<%= flash[:notice] %>');
 		});
 	</script>
 	<% end %>
