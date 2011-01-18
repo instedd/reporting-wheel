@@ -62,7 +62,20 @@ a { outline: none; }
 #MenuTable td a { font-size:0.7em; color:#5f5f5f; text-decoration:none }
 #MenuTable td a:hover { color:#FFF }
 
+.LabelTable tr.header { background: #e7f5ce; }
+.LabelTable tr.value { background: #a8a8a8; color: #fff; font-size: 0.9em; }
+.LabelTable tr.code { background: #E6E3E3; font-size: 0.8em; text-align: center;}
+
+.Row { margin-bottom: 20px; }
+.Row table { width: auto; }
+.Row table th { background: #e7f5ce; text-align: center; font-weight: bold; }
+.LabelList li { display: inline-block; padding-right: 2px; padding-bottom: 5px; }
+.LabelList div.value { background: #a8a8a8; color: #fff; font-size: 0.9em;  font-weight: bold; text-align: center; padding: 3px;}
+.LabelList div.code { background: #E6E3E3; font-size: 0.8em; text-align: center; padding: 3px;}
+
 .menu_content { background:#f6f6f6; border-bottom:#616d73 2px solid; color:#333; margin:5px 0; padding:20px 40px; min-height:200px }
+.mid_content { background:#f6f6f6; color:#333; margin:5px 0; padding:20px 40px; }
+.mid_content_last { border-bottom:#616d73 2px solid; }
 
 .label_box { background:#FFF; border:#adadad 1px solid; padding:10px 20px; margin:0 0 10px 10px; position:relative }
 .delete_box { position:absolute; right:5px; top:5px }
@@ -71,6 +84,9 @@ a { outline: none; }
 .butt_create { text-align:right; margin:12px 6px 0 0 }
 
 #TopTitle { background:#a8a8a8; font-size:1.6em; letter-spacing:-0.02em; color:#FFF; padding:8px 10px }
+.MidTitle { background:#a8a8a8; font-size:1.2em; letter-spacing:-0.02em; color:#FFF; padding:8px 10px }
+
+#report_result { margin-left: 10px; }
 
 /* -------- Buttons ---------*/
 .butt01l { background:url(../images/butt01_l.png) no-repeat; width:9px; height:29px; display:inline-block }
