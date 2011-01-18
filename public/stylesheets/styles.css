@@ -91,7 +91,8 @@ a { outline: none; }
 /* -------- Edit Wheel ---------*/
 
 #tabs-print ul li { display: inline-block; width: 250px; padding-right: 10px; padding-bottom: 30px; }
-#tabs-print ul li input { width: 170px;}
+#tabs-print ul li input { width: 200px; margin-top: 5px; padding: 3px;}
+#tabs-print ul li img { vertical-align: middle; }
 
 /* -------- Buttons ---------*/
 .butt01l { background:url(../images/butt01_l.png) no-repeat; width:9px; height:29px; display:inline-block }

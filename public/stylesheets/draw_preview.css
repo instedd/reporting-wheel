@@ -2,7 +2,8 @@
 
 #draw_preview ul { display: inline; }
 #draw_preview ul li { display: inline; float: left; width: 200px; padding-right: 10px; padding-bottom: 10px; }
-#draw_preview ul li input { width: 170px;}
+#draw_preview ul li input { height: 17px; width: 170px;}
+#draw_preview ul li img { vertical-align: middle; }
 
 #sliders { margin-top: 10px; }
 #sliders .slider { width:480px; margin: 10px }
