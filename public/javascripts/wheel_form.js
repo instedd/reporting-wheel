@@ -75,3 +75,24 @@ function should_recalculate_factors(id) {
 		}
 	});
 }
+
+function edit_field(object) {
+	var parent = $(object).parent();
+	var span_label = parent.find("span");
+	var input_label = parent.find("input");
+	
+	span_label.hide();
+	input_label.show();
+	
+	input_label.keypress(function(e) {
+		code = (e.keyCode ? e.keyCode : e.which);
+		if (code == 13) {
+			span_label.text(input_label.val());
+			
+			input_label.hide();
+			span_label.show();
+			
+			e.preventDefault();
+		}
+	});
+}

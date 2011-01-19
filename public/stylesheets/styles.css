@@ -80,7 +80,7 @@ a { outline: none; }
 .label_box { background:#FFF; border:#adadad 1px solid; padding:10px 20px; margin:0 0 10px 10px; position:relative }
 .delete_box { position:absolute; right:5px; top:5px }
 .values { font-size:0.8em; color:#6e6e6e; margin: 10px 0 0 0; width:630px; float:right }
-.values span { margin: 0 12px 2px 0; display:inline-block }
+.values span.value { margin: 0 12px 2px 0; display:inline-block }
 .butt_create { text-align:right; margin:12px 6px 0 0 }
 
 #TopTitle { background:#a8a8a8; font-size:1.6em; letter-spacing:-0.02em; color:#FFF; padding:8px 10px }
@@ -129,6 +129,7 @@ a { outline: none; }
 .smallsize { width:135px; height:22px; border:#adadad 1px solid }
 .medsize { width:220px; height:22px; border:#adadad 1px solid }
 .largesize { width:500px; height:22px; border:#adadad 1px solid }
+.hidden { display: none; }
 
 /* -------- UI Tabs ---------*/
 #tabs { text-align: center; }
