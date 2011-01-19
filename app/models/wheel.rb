@@ -47,12 +47,11 @@ class Wheel < ActiveRecord::Base
   validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
-  accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
+  accepts_nested_attributes_for :wheel_rows, :allow_destroy => true, :reject_if => proc {|attrs| attrs['_destroy'] == '1'}
   
   alias :rows :wheel_rows
   
-  before_validation_on_create :calculate_factors
-  before_validation_on_update :calculate_factors
+  before_validation :calculate_factors
   
   before_save :save_success_voice
   before_save :save_cover_image
@@ -213,14 +212,14 @@ class Wheel < ActiveRecord::Base
   
   def length_of_factors_and_rows
     factors_count = self.factors.nil? ? 0 : self.factors.split(',').length
-    rows_count = self.rows.length
+    rows_count = real_rows.length
     
     errors.add(:factors, "Length of factors is not the same as the number of wheel rows") if factors_count != rows_count
   end
 
   def calculate_factors
-    if new_record? || recalculate_factors
-      rows_count = rows.map{|r| r.values.length}
+    if new_record? || recalculate_factors  
+      rows_count = real_rows.map{|r| r.values.length}
       
       # check that there isnt a row with no values, otherwise we will divide by 0
       return if rows_count.min == 0
@@ -242,7 +241,7 @@ class Wheel < ActiveRecord::Base
     end
     
     # calculate code for each value for each row
-    rows.each_with_index do |row, row_index|
+    real_rows.each_with_index do |row, row_index|
       row.index = row_index
       row.values.each_with_index do |value, value_index|
         value.index = value_index
@@ -254,6 +253,12 @@ class Wheel < ActiveRecord::Base
   def get_best_factor(count)
     ceiling = @@max_field_code / (Prime.value_for(count-1))
     Prime.find_first_smaller_than ceiling
+  end
+  
+  def real_rows
+    # HACK because we use 'accepts_nested_attributes_for' for wheel_rows we need to reject manually
+    # objects marked for destruction (else we will calculate factors using rows marked for deletion)
+    rows.reject{|x| x.marked_for_destruction?}
   end
   
 end
