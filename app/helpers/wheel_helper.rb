@@ -2,6 +2,7 @@ module WheelHelper
   def button_to_add_label(name, f, association)
     new_object = f.object.class.reflect_on_association(association).klass.new
     new_object.label = "__LABEL__"
+    new_object.index = "__INDEX__"
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render(association.to_s.singularize + "_fields", :f => builder)
     end
@@ -23,5 +24,9 @@ module WheelHelper
   
   def link_to_remove_label(f)
     f.hidden_field(:_destroy) + link_to_function(image_tag("b_cross_big.gif", :title => "Delete label"), "remove_label(this)")
+  end
+  
+  def drop_box
+    '<div class="drop_box"></div>'
   end
 end

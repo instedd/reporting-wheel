@@ -28,7 +28,7 @@ class Wheel < ActiveRecord::Base
   @@max_field_code = 999
   @@url_regexp = Regexp.new('((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))', Regexp::IGNORECASE)
   
-  has_many :wheel_rows, :dependent => :destroy
+  has_many :wheel_rows, :dependent => :destroy, :order => "wheel_rows.index ASC"
   belongs_to :user
   belongs_to :pool
   
@@ -115,11 +115,12 @@ class Wheel < ActiveRecord::Base
   end
   
   def recalculate_factors?(rows_length)
+    rows = real_rows
     # check number of rows
-    return true if self.rows.length != rows_length.length
+    return true if rows.length != rows_length.length
     # check number of values per row
-    self_values_per_row = self.rows.map{|r| r.values.length}
-    self.rows.length.times do |i|
+    self_values_per_row = rows.map{|r| r.values.length}
+    rows.length.times do |i|
       return true if rows_length[i] > self_values_per_row[i]
     end
     false
@@ -258,7 +259,7 @@ class Wheel < ActiveRecord::Base
   def real_rows
     # HACK because we use 'accepts_nested_attributes_for' for wheel_rows we need to reject manually
     # objects marked for destruction (else we will calculate factors using rows marked for deletion)
-    rows.reject{|x| x.marked_for_destruction?}
+    rows.reject{|x| x.marked_for_destruction?}.sort
   end
   
 end

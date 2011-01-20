@@ -13,9 +13,10 @@ class WheelController < AuthController
     @wheel.ok_text = "Your report of {Quantity} {Type} of {Disease} was received. Thank you!"
     
     defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
-    defaults.each do |values| 
+    defaults.each_with_index do |values, index| 
       row = @wheel.rows.build
-      row.label = values[0] 
+      row.label = values[0]
+      row.index = index
       values[1 .. -1].each do |value|
         row_value = row.values.build
         row_value.value = value
@@ -121,7 +122,12 @@ class WheelController < AuthController
   
   def recalculate_factors(wheel_data)
     # TODO: this is ugly, change when ActiveRecord::Dirty supports associations
-    row_lengths = wheel_data['wheel_rows_attributes'].select{|k,v|v['_destroy'] != '1'}.map{|k,v|v['wheel_values_attributes'].select{|k,v|v['_destroy'] != '1'}.length}
+    # This creates an array where each position belongs to a row and has the number 
+    # of values inside that row (rows are sorted by its index)
+    rows = wheel_data['wheel_rows_attributes'].map{ |k,v| v } # Get row attributes
+    row_lengths = rows.sort{ |a,b| a['index'].to_i <=> b['index'].to_i } \
+      .select{ |x| x['_destroy'] != '1' } \
+      .map{ |x| x['wheel_values_attributes'].select{|k,v| v['_destroy'] != '1' }.length }
     @wheel.recalculate_factors? row_lengths
   end
     
