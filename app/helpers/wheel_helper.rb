@@ -26,7 +26,4 @@ module WheelHelper
     f.hidden_field(:_destroy) + link_to_function(image_tag("b_cross_big.gif", :title => "Delete label"), "remove_label(this)")
   end
   
-  def drop_box
-    '<div class="drop_box"></div>'
-  end
 end
