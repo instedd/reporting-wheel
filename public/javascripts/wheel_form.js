@@ -99,10 +99,13 @@ function edit_field(object) {
 	input_label.focus();
 	
 	var close_edit = function() {
-		span_label.text(input_label.val());
-		
-		input_label.hide();
-		span_label.show();
+		var value = input_label.val();
+		if (value != "") {
+			span_label.text(value);
+
+			input_label.hide();
+			span_label.show();
+		}
 	};
 	
 	input_label.keypress(function(e) {
