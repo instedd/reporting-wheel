@@ -42,8 +42,9 @@ function remove_value(link) {
 }
 
 function remove_label(link) {
-  $(link).prev("input[type=hidden]").val("1");
-  $(link).closest(".label_box").hide();
+	$(link).prev("input[type=hidden]").val("1");
+	$(link).closest(".label_box").hide();
+	$(link).closest(".label_box").next(".drop_box").remove();
 }
 
 function add_label(link, association, content) {
