@@ -15,7 +15,7 @@ module WheelHelper
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render(association.to_s.singularize + "_fields", :f => builder)
     end
-    link_to_function('<img src="/images/b_plus.png"/>', h("add_value(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), :title => name)
+    link_to_function('<img class="plus" src="/images/b_plus.png"/>', h("add_value(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), :title => name)
   end
   
   def link_to_remove_value(f)
