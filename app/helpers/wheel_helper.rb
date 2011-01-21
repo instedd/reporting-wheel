@@ -19,11 +19,11 @@ module WheelHelper
   end
   
   def link_to_remove_value(f)
-    f.hidden_field(:_destroy) + link_to_function(image_tag("b_cross.gif", :title => "Delete value"), "remove_value(this)")
+    f.hidden_field(:_destroy, :class => "destroy_value") + link_to_function(image_tag("b_cross.gif", :title => "Delete value"), "remove_value(this)")
   end
   
   def link_to_remove_label(f)
-    f.hidden_field(:_destroy) + link_to_function(image_tag("b_cross_big.gif", :title => "Delete label"), "remove_label(this)")
+    f.hidden_field(:_destroy, :class => "destroy_label") + link_to_function(image_tag("b_cross_big.gif", :title => "Delete label"), "remove_label(this)")
   end
   
 end
