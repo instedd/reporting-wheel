@@ -20,23 +20,30 @@
 	<%= yield :head %>
 </head>
 <body>
-<div id="Main">
-    <div id="Content_container">
-        <div id="Header">
-            <a href="/"><div id="Logo" title="Reporting Wheel"></div><!-- /Logo --></a>
-			<% if logged_in? %>
-				<div id="User">
-					<b><%= current_user.username %></b>
-					<br />
-					<span><%= link_to "Settings", edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></span>
-				</div>
-			<% end %>
-        </div><!-- /Header -->
-        <div id="Content">
-			<%= yield(:content) or yield %>
-        </div><!-- /Content -->
-    </div><!-- /Content_container -->
-</div><!-- /Main -->
-<div id="Footer">&copy; 2010 Reporting Wheel<div id="version">Version: <%= app_version %></div></div><!-- /Footer -->
+<div id="Container">
+	<div id="Main">
+	    <div id="Content_container">
+	        <div id="Header">
+	            <a href="/"><div id="Logo" title="Reporting Wheel"></div><!-- /Logo --></a>
+				<% if logged_in? %>
+					<div id="User">
+						<b><%= current_user.username %></b>
+						<br />
+						<span><%= link_to "Settings", edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></span>
+					</div>
+				<% end %>
+	        </div><!-- /Header -->
+	        <div id="Content">
+				<%= yield(:content) or yield %>
+	        </div><!-- /Content -->
+	    </div><!-- /Content_container -->
+	</div><!-- /Main -->
+	<div id="Separator"></div>
+	<div id="Footer">
+		<div id="FooterContent"> 
+			&copy; 2010 Reporting Wheel<div id="version">Version: <%= app_version %></div>
+		</div>
+	</div><!-- /Footer -->
+</div>
 </body>
 </html>
