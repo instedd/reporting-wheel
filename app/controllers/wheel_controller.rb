@@ -1,8 +1,8 @@
-require 'tempfile'
+require 'simple-useragent'
 
 class WheelController < AuthController
   
-  before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :edit, :update, :show, :delete, :should_recalculate]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :draw_preview_png, :edit, :update, :show, :delete, :should_recalculate]
   
   def index
     @wheels = Wheel.find(:all, :conditions => {:user_id => current_user.id})
@@ -90,7 +90,9 @@ class WheelController < AuthController
     content = File.open(file).read
     @svg, @center_x, @center_y = prepare_svg content
     
-    render :action => "draw_preview", :content_type => "application/xhtml+xml"
+    if !SimpleUserAgent::is_ie?(self.request)
+      render :action => "draw_preview" , :content_type => "application/xhtml+xml"
+    end
   end
   
   def update_print_configuration
@@ -113,6 +115,14 @@ class WheelController < AuthController
     svg, center_x, center_y = prepare_svg content
     
     render :json => {:svg => svg, :center_x => center_x, :center_y => center_y}
+  end
+  
+  def draw_preview_png
+    file = temp_file
+    builder = CairoImageBuilder.new(file)
+    drawer = WheelDrawer.new(@wheel, builder)
+    drawer.draw_preview
+    send_file(file, :disposition => 'inline', :type => 'image/png')
   end
   
   private

@@ -8,6 +8,11 @@
 	<script type="text/javascript">
 		var center_x = <%= @center_x %>;
 		var center_y = <%= @center_y %>;
+		var wheel_id = <%= @wheel.id %>;
+		
+		function is_ie() {
+			return $.browser.msie;
+		}
 	
 		function update(id, value) {
 			target = $("#" + id).attr("target");
@@ -16,15 +21,25 @@
 		}
 		
 		$(function() {
-			$(".slider").slider({
-				slide: function(event, ui) { update(this.id, ui.value); },
-				max: 180,
-				min: -180,
-				orientation: "horizontal"
-			});
+			if (is_ie()) {
+				$("#sliders").hide();
+				$("#svg").hide();
+				image_tag().appendTo('#png');
+				$("#png").show();
+			} else {
+				bind_sliders();
+				resize_svg();
+			}
 			
-			resize_svg();
-			
+			bind_blockUI();
+		});
+		
+		function image_tag() {
+			return $(document.createElement("img"))
+					.attr({ src: '/wheel/draw_preview_png/' + wheel_id + "?v=" + new Date().getTime(), width: '500', height: '500'});
+		}
+		
+		function bind_blockUI() {
 			$(document).ajaxStart(function() {
 			  $.blockUI({ css: { 
 				            border: 'none', 
@@ -37,7 +52,16 @@
 				        } });
 			});
 			$(document).ajaxStop($.unblockUI);
-		});
+		}
+		
+		function bind_sliders() {
+			$(".slider").slider({
+				slide: function(event, ui) { update(this.id, ui.value); },
+				max: 180,
+				min: -180,
+				orientation: "horizontal"
+			});
+		}
 		
 		function reset_sliders() {
 			$(".slider").slider("option", "value", 0);
@@ -47,16 +71,25 @@
 			$("svg").width("500px").height("500px");
 		}
 		
+		function reload_image() {
+			$("#png").find("img").remove();
+			image_tag().appendTo('#png');
+		}
+		
 		function update_print_configuration(id) {
 			form = $("#update_form");
 			form_data = form.serialize();
 			$.post('/wheel/update_print_configuration/' + id, form_data, function(data) {
-				data = eval(data);
-				$("#svg").html(data['svg']);
-				center_x = data['center_x'];
-				center_y = data['center_y'];
-				resize_svg();
-				reset_sliders();
+				if (is_ie()) {
+					reload_image();
+				} else {
+					data = eval(data);
+					$("#svg").html(data['svg']);
+					center_x = data['center_x'];
+					center_y = data['center_y'];
+					resize_svg();
+					reset_sliders();
+				}
 			});
 		}
 	</script>
@@ -77,6 +110,8 @@
 				<div id="left">
 					<div id="svg">
 						<%= @svg %>
+					</div>
+					<div id="png" style="display:none;">
 					</div>
 					<div id="sliders">
 					<% @wheel.rows.length.times do |i| %>
