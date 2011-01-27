@@ -97,6 +97,13 @@ class WheelController < AuthController
     wheel = Wheel.find(params[:id])
     wheel.update_attributes(params[:wheel])
     
+    # HACK update_attributes on wheel doesn't forward
+    # the render_configuration to the rows
+    params[:wheel]["wheel_rows_attributes"].each do |k,v|
+      r = wheel.rows[k.to_i]
+      r.update_attributes(v)
+    end
+    
     file = temp_file
     builder = CairoSvgBuilder.new(file)
     drawer = WheelDrawer.new(wheel, builder)

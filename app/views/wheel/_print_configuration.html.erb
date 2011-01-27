@@ -1,11 +1,25 @@
-<ul>
-<% f.fields_for :render_configuration do |c| %>
-	<% @wheel.render_configuration.to_a.sort_by{|x| Wheel.render_configuration_order x[0] }.each do |key, value| %>
-	<li>
-		<%= Wheel.render_configuration_description key %><br/>
-		<%= c.text_field key, :value => value, :id => "pc_#{key}", :class => 'medsize' %> <%= link_to_function image_tag("b_cross_big.gif"), "$('#pc_#{key}').val('#{Wheel::DefaultRenderConfiguration[key]}')", :title => "Reset to default" %>
-	</li>
+<ul class="wheel_print_config">
+	<% f.fields_for :render_configuration do |builder| %>
+		<% print_config = f.object.print_config %>
+		<% print_config.ordered_keys.each do |key| %>
+		<li>
+			<%= print_config_field builder, print_config, key %> 
+		</li>
+		<% end %>
 	<% end %>
-<% end %>
 </ul>
 <div class="clear"></div>
+<% f.fields_for :wheel_rows do |row_builder| %>
+	<div class="row_title_print_config"><%= row_builder.object.label %></div>
+	<ul class="row_print_config">
+		<% row_builder.fields_for :render_configuration do |builder| %>
+			<% print_config = row_builder.object.print_config %>
+			<% print_config.ordered_keys.each do |key| %>
+			<li>
+				<%= print_config_field builder, print_config, key %>
+			</li>
+			<% end %>
+		<% end %>
+	</ul>
+	<div class="clear"></div>
+<% end %>

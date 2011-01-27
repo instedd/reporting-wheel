@@ -1,29 +1,4 @@
 class Wheel < ActiveRecord::Base
-
-  DefaultRenderConfigurationWithDescriptions = [
-    [:width, 'Width of the generated PDF (in cm)', 22, 0],
-    [:height, 'Height of the generated PDF (in cm)', 22, 1],
-    [:initial_radius, 'The radius of the biggest disc (in cm)', 10.5, 2],
-    [:stroke_width, 'Stroke with to use when drawing', 2, 3],
-    [:values_font_family, 'Font family to use for the values', 'Garuda', 4],
-    [:values_font_size, 'Font size to use for the values', 10, 4.5],
-    [:codes_font_family, 'Font family to use for the codes', 'Helvetica', 5],
-    [:codes_font_size, 'Font size to use for the codes', 12, 5.5],
-    [:values_width, 'Width to reserve for values on discs after the third one (in cm)', 2, 6],
-    [:values_width_field_1, 'Width to reserve for values on the first (biggest) disc (in cm)', 4, 7],
-    [:values_width_field_2, 'Width to reserve for values on the second disc (in cm)', 1, 8], 
-    [:values_width_field_3, 'Width to reserve for values on the third (smallest) disc (in cm)', 1, 9],
-    [:codes_width, 'Width to reserve for codes in any disc (in cm)', 1, 10],
-    [:angle_separation, 'Angles to use when separating each value/code (in degrees)', 4, 11],
-    [:angle_modifier, 'Angles to use when separating each value/code for successive wheels (it\'s added, in degress)', 2, 12],    
-    [:row_separation, 'Separation from text to the next wheel disc (in cm)', 0.1, 13],
-    [:field_cover_height, 'Height of the boxes in the cover to show the values/codes (in cm)', 0.8, 14],    
-    [:outer_margin, 'Separation of text from disc border for the biggest disc (in cm)', 0.5, 15],
-    [:inner_margin, 'Separation of text from disc border for the other discs (in cm)', 0.2, 16],
-    [:alternate_colors, 'Alternate value/code colors', true, 17],
-    [:new_design, 'Use new design for rows', true, 18]
-  ].inject([]) {|m, o| m << {:key => o[0], :description => o[1], :value => o[2], :order => o[3]}; m }
-  DefaultRenderConfiguration = DefaultRenderConfigurationWithDescriptions.inject({}) {|m, o| m[o[:key]] = o[:value]; m}
   
   @@max_field_code = 999
   @@url_regexp = Regexp.new('((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))', Regexp::IGNORECASE)
@@ -47,7 +22,7 @@ class Wheel < ActiveRecord::Base
   validates_length_of :wheel_rows, :minimum => 1, :message => "At least one label is required"
   validate :uniqueness_of_factors, :factors_are_primes, :length_of_factors_and_rows, :callback_is_url
   
-  accepts_nested_attributes_for :wheel_rows, :allow_destroy => true, :reject_if => proc {|attrs| attrs['_destroy'] == '1'}
+  accepts_nested_attributes_for :wheel_rows, :allow_destroy => true
   
   alias :rows :wheel_rows
   
@@ -72,26 +47,13 @@ class Wheel < ActiveRecord::Base
     count > 0
   end
   
-  def self.render_configuration_description(key)
-    DefaultRenderConfigurationWithDescriptions.select{|x| x[:key] == key}.first[:description]
-  end
-  
-  def self.render_configuration_order(key)
-    DefaultRenderConfigurationWithDescriptions.select{|x| x[:key] == key}.first[:order]
-  end
-  
   def has_callback?
     return url_callback.present?
   end
   
-  def render_configuration
-    cfg = self[:render_configuration] || Hash.new
-    cfg = cfg.symbolize_keys
-    # This is to support future removal of keys/values
-    cfg.each{|k, v| cfg.delete k unless DefaultRenderConfiguration.has_key? k} 
-    # This is to support future additional of keys/values
-    DefaultRenderConfiguration.each{|k, v| cfg[k] = cfg[k] || v}
-    cfg.to_struct
+  def print_config
+    values = self[:render_configuration] || Hash.new
+    @cfg = @cfg || PrintConfig.new(WHEEL_PRINT_CONFIG, values)
   end
   
   def success_voice_file=(value)

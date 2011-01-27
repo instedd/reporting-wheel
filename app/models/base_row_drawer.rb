@@ -9,7 +9,7 @@ class BaseRowDrawer
   def initialize(wheel, builder)
     @wheel = wheel
     @builder = builder
-    @cfg = @wheel.render_configuration
+    @cfg = @wheel.print_config
   end
   
   def draw_front_cover
@@ -27,7 +27,7 @@ class BaseRowDrawer
   end
   
   def values_offset(i)
-    0.upto(i - 1).inject(0){|r,x| r + values_width_for_index(x)}
+    0.upto(i - 1).inject(0){|r,x| r + values_width(x)}
   end
   
   def row_separation_offset(i)
@@ -47,17 +47,8 @@ class BaseRowDrawer
     i * value_code_space
   end
   
-  def values_width_for_index(i)
-    case i
-      when 0
-        @cfg[:values_width_field_1].to_f
-      when 1
-        @cfg[:values_width_field_2].to_f
-      when 2
-        @cfg[:values_width_field_3].to_f
-      else
-        @cfg[:values_width].to_f
-    end
+  def values_width(i)
+    @wheel.rows[i].print_config['values_width']
   end
   
   def to_rad(angle)
@@ -67,59 +58,55 @@ class BaseRowDrawer
   # Configuration getters
   
   def initial_radius
-    @cfg.initial_radius.to_f
+    @cfg['initial_radius']
   end
   
   def row_separation
-    @cfg.row_separation.to_f
+    @cfg['row_separation']
   end
   
   def codes_width
-    @cfg.codes_width.to_f
+    @cfg['codes_width']
   end
   
   def stroke_width
-    @cfg.stroke_width.to_f
+    @cfg['stroke_width']
   end
   
-  def angle_separation
-    @cfg.angle_separation.to_f
-  end
-  
-  def angle_modifier
-    @cfg.angle_modifier.to_f
+  def angle_separation(i)
+    @wheel.rows[i].print_config['angle_separation']
   end
   
   def inner_margin
-    @cfg.inner_margin.to_f
+    @cfg['inner_margin']
   end
   
   def outer_margin
-    @cfg.outer_margin.to_f
+    @cfg['outer_margin']
   end
   
   def alternate_colors
-    @cfg.alternate_colors.to_s == "true"
+    @cfg['alternate_colors']
   end
   
-  def values_font_size
-    @cfg.values_font_size.to_i
+  def values_font_size(i)
+    @wheel.rows[i].print_config['values_font_size']
   end
   
-  def values_font_family
-    @cfg.values_font_family
+  def values_font_family(i)
+    @wheel.rows[i].print_config['values_font_family']
   end
   
   def codes_font_size
-    @cfg.codes_font_size.to_i
+    @cfg['codes_font_size']
   end
   
   def codes_font_family
-    @cfg.codes_font_family
+    @cfg['codes_font_family']
   end
   
   def field_cover_height
-    @cfg.field_cover_height.to_f
+    @cfg['field_cover_height']
   end
   
   def value_code_space

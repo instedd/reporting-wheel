@@ -21,7 +21,7 @@ class RowDrawer < BaseRowDrawer
       rows_count.times do |i|
         dx = - initial_radius + values_offset(i) + row_separation_offset(i) + margin_offset(i+1) - @@small_space
         dy = - field_cover_height / 2
-        @builder.rect(dx, dy, values_width_for_index(i) + @@small_space, field_cover_height).stroke(stroke_width)
+        @builder.rect(dx, dy, values_width(i) + @@small_space, field_cover_height).stroke(stroke_width)
       end
       
       # draw right box (box for code)
@@ -45,7 +45,7 @@ class RowDrawer < BaseRowDrawer
     indexes = (0..row_values_count-1).map{|z| z - row_values_count/2}.reverse
      
     row.values.sort.each_with_index do |value, j|
-      angle = (angle_separation + i * angle_modifier) * indexes[j]
+      angle = angle_separation(i) * indexes[j]
       angle_rad = to_rad angle
       
       margin = i > 0 ? inner_margin : outer_margin
@@ -54,7 +54,7 @@ class RowDrawer < BaseRowDrawer
         # Background for value
         dx = - left_radius + margin - @@small_space
         dy = - field_cover_height / 2
-        width = values_width_for_index(i) + @@small_space
+        width = values_width(i) + @@small_space
         height = field_cover_height
         @builder.rotate(angle_rad) do
           @builder.rect(dx, dy, width, height).fill(@@color_grey)
@@ -71,7 +71,7 @@ class RowDrawer < BaseRowDrawer
       end
     
       dx, dy = point_for_angle(-(left_radius - margin), angle_rad)
-      @builder.text(value.value, values_font_size, values_font_family, dx, dy, angle_rad, :left)
+      @builder.text(value.value, values_font_size(i), values_font_family(i), dx, dy, angle_rad, :left)
        
       #Force codes to have 3 digits (pad with leading zeros)
       dx, dy = point_for_angle((right_radius - margin), angle_rad)

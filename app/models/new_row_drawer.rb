@@ -21,7 +21,7 @@ class NewRowDrawer < BaseRowDrawer
       rows_count.times do |i|
         dx = - initial_radius + values_offset(i) + row_separation_offset(i) + margin_offset(i+1) + codes_offset(i) + value_code_space_offset(i) - @@small_space
         dy = - field_cover_height / 2
-        width = values_width_for_index(i) + @@small_space
+        width = values_width(i) + @@small_space
         height = field_cover_height
         @builder.rect(dx, dy, width, height).stroke(stroke_width)
       end
@@ -51,7 +51,7 @@ class NewRowDrawer < BaseRowDrawer
     # Draw each pair of value/code
     row.values.sort.each_with_index do |value, j|
       # Angle for this value/code
-      angle = (angle_separation + i * angle_modifier) * indexes[j]
+      angle = angle_separation(i) * indexes[j]
       angle_rad = to_rad angle
       
       # Margin from wheel border to text, use outer_margin for the first row, else inner_margin
@@ -61,14 +61,14 @@ class NewRowDrawer < BaseRowDrawer
         # Background for value
         dx = - radius + margin - @@small_space
         dy = - field_cover_height / 2
-        width = values_width_for_index(i) + @@small_space
+        width = values_width(i) + @@small_space
         height = field_cover_height
         @builder.rotate(angle_rad) do
           @builder.rect(dx, dy, width, height).fill(@@color_grey)
         end
         
         # Background for code
-        dx = radius - margin - values_width_for_index(i) - value_code_space - codes_width + @@small_space
+        dx = radius - margin - values_width(i) - value_code_space - codes_width + @@small_space
         dy = - field_cover_height / 2
         width = codes_width + @@small_space
         height = field_cover_height
@@ -79,10 +79,10 @@ class NewRowDrawer < BaseRowDrawer
       
       # Draw value
       dx, dy = point_for_angle(- radius + margin, angle_rad)
-      @builder.text(value.value, values_font_size, values_font_family, dx, dy, angle_rad, :left)
+      @builder.text(value.value, values_font_size(i), values_font_family(i), dx, dy, angle_rad, :left)
        
       # Draw code (padded with ceros to be 3 digits length)
-      dx, dy = point_for_angle((radius - margin - values_width_for_index(i) - value_code_space), angle_rad)
+      dx, dy = point_for_angle((radius - margin - values_width(i) - value_code_space), angle_rad)
       @builder.text("%03d" % value.code, codes_font_size, codes_font_family, dx, dy, angle_rad, :right)
     end
     

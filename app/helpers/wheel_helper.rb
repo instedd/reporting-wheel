@@ -26,4 +26,29 @@ module WheelHelper
     f.hidden_field(:_destroy, :class => "destroy_label") + link_to_function(image_tag("b_cross_big.gif", :title => "Delete label"), "remove_label(this)")
   end
   
+  def print_config_field(f, print_config, key)
+    type = print_config.type(key)
+    self.send("print_config_field_#{type.to_s}", f, print_config, key)
+  end
+  
+  private
+  
+  def print_config_field_string(f, print_config, key)
+    id = "pc_#{f.id}_#{key}"
+    res = print_config.desc(key) + "<br/>"
+    res << f.text_field(key, :value => print_config[key], :id => id, :class => 'medsize') + " " 
+    res << link_to_function(image_tag("b_cross_big.gif"), "$('##{id}').val('#{print_config.default(key)}')", :title => "Reset to default")
+    res
+  end
+  
+  def print_config_field_numeric(f, print_config, key)
+    print_config_field_string(f, print_config, key)
+  end
+  
+  def print_config_field_boolean(f, print_config, key)
+    res = print_config.desc(key) + " "
+    res << f.check_box(key, {:checked => print_config[key]}, "true", "false")
+    res
+  end
+  
 end

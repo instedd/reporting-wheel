@@ -6,7 +6,7 @@ class WheelDrawer
   def initialize(wheel, builder)
     @wheel = wheel
     @builder = CmToPxDecorator.new(builder)
-    @cfg = @wheel.render_configuration
+    @cfg = @wheel.print_config
     @row_drawer = new_design ? NewRowDrawer.new(@wheel, @builder) : RowDrawer.new(@wheel, @builder)
   end
   
@@ -77,23 +77,23 @@ class WheelDrawer
   end
   
   def initial_radius
-    @cfg.initial_radius.to_f
+    @cfg['initial_radius']
   end
   
   def stroke_width
-    @cfg.stroke_width.to_f
+    @cfg['stroke_width']
   end
   
   def width
-    @cfg.width.to_f
+    @cfg['width']
   end
   
   def height
-    @cfg.height.to_f
+    @cfg['height']
   end
   
   def new_design
-    @cfg.new_design.to_s == "true"
+    @cfg['new_design']
   end
   
 end
