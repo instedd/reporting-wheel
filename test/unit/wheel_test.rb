@@ -229,7 +229,7 @@ class WheelTest < ActiveSupport::TestCase
   
   test "access render configuration" do
     w = Wheel.new
-    assert_equal Wheel::DefaultRenderConfiguration.length, w.render_configuration.length
+    assert_equal WHEEL_PRINT_CONFIG.keys, w.print_config.keys
   end
   
   test "when saving keep same factors" do
