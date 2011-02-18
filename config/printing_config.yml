@@ -1,0 +1,88 @@
+wheel:
+    width:
+        desc: 'Width of the generated PDF (in cm)'
+        default: 22
+        order: 1
+        type: :numeric
+    height:
+        desc: 'Height of the generated PDF (in cm)'
+        default: 22
+        order: 2
+        type: :numeric
+    initial_radius:
+        desc: 'The radius of the biggest disc (in cm)'
+        default: 10.5
+        order: 3
+        type: :numeric
+    stroke_width:
+        desc: 'Stroke with to use when drawing'
+        default: 2
+        order: 4
+        type: :numeric
+    codes_width:
+        desc: 'Width to reserve for codes in any disc (in cm)'
+        default: 1
+        order: 5
+        type: :numeric
+    row_separation:
+        desc: 'Separation from text to the next wheel disc (in cm)'
+        default: 0.1
+        order: 6
+        type: :numeric
+    field_cover_height:
+        desc: 'Height of the boxes in the cover to show the values/codes (in cm)'
+        default: 0.8
+        order: 7
+        type: :numeric
+    outer_margin:
+        desc: 'Separation of text from disc border for the biggest disc (in cm)'
+        default: 0.5
+        order: 8
+        type: :numeric
+    inner_margin:
+        desc: 'Separation of text from disc border for the other discs (in cm)'
+        default: 0.2
+        order: 9
+        type: :numeric
+    codes_font_family:
+        desc: 'Font family to use for the codes'
+        default: 'Helvetica'
+        order: 10
+        type: :string
+    codes_font_size:
+        desc: 'Font size to use for the codes'
+        default: 12
+        order: 11
+        type: :numeric
+    alternate_colors:
+        desc: 'Alternate value/code colors'
+        default: false
+        order: 12
+        type: :boolean
+    new_design:
+        desc: 'Use new design for rows'
+        default: false
+        order: 13
+        type: :boolean
+
+wheel_row:
+    values_font_family:
+        desc: 'Font family to use for the values'
+        default: 'Garuda'
+        order: 1
+        type: :string
+    values_font_size:
+        desc: 'Font size to use for the values'
+        default: 10
+        order: 2
+        type: :numeric
+    values_width:
+        desc: 'Width to reserve for values'
+        default: 2
+        order: 3
+        type: :numeric
+    angle_separation:
+        desc: 'Angle to use when separating each value/code (in degrees)'
+        default: 4
+        order: 4
+        type: :numeric

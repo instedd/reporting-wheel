@@ -15,6 +15,14 @@ class CairoBuilder
     self
   end
   
+  def rotate(angle)
+    tmp = @context.matrix
+    @context.rotate(angle)
+    yield
+    @context.matrix = tmp
+    self
+  end
+  
   def circle(radius)
     @context.circle(0, 0, radius)
     self
@@ -31,8 +39,11 @@ class CairoBuilder
     self
   end
   
-  def fill
+  def fill(color=:black)
+    @context.save
+    @context.set_source_color Cairo::Color.parse(color)
     @context.fill
+    @context.restore
     self
   end
   

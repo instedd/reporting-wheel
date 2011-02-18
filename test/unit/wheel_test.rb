@@ -8,8 +8,11 @@ class WheelTest < ActiveSupport::TestCase
     @wheel = Wheel.new :name => 'Test Wheel', :factors => [19,17,23].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
     
     @row1 = @wheel.rows.build
+    @row1.index = 1
     @row2 = @wheel.rows.build
+    @row2.index = 2
     @row3 = @wheel.rows.build
+    @row3.index = 3
     
     @row1.stubs(:valid?).returns(true)
     @row2.stubs(:valid?).returns(true)
@@ -92,6 +95,7 @@ class WheelTest < ActiveSupport::TestCase
   
   test "should validate that the number of rows is the same as the number of factors" do
     new_row = @wheel.rows.build
+    new_row.index = 4
     new_row.stubs(:valid?).returns(true)
     
     assert !@wheel.valid?    
@@ -225,7 +229,7 @@ class WheelTest < ActiveSupport::TestCase
   
   test "access render configuration" do
     w = Wheel.new
-    assert_equal Wheel::DefaultRenderConfiguration.length, w.render_configuration.length
+    assert_equal WHEEL_PRINT_CONFIG.keys, w.print_config.keys
   end
   
   test "when saving keep same factors" do

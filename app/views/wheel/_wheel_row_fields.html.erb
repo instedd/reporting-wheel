@@ -1,12 +1,14 @@
-<div class="label_box">
+<li class="label_box">
+	
+	<%= f.hidden_field :index, :class => 'label_index' %>
 
 	<div class="delete_box">
 		<%= link_to_remove_label f %>
 	</div><!-- /delete_box -->
     
     <div class="title_three">
-		<%= f.object.label %>
-		<%= f.hidden_field :label %>
+		<span onclick="javascript:edit_field(this);"><%= f.object.label %></span>
+		<%= f.text_field :label, :class => 'medsize hidden label_name' %>
 	</div><!-- /title_three -->
     
     <div class="left">
@@ -22,4 +24,4 @@
     
     <div class="clear"></div><!-- /clear -->
 
-</div><!-- /label_box -->
+</li><!-- /label_box -->

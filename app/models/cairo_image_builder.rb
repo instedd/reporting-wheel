@@ -11,4 +11,8 @@ class CairoImageBuilder < CairoBuilder
     @surface.write_to_png(@file_path)
   end
   
+  def group
+    yield
+  end
+  
 end

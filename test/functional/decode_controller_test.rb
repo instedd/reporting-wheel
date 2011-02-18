@@ -10,6 +10,17 @@ class DecodeControllerTest < ActionController::TestCase
     assert_equal((I18n.t :wheel_error_message, :code => 'foo', :locale => 'th'), assigns(:message))
   end
   
+  test "should return success message in Thai" do
+    wheel_combination = mock()
+    WheelCombination.expects(:new).returns(wheel_combination)
+    wheel_combination.expects(:record!)
+    wheel_combination.expects(:message).returns('Wheel Decoded Message')
+    
+    post :wheel, :locale => 'th'
+    
+    assert_equal((I18n.t :wheel_success_message, :locale => 'th'), assigns(:message))
+  end
+  
   test "should return a GeoChat action reply header in case of an error" do
     @request.env['RAW_POST_DATA'] = 'foo'
     @request.query_parameters = ''

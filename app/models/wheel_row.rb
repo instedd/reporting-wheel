@@ -3,6 +3,8 @@ class WheelRow < ActiveRecord::Base
   belongs_to :wheel
   has_many :wheel_values, :dependent => :destroy
   
+  serialize :render_configuration, Hash
+  
   validates_presence_of :index
   validates_presence_of :label, :message => "Label can't be blank"
   validates_length_of :wheel_values, :minimum => 1, :message => "At least one value is required in each of the labels"
@@ -14,6 +16,11 @@ class WheelRow < ActiveRecord::Base
   
   def <=>(other)
     self.index <=> other.index
+  end
+  
+  def print_config
+    values = self[:render_configuration] || Hash.new
+    @cfg = @cfg || PrintConfig.new(WHEEL_ROW_PRINT_CONFIG, values)
   end
   
 end

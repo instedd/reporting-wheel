@@ -1,7 +1,3 @@
-<% if !flash[:notice].nil? %>
-	<div id="Notice"><%= flash[:notice] %></div>
-<% end %>
-
 <div id="Main_Table">
 	<table id="TopTable" cellpadding="0" cellspacing="0" ><tr><td class="bleft"></td><td class="bmid"><div><span class="butt01l"></span><span class="butt01m"><%= link_to 'Create a new wheel', :action => 'new' %></span><span class="butt01r"></span></div></td><td class="bright"></td></tr></table><!-- /TopTable -->
 
@@ -16,7 +12,7 @@
 		<% @wheels.each_with_index do |wheel, i| %>
 			<tr class="<%= i % 2 == 0 ? "one" : "two" %>">
 	    		<td class="n"><%= link_to wheel.name, :action => :show, :id => wheel.id %></td>
-				<td class="i"><%= link_to '<span class="i_view"></span>', {:action => :draw_preview, :id => wheel.id}, :class => "preview" %></td>
+				<td class="i"><%= link_to '<span class="i_view"></span>', :action => :draw_preview, :id => wheel.id %></td>
 			    <td class="i"><%= link_to '<span class="i_edit"></span>', :action => :edit, :id => wheel.id %></td>
 			    <td class="i"><%= link_to '<span class="i_download"></span>', :action => :draw, :id => wheel.id %></td>
 			    <td class="i"><%= link_to '<span class="i_delete"></span>', {:action => :delete, :id => wheel.id}, :confirm => "Are you sure you want to delete the wheel #{wheel.name}?" %></td>
@@ -29,13 +25,3 @@
 		<tr><td class="bleft"></td><td class="bmid">&nbsp;</td><td class="bright"></td></tr>
 	</table><!-- /TopTable -->
 </div><!-- /Main_Table -->
-
-<% content_for :head do %>
-<script type="text/javascript">
-	$(function() {
-		if ($.browser.msie) {
-			$(".preview").hide();
-		}
-	});
-	</script>
-<% end %>

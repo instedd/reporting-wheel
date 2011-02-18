@@ -1,5 +1,6 @@
 /*  --------  Redefined Tags --------  */
-body { 	background:#616d73; font-family:Arial, Helvetica, sans-serif; font-size:95%; color: #666; margin:0; padding:0 }
+body, html { height: 100%; }
+body { font-family:Arial, Helvetica, sans-serif; font-size:95%; color: #666; margin:0; padding:0 }
 img { border:0 }
 img.pngfix { behavior: url(pngHack.htc) }
 table { width:100%; border-collapse:collapse }
@@ -8,15 +9,20 @@ li { margin:0; padding:0; list-style:none }
 a { outline: none; }
 
 /*  -------- Main Structure  --------  */
-#Main { background:#fff; padding-bottom:40px }
+#Container { min-height: 100%; position: relative; background-color: #fff; }
+#Separator { height: 40px; }
+#Main { padding-bottom:40px }
 #Content_container { width:1000px; margin:0 auto }
-#Header { height:65px }
+#Header { height:65px; position:relative }
 #Content { padding:10px 0 0 0 }
-#Footer { font-size:0.8em; color:#FFF; width:1000px; margin:10px auto 50px auto }
+#Footer { position: absolute; bottom: 0px; width: 100%; background-color: #616d73; color:#FFF; font-size:0.8em; padding: 10px 0; }
+#FooterContent { padding-left: 20px; }
 
 #Logo { background:url(../images/logo_reporting_wheels.gif) no-repeat; width:119px; height:53px; margin-left:8px; position:relative; top:20px }
-#Account { float: right; }
-#Notice { font-weight: bold; margin-top: 20px; padding-left: 20px; }
+#User { color:#000; position:absolute; top:10px; right:0; text-align:right }
+#User span { font-size:0.7em }
+#User a { color:#666 }
+#User a:hover { color:#000 }
 
 #Main_Table { padding:20px }
 
@@ -46,6 +52,9 @@ a { outline: none; }
 #ItemsTable .i span.i_records { background:url(../images/b_records.png) no-repeat bottom; display:block; width:55px; height:21px }
 #ItemsTable a { color:#666666; text-decoration:underline }
 #ItemsTable a:hover { color:#000 }
+#ItemsTable tr.header { background:#a8a8a8; color:#FFF }
+#ItemsTable th { padding:7px 0 }
+#ItemsTable td.r { padding: 3px 1px; }
 
 #BotTable .bleft { background:url(../images/t02_l.gif) no-repeat left; width:10px; height:23px }
 #BotTable .bmid { background:url(../images/t02_m.gif) repeat-x; height:18px }
@@ -57,13 +66,40 @@ a { outline: none; }
 #MenuTable td a { font-size:0.7em; color:#5f5f5f; text-decoration:none }
 #MenuTable td a:hover { color:#FFF }
 
-.menu_content { background:#f6f6f6; border-bottom:#616d73 2px solid; color:#333; margin:5px 0; padding:20px 40px; min-height:200px }
+.LabelTable tr.header { background: #e7f5ce; }
+.LabelTable tr.value { background: #a8a8a8; color: #fff; font-size: 0.9em; }
+.LabelTable tr.code { background: #E6E3E3; font-size: 0.8em; text-align: center;}
 
-.label_box { background:#FFF; border:#adadad 1px solid; padding:10px 20px; margin:0 0 10px 10px; position:relative }
+.Row { margin-bottom: 20px; }
+.Row table { width: auto; }
+.Row table th { background: #e7f5ce; text-align: center; font-weight: bold; }
+.LabelList li { display: inline-block; padding-right: 2px; padding-bottom: 5px; }
+.LabelList div.value { background: #a8a8a8; color: #fff; font-size: 0.9em;  font-weight: bold; text-align: center; padding: 3px;}
+.LabelList div.code { background: #E6E3E3; font-size: 0.8em; text-align: center; padding: 3px;}
+
+.menu_content { background:#f6f6f6; border-bottom:#616d73 2px solid; color:#333; margin:5px 0; padding:20px 40px; min-height:200px }
+.mid_content { background:#f6f6f6; color:#333; margin:5px 0; padding:20px 40px; }
+.mid_content_last { border-bottom:#616d73 2px solid; }
+
+.label_box { background:#FFF; border:#adadad 1px solid; padding:10px 20px; margin: 0 0 10px 10px; position:relative; cursor:move; }
+.label_box .title_three span { cursor:pointer; }
 .delete_box { position:absolute; right:5px; top:5px }
-.values { font-size:0.8em; color:#6e6e6e; margin: 10px 0 0 0; width:630px; float:right }
-.values span { margin: 0 12px 2px 0; display:inline-block }
+.values { font-size:0.8em; color:#6e6e6e; margin: 10px 0 0 0; width:630px; float:right; }
+.values span.value { margin: 0 12px 2px 0; display:inline-block; cursor:pointer; }
 .butt_create { text-align:right; margin:12px 6px 0 0 }
+
+#TopTitle { background:#a8a8a8; font-size:1.6em; letter-spacing:-0.02em; color:#FFF; padding:8px 10px }
+.MidTitle { background:#a8a8a8; font-size:1.2em; letter-spacing:-0.02em; color:#FFF; padding:8px 10px }
+
+#report_result { margin-left: 10px; }
+
+/* -------- Edit Wheel ---------*/
+
+#tabs-print ul li { display: inline-block; width: 250px; padding-right: 10px; padding-bottom: 30px; }
+#tabs-print ul li input { width: 200px; margin-top: 5px; padding: 3px; height: 20px;}
+#tabs-print ul li img { vertical-align: middle; }
+
+.plus { vertical-align: middle; }
 
 /* -------- Buttons ---------*/
 .butt01l { background:url(../images/butt01_l.png) no-repeat; width:9px; height:29px; display:inline-block }
@@ -78,8 +114,14 @@ a { outline: none; }
 .butt_cancel  { background:url(../images/b_cancel.png) no-repeat top; width:76px; height:29px; display:inline-block }
 .butt_cancel:hover { background:url(../images/b_cancel.png) no-repeat bottom; width:76px; height:29px; display:inline-block }
 
-.butt_update  { background:url(../images/b_update.png) no-repeat top; width:83px; height:29px; display:inline-block }
+.butt_update  { background:url(../images/b_update.png) no-repeat top; width:83px; height:29px; display:inline-block; cursor: pointer; }
 .butt_update:hover { background:url(../images/b_update.png) no-repeat bottom; width:83px; height:29px; display:inline-block }
+
+.butt_done  { background:url(../images/b_done.png) no-repeat top; width:76px; height:29px; display:inline-block }
+.butt_done:hover { background:url(../images/b_done.png) no-repeat bottom; width:76px; height:29px; display:inline-block }
+
+.butt_back  { background:url(../images/b_back.png) no-repeat top; width:76px; height:29px; display:inline-block }
+.butt_back:hover { background:url(../images/b_back.png) no-repeat bottom; width:76px; height:29px; display:inline-block }
 
 /* -------- Gral Classes ---------*/
 .clear { clear:both; margin:0; padding:0 }
@@ -94,9 +136,11 @@ a { outline: none; }
 .smallsize { width:135px; height:22px; border:#adadad 1px solid }
 .medsize { width:220px; height:22px; border:#adadad 1px solid }
 .largesize { width:500px; height:22px; border:#adadad 1px solid }
+.hidden { display: none; }
 
 /* -------- UI Tabs ---------*/
 #tabs { text-align: center; }
+#Main_Table .ui-tabs-panel { padding: 0;}
 #Main_Table .ui-tabs-nav { background: #A8A8A8; padding: 0; font-size: 1.6em; }
 #Main_Table .ui-tabs-nav li { float: none; display: inline-block; padding: 7px 10px; text-align: center;}
 #Main_Table .ui-tabs-nav li a { float: none; padding: 0; }

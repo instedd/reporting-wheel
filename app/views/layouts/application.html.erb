@@ -2,26 +2,48 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Reporting Wheels</title>
+	<title>Reporting Wheel</title>
 	
 	<link href="/stylesheets/styles.css" rel="stylesheet" type="text/css" />
-	<%= javascript_include_tag 'application', 'jquery-1.4.2.min' %>
+	<link href="/stylesheets/jquery.jgrowl.css" rel="stylesheet" type="text/css" />
+	
+	<%= javascript_include_tag 'application', 'jquery-1.4.2.min', 'jquery.jgrowl.min' %>
+	
+	<% if !flash[:notice].nil? %>
+	<script type="text/javascript">
+		$(function() {
+			$.jGrowl('<%= flash[:notice] %>');
+		});
+	</script>
+	<% end %>
+	
 	<%= yield :head %>
 </head>
 <body>
-<div id="Main">
-    <div id="Content_container">
-        <div id="Header">
-            <a href="/"><div id="Logo" title="Reporting Wheels"></div><!-- /Logo --></a>
-			<% if logged_in? %>
-				<div id="Account"><%= link_to current_user.username, edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></div>
-			<% end %>
-        </div><!-- /Header -->
-        <div id="Content">
-			<%= yield(:content) or yield %>
-        </div><!-- /Content -->
-    </div><!-- /Content_container -->
-</div><!-- /Main -->
-<div id="Footer">&copy; 2010 Reporting Wheels<div id="version">Version: <%= app_version %></div></div><!-- /Footer -->
+<div id="Container">
+	<div id="Main">
+	    <div id="Content_container">
+	        <div id="Header">
+	            <a href="/"><div id="Logo" title="Reporting Wheel"></div><!-- /Logo --></a>
+				<% if logged_in? %>
+					<div id="User">
+						<b><%= current_user.username %></b>
+						<br />
+						<span><%= link_to "Settings", edit_user_path(:current) %> | <%= link_to 'Logout', logout_url %></span>
+					</div>
+				<% end %>
+	        </div><!-- /Header -->
+	        <div id="Content">
+				<%= yield(:content) or yield %>
+	        </div><!-- /Content -->
+	    </div><!-- /Content_container -->
+	</div><!-- /Main -->
+	<div id="Separator"></div>
+	<div id="Footer">
+		<div id="FooterContent"> 
+			&copy; 2010 Reporting Wheel<div id="version">Version: <%= app_version %></div>
+		</div>
+	</div><!-- /Footer -->
+</div>
 </body>
 </html>

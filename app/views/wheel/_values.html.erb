@@ -8,8 +8,10 @@
 	</div>
 
 	<br/>
-
-	<% f.fields_for :wheel_rows do |builder| %>
-		<%= render 'wheel_row_fields', :f => builder %>
-	<% end %>
+	
+	<ul id="labels_list">
+		<% f.fields_for :wheel_rows do |builder| %>
+			<%= render 'wheel_row_fields', :f => builder %>
+		<% end %>
+	</ul>
 </div>

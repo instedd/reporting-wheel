@@ -1,5 +1,5 @@
 <% content_for :head do %>
-	<%= javascript_include_tag 'jquery-ui-1.8.7.min.js', 'jquery.placeholder.js', 'wheel_form.js' %>
+	<%= javascript_include_tag 'jquery-ui-1.8.8.min.js', 'jquery.placeholder.js', 'wheel_form.js' %>
 	<link rel="stylesheet" href="/stylesheets/jquery.ui.base.css" type="text/css"/>
 <% end %>
 
@@ -15,7 +15,6 @@
 		<ul>
 			<li><a href="#tabs-general">General Information</a></li>
 			<li><a href="#tabs-values">Values to report</a></li>
-			<li><a href="#tabs-print">Print configuration</a></li>
 			<% unless @wheel.new_record? %>
 				<li><a href="#tabs-cover">Cover</a></li>
 			<% end %>
@@ -30,9 +29,6 @@
 		</div>
 		<div id="tabs-values">
 			<%= render :partial => 'values', :locals => {:f => f} %>
-		</div>
-		<div id="tabs-print">
-			<%= render :partial => 'print_configuration', :locals => {:f => f} %>
 		</div>
 		<% unless @wheel.new_record? %>
 			<div id="tabs-cover">
