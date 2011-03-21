@@ -34,7 +34,7 @@
 				<% end %>
 	        </div><!-- /Header -->
 	        <div id="Content">
-				<%= yield(:content) or yield %>
+				<%= content_for?(:content) ? yield(:content) : yield %>
 	        </div><!-- /Content -->
 	    </div><!-- /Content_container -->
 	</div><!-- /Main -->

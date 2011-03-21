@@ -1,4 +1,3 @@
-# Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   def link_to_remove_fields(name, f)
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
@@ -11,7 +10,7 @@ module ApplicationHelper
     end
     link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"))
   end
-  
+
   def app_version
     begin
       @@app_version = File.read('VERSION').strip unless defined? @@app_version
@@ -20,7 +19,7 @@ module ApplicationHelper
     end
     @@app_version
   end
-  
+
   def decode_url
     url = url_for :only_path => false, :controller => 'decode', :action => 'wheel'
     url.gsub(/\?.*/,"")

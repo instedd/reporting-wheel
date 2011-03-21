@@ -2,7 +2,7 @@
 	<%= javascript_include_tag 'user_form.js' %>
 <% end %>
 
-<% form_for @user do |f| %>
+<%= form_for @user do |f| %>
 
 <div id="Main_Table">
 
@@ -28,7 +28,7 @@
     </div><!-- /menu_content --> 
     
     <div class="butt_create">
-		<a id="submit"><span class="butt_update"></span></a> <%= link_to '<span class="butt_cancel"></span>', root_url %>
+		<a id="submit"><span class="butt_update"></span></a> <%= link_to '<span class="butt_cancel"></span>'.html_safe, root_url %>
     </div><!-- /butt_create -->
 
 </div><!-- /Main_Table -->

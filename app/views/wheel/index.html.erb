@@ -12,11 +12,11 @@
 		<% @wheels.each_with_index do |wheel, i| %>
 			<tr class="<%= i % 2 == 0 ? "one" : "two" %>">
 	    		<td class="n"><%= link_to wheel.name, :action => :show, :id => wheel.id %></td>
-				<td class="i"><%= link_to '<span class="i_view"></span>', :action => :draw_preview, :id => wheel.id %></td>
-			    <td class="i"><%= link_to '<span class="i_edit"></span>', :action => :edit, :id => wheel.id %></td>
-			    <td class="i"><%= link_to '<span class="i_download"></span>', :action => :draw, :id => wheel.id %></td>
-			    <td class="i"><%= link_to '<span class="i_delete"></span>', {:action => :delete, :id => wheel.id}, :confirm => "Are you sure you want to delete the wheel #{wheel.name}?" %></td>
-			    <td class="i"><%= link_to '<span class="i_records"></span>', {:controller => :wheel_record, :action => :index, :id => wheel.id} %></td>
+				<td class="i"><%= link_to '<span class="i_view"></span>'.html_safe, :action => :draw_preview, :id => wheel.id %></td>
+			    <td class="i"><%= link_to '<span class="i_edit"></span>'.html_safe, :action => :edit, :id => wheel.id %></td>
+			    <td class="i"><%= link_to '<span class="i_download"></span>'.html_safe, :action => :draw, :id => wheel.id %></td>
+			    <td class="i"><%= link_to '<span class="i_delete"></span>'.html_safe, {:action => :delete, :id => wheel.id}, :confirm => "Are you sure you want to delete the wheel #{wheel.name}?" %></td>
+			    <td class="i"><%= link_to '<span class="i_records"></span>'.html_safe, {:controller => :wheel_record, :action => :index, :id => wheel.id} %></td>
 		    </tr>
 		<% end %>
     </table><!-- /ItemsTable -->

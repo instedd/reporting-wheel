@@ -32,7 +32,7 @@ class Wheel < ActiveRecord::Base
   before_save :save_cover_image
   
   def self.find_for_factors_and_pool(factors, pool)
-    Wheel.find :first, :conditions => {:factors => factors.join(','), :pool_id => pool.id}
+    Wheel.where(:factors => factors.join(','), :pool_id => pool.id).first
   end
   
   def self.exists_for_factors_and_pool(factors, pool, except_id = nil)
@@ -43,7 +43,7 @@ class Wheel < ActiveRecord::Base
       conditions << except_id
     end
     
-    count = Wheel.count :all, :conditions => conditions
+    count = Wheel.where(conditions).count
     count > 0
   end
   
@@ -121,11 +121,11 @@ class Wheel < ActiveRecord::Base
      
     FileUtils.mkdir_p(absolute(images_directory))
     
-    File.open(absolute_path, "w") { |f| f.write(self[:cover_image].read); }
+    File.open(absolute_path, "w+b") { |f| f.write(self[:cover_image].read); }
   end
   
   def absolute(path)
-    "#{RAILS_ROOT}/public#{path}"
+    "#{::Rails.root.to_s}/public#{path}"
   end
   
   def wheel_directory

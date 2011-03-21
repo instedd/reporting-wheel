@@ -2,7 +2,7 @@ require 'test_helper'
 require 'yaml'
 
 class DecodeControllerTest < ActionController::TestCase
-  
+    
   test "should return error message in Thai" do
     @request.env['RAW_POST_DATA'] = 'foo'
     post(:wheel, :locale => 'th')
@@ -23,7 +23,6 @@ class DecodeControllerTest < ActionController::TestCase
   
   test "should return a GeoChat action reply header in case of an error" do
     @request.env['RAW_POST_DATA'] = 'foo'
-    @request.query_parameters = ''
     
     post :wheel
         
