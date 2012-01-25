@@ -40,7 +40,7 @@ GEM
     authlogic (2.1.6)
       activesupport
     builder (2.1.2)
-    cairo (1.10.0)
+    cairo (1.10.2)
       pkg-config
     daemons (1.1.0)
     erubis (2.6.6)
@@ -63,7 +63,7 @@ GEM
     pango (0.90.8)
       cairo (>= 1.10.0)
       glib2 (>= 0.90.8)
-    pkg-config (1.0.8)
+    pkg-config (1.1.2)
     polyglot (0.3.1)
     rack (1.2.2)
     rack-mount (0.6.13)
