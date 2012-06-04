@@ -97,7 +97,7 @@
 <% content_for :content do %>
 	
 	<div id="Main_Table">
-		<% form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
+		<%= form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
 		
 		<table id="TopTable" cellpadding="0" cellspacing="0" >
 			<tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
@@ -109,7 +109,7 @@
             <div id="draw_preview">
 				<div id="left">
 					<div id="svg">
-						<%= @svg %>
+						<%= @svg.html_safe %>
 					</div>
 					<div id="png" style="display:none;">
 					</div>
@@ -127,8 +127,8 @@
         </div><!-- /wheel_preview -->
         
         <div class="butt_create">
-			<%= link_to '<span class="butt_done"></span>', root_url %>
-			<%= link_to_function '<span class="butt_update"></span>', "update_print_configuration(#{@wheel.id})" %>
+			<%= link_to '<span class="butt_done"></span>'.html_safe, root_url %>
+			<%= link_to_function '<span class="butt_update"></span>'.html_safe, "update_print_configuration(#{@wheel.id})" %>
         </div><!-- /butt_create -->
 		<% end %>
     </div><!-- /Main_Table -->

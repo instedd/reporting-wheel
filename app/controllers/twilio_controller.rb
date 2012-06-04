@@ -38,6 +38,6 @@ class TwilioController < ApplicationController
   
   def load_voice_channel
     called_from = params[:Called]
-    @voice_channel = VoiceChannel.find :first, :conditions => { :number => called_from }
+    @voice_channel = VoiceChannel.where(:number => called_from).first
   end
 end

@@ -17,7 +17,7 @@
 	</div><!-- /left -->  
     
 	<div class="values">
-		<% f.fields_for :wheel_values do |builder| %>
+		<%= f.fields_for :wheel_values do |builder| %>
 			<%= render 'wheel_value_fields', :f => builder %>
 		<% end %>
     </div><!-- /values -->                        

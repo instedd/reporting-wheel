@@ -5,7 +5,7 @@ class WheelController < AuthController
   before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :draw_preview_png, :edit, :update, :show, :delete, :should_recalculate]
   
   def index
-    @wheels = Wheel.find(:all, :conditions => {:user_id => current_user.id})
+    @wheels = Wheel.where(:user_id => current_user.id)
   end
   
   def new
@@ -96,6 +96,8 @@ class WheelController < AuthController
   end
   
   def update_print_configuration
+    p params[:wheel]
+    
     wheel = Wheel.find(params[:id])
     wheel.update_attributes(params[:wheel])
     

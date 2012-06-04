@@ -49,7 +49,7 @@
 		<% else %>
 			<a onclick="should_recalculate_factors(<%=@wheel.id%>)"><span class="butt_update"></span></a>
 		<% end %>
-		<%= link_to '<span class="butt_cancel"></span>', :controller => :wheel, :action => :index %>
+		<%= link_to '<span class="butt_cancel"></span>'.html_safe, :controller => :wheel, :action => :index %>
     </div><!-- /butt_create -->
 
 </div><!-- /Main_Table -->

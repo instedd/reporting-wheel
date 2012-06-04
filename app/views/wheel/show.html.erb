@@ -43,7 +43,7 @@
 	</div>
 	<div class="MidTitle">Test a report</div>
 	<div class="mid_content mid_content_last">
-		<% form_for :report, :html => {'onsubmit' => 'return test_report_code()'} do |f| %>
+		<%= form_for :report, :html => {'onsubmit' => 'return test_report_code()'} do |f| %>
 			<p>
 				<%= f.label :code, 'Code:' %><br/>
 				<%= f.text_field :code, :id => 'report_code', :class => 'medsize' %> <span id="report_result"></span><br/>
@@ -59,6 +59,6 @@
 		</script>
 	</div>
 	<div class="butt_create">
-		<%= link_to '<span class="butt_back"></span>', root_url %>
+		<%= link_to '<span class="butt_back"></span>'.html_safe, root_url %>
 	</div>
 </div>
