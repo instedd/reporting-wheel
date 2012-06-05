@@ -8,3 +8,4 @@ syntax: glob
 *.jpg
 *.orig
 vendor
+.bundle

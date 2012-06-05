@@ -16,6 +16,7 @@ gem 'cairo'
 gem 'pango'
 gem 'authlogic'
 gem "guid"
+gem 'dynamic_form'
 
 # Use unicorn as the web server
 # gem 'unicorn'
