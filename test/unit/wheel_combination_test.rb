@@ -54,7 +54,7 @@ class WheelCombinationTest < ActiveSupport::TestCase
       wheel_combination.record!
 
       assert_equal "#{values} #{values}", wheel_combination.message
-      assert_equal "Success message: #{raw_values[0]}, #{raw_values[1]} - Success message: #{raw_values[0]}, #{raw_values[1]}", wheel_combination.wheel_success_message
+      assert_equal "Success message: #{raw_values[0]}, #{raw_values[1]}", wheel_combination.wheel_success_message
     end
   end
 
