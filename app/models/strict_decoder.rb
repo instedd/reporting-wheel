@@ -25,27 +25,13 @@ class StrictDecoder < BaseDecoder
         raise "Code not found"
       end
 			output_str << tmp_output
-			if success_messages.empty?
+			if success_messages.empty? || !success_messages.include?(success_message)
 				success_messages << success_message
-			else
-				if not_existe success_messages, success_message
-					success_messages << success_message
-				end
 			end
     end
     output_str = output_str.join(' ')
 
     [output_str, success_messages.join(' - '), @digits]
   end
-
-	def not_existe messages, message
-		result = true
-		messages.each do |msg|
-			if msg == message 
-				result = false
-			end 			
-		end
-		return result
-	end
 
 end

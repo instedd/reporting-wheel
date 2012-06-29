@@ -27,12 +27,8 @@ class FreeTextDecoder < BaseDecoder
         output_str += @message[0..end_pos] if end_pos >= 0
       end
 
-			if success_messages.empty?
+			if success_messages.empty? || !success_messages.include?(success_message)
 				success_messages << success_message
-			else
-				if not_existe success_messages, success_message
-					success_messages << success_message
-				end
 			end
       @message = @message[match.end(1)..-1]
     end
@@ -42,13 +38,4 @@ class FreeTextDecoder < BaseDecoder
     [output_str, success_messages.join(' - '), @digits]
   end
 
-	def not_existe messages, message
-		result = true
-		messages.each do |msg|
-			if msg == message 
-				result = false
-			end 			
-		end
-		return result
-	end
 end
