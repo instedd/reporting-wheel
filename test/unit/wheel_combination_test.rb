@@ -54,7 +54,20 @@ class WheelCombinationTest < ActiveSupport::TestCase
       wheel_combination.record!
 
       assert_equal "#{values} #{values}", wheel_combination.message
-      assert_equal "Success message: #{raw_values[0]}, #{raw_values[1]} - Success message: #{raw_values[0]}, #{raw_values[1]}", wheel_combination.wheel_success_message
+      assert_equal "Success message: #{raw_values[0]}, #{raw_values[1]}", wheel_combination.wheel_success_message
+    end
+  end
+
+	test "should decode message base on codes sent" do
+    [@wheel, @wheel_strict].each do |wheel|
+      code1, values1, raw_values1 = code_and_values(wheel)
+			code2, values2, raw_values2 = code_and_values(wheel)
+
+      wheel_combination = WheelCombination.new @pool, "#{code1} #{code2}"
+      wheel_combination.record!
+
+      assert_equal "#{values1} #{values2}", wheel_combination.message
+      assert_equal "Success message: #{raw_values1[0]}, #{raw_values1[1]} - Success message: #{raw_values2[0]}, #{raw_values2[1]}", wheel_combination.wheel_success_message
     end
   end
 

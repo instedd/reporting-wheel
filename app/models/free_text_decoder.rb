@@ -7,7 +7,6 @@ class FreeTextDecoder < BaseDecoder
 
     while (match = @@regexp.match(@message))
       success_message = @wheel.ok_text || ''
-      success_messages << success_message
 
       # extract codes
       codes = extract_codes(match[1])
@@ -19,7 +18,7 @@ class FreeTextDecoder < BaseDecoder
         end_pos = match.begin(1) - 1
         output_str += @message[0..end_pos] if end_pos >= 0
         output_str += values.map do |v|
-          success_message.gsub! "{#{v.row.label}}", v.value
+          success_message = success_message.gsub "{#{v.row.label}}", v.value
           v.row.label + ':"' + v.value + '"'
         end.join(', ')
         @digits.push(match[1])
@@ -28,6 +27,9 @@ class FreeTextDecoder < BaseDecoder
         output_str += @message[0..end_pos] if end_pos >= 0
       end
 
+			if success_messages.empty? || !success_messages.include?(success_message)
+				success_messages << success_message
+			end
       @message = @message[match.end(1)..-1]
     end
 
@@ -35,4 +37,5 @@ class FreeTextDecoder < BaseDecoder
 
     [output_str, success_messages.join(' - '), @digits]
   end
+
 end
