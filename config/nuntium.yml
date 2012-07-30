@@ -1,0 +1,26 @@
+development:
+  url: http://localhost:1234
+  account: rw
+  application: rw
+  password: rw
+  channel: rw
+  incoming_username: rw
+  incoming_password: rw
+
+production:
+  url: http://nuntium.instedd.org
+  account: rw
+  application: rw
+  password: rw
+  channel: rw
+  incoming_username: rw
+  incoming_password: rw
+
+test:
+  url: rw
+  account: rw
+  application: rw
+  password: rw
+  channel: rw
+  incoming_username: rw
+  incoming_password: rw
