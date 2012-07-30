@@ -27,7 +27,6 @@ ActiveRecord::Schema.define(:version => 20120730160528) do
 
   create_table "local_gateways", :force => true do |t|
     t.integer  "user_id"
-    t.string   "name"
     t.string   "address"
     t.datetime "created_at"
     t.datetime "updated_at"

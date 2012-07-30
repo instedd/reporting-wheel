@@ -1,5 +1,5 @@
 class LocalGateway < ActiveRecord::Base
   belongs_to :user
 
-  validates_presence_of :user_id, :name, :address
+  validates_presence_of :user_id, :address
 end

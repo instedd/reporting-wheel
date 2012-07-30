@@ -1,0 +1,86 @@
+<% content_for :head do %>
+  <%= javascript_include_tag 'knockout-2.1.0.min.js' %>
+  <%= javascript_include_tag 'channels.js' %>
+  <script type="text/javascript">
+  $(function() { initChannels(<%= @local_gateway ? @local_gateway.address : 'null' %>); });
+  </script>
+<% end %>
+<div class="ChannelWizard">
+<!-- ko if: state() == 'unconfigured' -->
+  <button data-bind="click: configure">Configure a channel</button>
+<!-- /ko -->
+<!-- ko if: state() == 'select_device' -->
+  <h3>Choose your type of mobile phone</h3>
+  <input checked="" class="left" id="androidLocalGateway" name="localGateway" type="radio" value="android" data-bind="checked: device">
+  <div class="left AndroidLogo"></div>
+  <label class="left" for="androidLocalGateway">Android mobile phone</label>
+  <p class="w30 clear description">If you have an Android powered mobile phone, you don't need a computer to set up your schedules. Just download the application, enter your text messages, and set your delivery schedule, Remindem handles the rest.</p>
+  <input class="left" id="desktopLocalGateway" name="localGateway" type="radio" value="desktop" data-bind="checked: device">
+  <div class="left DesktopLogo"></div>
+  <label class="left" for="desktopLocalGateway">Other mobile phone</label>
+  <p class="w30 clear description">If you use another type of mobile phone all you need to do is plug your phone into your computer and bridge the gap between your text messages and the internet application that sends them out.</p>
+  <button data-bind="click: chooseDevice">Next</button>
+<!-- /ko -->
+<!-- ko if: state() == 'download' -->
+  <!-- ko if: device() == 'android' -->
+    <h3>Go to Android Market and install Nuntium Local Gateway</h3>
+    <p class="w30 grey">
+    Use the following QR code to access the app or use the search engine with the keyword
+    <span class="box plain grey">Nuntium</span>
+    </p>
+    <div class="AndroidQR"></div>
+    <a href="http://market.android.com/details?id=org.instedd.geochat.lgw" target="_blank">http://market.android.com/details?id=org.instedd.geochat.lgw</a>
+    <br>
+    <br>
+  <!-- /ko -->
+  <!-- ko if: device() == 'desktop' -->
+    <h3>Donwload and install Nuntium Local Gateway</h3>
+    <p class="w30">Nuntium Local Gateway is a program that runs on your local computer and requires a mobile phone to be plugged in. The Gateway will use the plugged-in phone for sending and receiving text messsages.</p>
+    <p class="w30">Download the client corresponding to your operating system and install it.</p>
+    <a class="fimport" href="https://bitbucket.org/instedd/local-gateway/downloads" target="_blank">Download Nuntium Local Gateway</a>
+    <br/>
+    <br/>
+  <!-- /ko -->
+  <button data-bind="click: doneDownload">Next</button>
+<!-- /ko -->
+<!-- ko if: state() == 'enter_code' -->
+  <form action="#" data-bind="submit: submitCode">
+    <!-- ko if: device() == 'android' -->
+      <h3>Enter the gateway code from your mobile phone</h3>
+      <div class="AndroidScreen left"></div>
+      <br>
+      <div class="GreyArrow AndroidArrow left"></div>
+      <br>
+      <div class="left AndroidChannelCreation">
+      <p class="w30">Copy the code for automated setup from the Nuntium Local Gateway in here.</p>
+      <input data-bind="value: code" placeholder="Enter gateway code" size="19" type="text">
+      <input type="submit" value="Next" />
+      </div> 
+    <!-- /ko -->
+    <!-- ko if: device() == 'desktop' -->
+      <h3>Enter the gateway code from your mobile phone</h3>
+      <div class="DesktopScreen left"></div>
+      <br>
+      <div class="GreyArrow DesktopArrow left"></div>
+      <br>
+      <div class="left DesktopChannelCreation">
+      <p class="w30">Copy the code for automated setup from the Nuntium Local Gateway in here.</p>
+      <input data-bind="value: code" placeholder="Enter gateway code" size="19" type="text">
+      <input type="submit" value="Next" />
+      </div>
+    <!-- /ko -->
+  </form>
+<!-- /ko -->
+<!-- ko if: state() == 'configured' -->
+<h3>Congratulations! you have successfully created a channel</h3>
+<p class="w30">The phone you have configured will be used for receiving wheel codes and replying the decoded values. Ensure the phone is running and has credit for sending messages.</p>
+<div class="ChannelConfigured"></div>
+<br/>
+<button data-bind="click: finish">Finish</button>
+<!-- /ko -->
+<!-- ko if: state() == 'finished' -->
+Your local gateway is now configured to be used with the phone number
+<span data-bind="text: address"></span>
+<button data-bind="click: unregister">Unregister phone</button>
+<!-- /ko -->
+</div>
