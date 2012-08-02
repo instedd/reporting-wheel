@@ -6,14 +6,20 @@ class NuntiumController < ApplicationController
     end
   end
 
-  def recieve_at
+  def receive_at
+    lgw = LocalGateway.where(:address => params[:to].without_protocol).first
+    unless lgw
+      render :text => (I18n.t :phone_not_lgw)
+      return
+    end
+
     begin
-      body = params[:body].presence || request.raw_post
+      body = params[:body]
 
       # TODO this hardcodes decoding of wheels to wheels of the default pool, remove when we add pool selection
       pool = Pool.first
 
-      comb = WheelCombination.new pool, body
+      comb = WheelCombination.new pool, body, lgw.user
       comb.record!
 
       message = comb.message

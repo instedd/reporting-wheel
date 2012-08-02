@@ -7,6 +7,8 @@
 <% end %>
 <div class="ChannelWizard">
 <!-- ko if: state() == 'unconfigured' -->
+  <p>A channel lets you report to an Android phone or a mobile phone connected to a computer.</p>
+  <p>No channel is configured for this account.</p>
   <button data-bind="click: configure">Configure a channel</button>
 <!-- /ko -->
 <!-- ko if: state() == 'select_device' -->
@@ -79,8 +81,10 @@
 <button data-bind="click: finish">Finish</button>
 <!-- /ko -->
 <!-- ko if: state() == 'finished' -->
-Your local gateway is now configured to be used with the phone number
-<span data-bind="text: address"></span>
-<button data-bind="click: unregister">Unregister phone</button>
+<p>
+  Your channel is now configured to be used with this phone number:
+  <span data-bind="text: address"></span>
+</p>
+<button data-bind="click: unregister">Unregister channel</button>
 <!-- /ko -->
 </div>

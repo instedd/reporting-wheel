@@ -133,6 +133,31 @@ class WheelCombinationTest < ActiveSupport::TestCase
     assert_decode_fails @pool, "#{code1} 002002002 #{code2}", "Code not found"
   end
 
+  test "should succeed with appropiate values with lgw" do
+    lgw = @wheel.user.local_gateways.create! :address => '1234'
+
+    code, values, raw_values = code_and_values(@wheel)
+
+    wheel_combination = WheelCombination.new @pool, code, @wheel.user
+    wheel_combination.record!
+
+    assert_equal values, wheel_combination.message
+    assert_equal "Success message: #{raw_values[0]}, #{raw_values[1]}", wheel_combination.wheel_success_message
+  end
+
+  test "should not find wheel with another user" do
+    lgw = @wheel.user.local_gateways.create! :address => '1234'
+
+    code, values, raw_values = code_and_values(@wheel)
+
+    begin
+      WheelCombination.new @pool, code, User.make
+      fail
+    rescue RuntimeError => e
+      assert_equal 'Wheel not found', e.message
+    end
+  end
+
   private
 
   def assert_decode_fails(pool, wheel_code, expected_error_message)
