@@ -4,3 +4,4 @@
 en:
   wheel_error_message: "You sent %{code}, but your report was not understood. Please verify the code in your wheel and try again. No data was reported."
   wheel_success_message: "Your report was successfully sent."
+  phone_not_lgw: "The phone you are sending the messages to is not configured to be used with Reporting Wheel." 

@@ -1,0 +1,26 @@
+development:
+  url: http://localhost:1234
+  account: rw
+  application: rw
+  password: rw
+  channel: rw
+  incoming_username: rw
+  incoming_password: rw
+
+production:
+  url: http://localhost:1234
+  account: rw
+  application: rw
+  password: rw
+  channel: rw
+  incoming_username: rw
+  incoming_password: rw
+
+test:
+  url: http://localhost:1234
+  account: rw
+  application: rw
+  password: rw
+  channel: rw
+  incoming_username: rw
+  incoming_password: rw

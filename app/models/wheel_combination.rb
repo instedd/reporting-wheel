@@ -17,11 +17,17 @@ class WheelCombination
   # A human readable message of this combination
   attr_reader :message
 
-  def initialize(pool, body, metadata = {})
+  def initialize(pool, body, metadata_or_user = {})
     match = @@regexp.match body
     raise "No wheel code present in the message" unless match
 
-    @original_metadata = metadata
+    if metadata_or_user.is_a? User
+      @original_metadata = {}
+      @user = metadata_or_user
+    else
+      @original_metadata = metadata_or_user
+    end
+
     @original = String.new(body)
     @pool = pool
 
@@ -49,7 +55,9 @@ class WheelCombination
       # factorize codes to find factors
       begin
         factors = extract_codes(match).map{|c| Prime.factorize c}
-        wheel = Wheel.find_for_factors_and_pool factors, @pool
+        wheel = Wheel.scoped
+        wheel = wheel.where(:user_id => @user.id) if @user
+        wheel = wheel.find_for_factors_and_pool factors, @pool
         return wheel unless wheel.nil?
       rescue
         next

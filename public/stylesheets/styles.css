@@ -152,3 +152,87 @@ a { outline: none; }
 
 /* -------- Errors ---------*/
 .fieldWithErrors { color: red; display: inline; }
+
+/* For local gateways (channels) */
+.left { float: left; }
+.ChannelWizard {
+  height: 430px;
+}
+.ChannelWizard > label {
+  font-size: 15px;
+} 
+.ChannelWizard .AndroidLogo {
+  background: url(/images/android.png);
+  background-repeat: no-repeat;
+  width: 37px;
+  height: 35px;
+  margin-left: 5px;
+  margin-top: -10px;
+}
+.ChannelWizard .DesktopLogo {
+  background: url(/images/pc.png);
+  background-repeat: no-repeat;
+  width: 37px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: -4px;
+} 
+.ChannelWizard .description {
+  margin-left: 26px;
+  padding-top: 4px;
+}
+.ChannelWizard > p {
+  margin-top: 15px !important;
+}
+.ChannelWizard > p, .ChannelWizard > div, .ChannelWizard > a {
+  font-size: 12px;
+  color: #555;
+  margin: 15px 0;
+}
+.ChannelWizard .AndroidQR {
+  background: url(/images/android_local_gateway.png);
+  background-repeat: no-repeat;
+  width: 270px;
+  height: 270px;
+}
+.ChannelWizard .AndroidScreen {
+  background: url(/images/androidPreview.png);
+  background-repeat: no-repeat;
+  width: 254px;
+  height: 375px;
+}
+.ChannelWizard .AndroidArrow {
+  margin-top: 115px;
+}
+.ChannelWizard .GreyArrow {
+  background: url(/images/arrow.png);
+  background-repeat: no-repeat;
+  width: 46px;
+  height: 17px;
+}
+.ChannelWizard .AndroidChannelCreation {
+  margin-left: 5px;
+  margin-top: 21px;
+}
+.ChannelWizard .DesktopScreen {
+  background: url(/images/pcPreview.png);
+  background-repeat: no-repeat;
+  width: 258px;
+  height: 374px;
+}
+.ChannelWizard .DesktopArrow {
+  margin-top: 254px;
+}
+.ChannelWizard .DesktopChannelCreation {
+  margin-top: 160px;
+  margin-left: 5px;
+}
+.ChannelWizard .ChannelConfigured{
+  background: url(/images/finish.png);
+  background-repeat: no-repeat;
+  width: 461px;
+  height: 302px;
+}
+.w30 {
+  width: 300px !important;
+}

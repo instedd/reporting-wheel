@@ -13,6 +13,10 @@ class ActiveSupport::TestCase
   #self.use_transactional_fixtures = true
   #self.use_instantiated_fixtures  = false
   setup { Sham.reset }
+
+  def http_auth(user, pass)
+    @request.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64.encode64(user + ':' + pass)
+  end
 end
 
 require 'test/unit'

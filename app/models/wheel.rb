@@ -32,7 +32,7 @@ class Wheel < ActiveRecord::Base
   before_save :save_cover_image
   
   def self.find_for_factors_and_pool(factors, pool)
-    Wheel.where(:factors => factors.join(','), :pool_id => pool.id).first
+    where(:factors => factors.join(','), :pool_id => pool.id).first
   end
   
   def self.exists_for_factors_and_pool(factors, pool, except_id = nil)
