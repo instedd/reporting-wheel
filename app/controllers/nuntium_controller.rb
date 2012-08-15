@@ -27,6 +27,6 @@ class NuntiumController < ApplicationController
       message = I18n.t :wheel_error_message, :code => body
     end
 
-    render :text => message
+    render :text => message, :content_type => 'text/plain'
   end
 end
