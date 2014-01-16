@@ -22,6 +22,7 @@ class FreeTextDecoder < BaseDecoder
           v.row.label + ':"' + v.value + '"'
         end.join(', ')
         @digits.push(match[1])
+        append_values(values)
       else
         end_pos = match.end(1) - 1
         output_str += @message[0..end_pos] if end_pos >= 0
@@ -35,7 +36,7 @@ class FreeTextDecoder < BaseDecoder
 
     output_str += @message
 
-    [output_str, success_messages.join(' - '), @digits]
+    [output_str, success_messages.join(' - '), @digits, @values]
   end
 
 end

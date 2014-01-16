@@ -1,6 +1,8 @@
 <div id="Main_Table">
 	<table id="TopTable" cellpadding="0" cellspacing="0" >
-		<tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
+		<tr><td class="bleft"></td><td class="bmid"><div>
+		<span class="butt01l"></span><span class="butt01m"><%= link_to 'Download as CSV', :action => 'csv', :id => @wheel.id %></span><span class="butt01r"></span>
+	</div></td><td class="bright"></td></tr>
 	</table><!-- /TopTable -->
 	<table id="ItemsTable" cellpadding="0" cellspacing="0" >
 		<tr class="header">
@@ -13,7 +15,7 @@
 		<% @records.each_with_index do |record, i| %>
 			<tr class="<%= i % 2 == 0 ? "one" : "two" %>">
 	    		<td class="r"><%= record.created_at.strftime("%m/%d/%Y %H:%M") %></td>
-				<td class="r"><%= record.code %></td>
+					<td class="r"><%= record.code %></td>
 			    <td class="r"><%= record.data_str %></td>
 			    <td class="r"><%= record.original %></td>
 			    <td class="r"><%= record.decoded %></td>

@@ -35,12 +35,12 @@ class WheelCombination
 
     decoder = @wheel.allow_free_text ? FreeTextDecoder : StrictDecoder
 
-    @message, @success_message, @digits = decoder.new(@pool, @wheel, body).decode
+    @message, @success_message, @digits, @values = decoder.new(@pool, @wheel, body).decode
   end
 
   # Saves this combination as a WheelRecord.
   def record!
-    WheelRecord.create! :wheel => @wheel, :code => @digits.join(','), :data => (YAML.dump(@original_metadata) || ""), :original => @original, :decoded => @message
+    WheelRecord.create! :wheel => @wheel, :code => @digits.join(','), :data => (YAML.dump(@original_metadata) || ""), :original => @original, :decoded => @message, :values => @values
     enqueue_callback
   end
 
