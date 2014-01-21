@@ -3,12 +3,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Reporting Wheel</title>
-	
+
 	<link href="/stylesheets/styles.css" rel="stylesheet" type="text/css" />
 	<link href="/stylesheets/jquery.jgrowl.css" rel="stylesheet" type="text/css" />
-	
+
 	<%= javascript_include_tag 'application', 'jquery-1.4.2.min', 'jquery.jgrowl.min' %>
-	
+
 	<% if !flash[:notice].nil? %>
 	<script type="text/javascript">
 		$(function() {
@@ -16,7 +16,7 @@
 		});
 	</script>
 	<% end %>
-	
+
 	<%= yield :head %>
 </head>
 <body>
@@ -40,8 +40,8 @@
 	</div><!-- /Main -->
 	<div id="Separator"></div>
 	<div id="Footer">
-		<div id="FooterContent"> 
-			&copy; 2010 Reporting Wheel<div id="version">Version: <%= app_version %></div>
+		<div id="FooterContent">
+			&copy; 2014 Reporting Wheel<div id="version">Version: <%= app_version %></div>
 		</div>
 	</div><!-- /Footer -->
 </div>

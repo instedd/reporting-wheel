@@ -13,7 +13,7 @@ module ApplicationHelper
 
   def app_version
     begin
-      @@app_version = File.read('VERSION').strip unless defined? @@app_version
+      @@app_version = File.read('REVISION').strip[0...10] unless defined? @@app_version
     rescue Errno::ENOENT
       @@app_version = 'Development'
     end
