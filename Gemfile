@@ -36,4 +36,6 @@ gem 'foreman'
 group :development, :test do
 	gem 'machinist'
 	gem 'faker'
+  gem 'pry'
+  gem 'pry-debugger'
 end
