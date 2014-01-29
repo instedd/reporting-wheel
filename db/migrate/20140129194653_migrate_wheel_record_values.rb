@@ -36,7 +36,7 @@ class MigrateWheelRecordValues < ActiveRecord::Migration
   end
 
   class WheelRecord < ActiveRecord::Base
-    serialize :values, Hash
+    serialize :values, Array
   end
 
   def self.up

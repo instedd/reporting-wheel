@@ -5,7 +5,7 @@ class BaseDecoder
     @wheel_size = @wheel.rows.length
     @message = message
     @digits = []
-    @values = {}
+    @values = []
   end
 
   def decode
@@ -24,6 +24,6 @@ class BaseDecoder
       value = wheel_value.value
       record[label] = value
     end
-    @values[digits] = record
+    @values << {code: digits, record: record}
   end
 end

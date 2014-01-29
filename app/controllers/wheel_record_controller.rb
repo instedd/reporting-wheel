@@ -14,9 +14,9 @@ class WheelRecordController < AuthController
     data = CSV.generate do |csv|
       csv << ["Date", "Code", "Data", "Original"] + labels
       @records.each do |record|
-        record.codes.each do |code|
-          values = labels.map{|label| record.values_for(code, label)}
-          csv << [record.created_at, code, record.data_str, record.original] + values
+        record.values.each do |value|
+          values = labels.map{|label| value[:record][label]}
+          csv << [record.created_at, value[:code], record.data_str, record.original] + values
         end
       end
     end
