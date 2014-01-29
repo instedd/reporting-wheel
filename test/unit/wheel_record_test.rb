@@ -6,10 +6,10 @@ class WheelRecordTest < ActiveSupport::TestCase
   def setup
     wheel = Wheel.new
     @data = {"from" => "John", "to" => "Mary"}
-    code = '123456789'
-    values = {'label_a' => ['value_a'], 'label_b' => ['value_b_1', 'value_b_2']}
+    @code = '123456789'
+    values = {'123456789' => {'label_a' => 'value_a', 'label_b' => 'value_b'}}
 
-    @record = WheelRecord.new :wheel => wheel, :data => YAML.dump(@data), :code => code, :original => code, :decoded => 'decoded message', :values => values
+    @record = WheelRecord.new :wheel => wheel, :data => YAML.dump(@data), :code => @code, :original => @code, :decoded => 'decoded message', :values => values
   end
 
   test "should be valid with valid attributes" do
@@ -32,8 +32,8 @@ class WheelRecordTest < ActiveSupport::TestCase
   end
 
   test "should return values for label" do
-    assert_equal 'value_a', @record.values_for('label_a')
-    assert_equal 'value_b_1, value_b_2', @record.values_for('label_b')
+    assert_equal 'value_a', @record.values_for(@code ,'label_a')
+    assert_equal 'value_b', @record.values_for(@code, 'label_b')
   end
 
 end

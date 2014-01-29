@@ -21,7 +21,7 @@ class StrictDecoder < BaseDecoder
           tmp_output << v.row.label + ':"' + v.value + '"'
 				end
 				tmp_output = tmp_output.join(", ")
-        append_values(values)
+        append_values(digits, values)
       else
         raise "Code not found"
       end

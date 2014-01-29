@@ -15,12 +15,16 @@ class WheelRecord < ActiveRecord::Base
     self.data_value.map{|k,v| k.to_str + ": " + v}.join(', ')
   end
 
-  def values_for(label)
-    if self.values.present? && self.values[label].present?
-      self.values[label].join(', ')
+  def values_for(code, label)
+    if self.values.present? && self.values[code].present? && self.values[code][label].present?
+      self.values[code][label]
     else
       ''
     end
+  end
+
+  def codes
+    self.values.present? ? self.values.keys : []
   end
 
 end

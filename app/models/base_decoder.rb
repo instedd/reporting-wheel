@@ -17,12 +17,13 @@ class BaseDecoder
     size.times.map{|i| digits[3*i..3*i+2].to_i}.reverse
   end
 
-  def append_values(wheel_values)
+  def append_values(digits, wheel_values)
+    record = {}
     wheel_values.each do |wheel_value|
       label = wheel_value.row.label
       value = wheel_value.value
-      @values[label] ||= []
-      @values[label] << value
+      record[label] = value
     end
+    @values[digits] = record
   end
 end

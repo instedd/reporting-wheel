@@ -22,7 +22,7 @@ class FreeTextDecoder < BaseDecoder
           v.row.label + ':"' + v.value + '"'
         end.join(', ')
         @digits.push(match[1])
-        append_values(values)
+        append_values(match[1], values)
       else
         end_pos = match.end(1) - 1
         output_str += @message[0..end_pos] if end_pos >= 0
