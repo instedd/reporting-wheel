@@ -1,7 +1,7 @@
 <% content_for :head do %>
   <%= javascript_include_tag 'jquery-ui-1.8.8.min.js' %>
 	<%= javascript_include_tag 'user_form.js' %>
-  <link rel="stylesheet" href="/stylesheets/jquery.ui.base.css" type="text/css"/>
+  <link rel="stylesheet" href="/assets/jquery.ui.base.css" type="text/css"/>
   <script type="text/javascript">
   $(function() { $("#Main_Table").tabs(); });
   </script>
@@ -29,5 +29,5 @@
     <div id="tabs-channels">
       <%= render 'channels' %>
     </div>
-  </div><!-- /menu_content --> 
+  </div><!-- /menu_content -->
 </div><!-- /Main_Table -->

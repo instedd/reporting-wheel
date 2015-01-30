@@ -1,25 +1,25 @@
 <% content_for :head do %>
-	<link rel="stylesheet" href="/stylesheets/jquery.ui.base.css" type="text/css"/>
-	<link rel="stylesheet" href="/stylesheets/jquery.ui.theme.css" type="text/css"/>
-	<link rel="stylesheet" href="/stylesheets/draw_preview.css" type="text/css"/>
-	
+	<link rel="stylesheet" href="/assets/jquery.ui.base.css" type="text/css"/>
+	<link rel="stylesheet" href="/assets/jquery.ui.theme.css" type="text/css"/>
+	<link rel="stylesheet" href="/assets/draw_preview.css" type="text/css"/>
+
 	<%= javascript_include_tag 'jquery-ui-1.8.8.min.js', 'jquery.svg.min', 'jquery.svganim.min', 'jquery.blockUI' %>
-	
+
 	<script type="text/javascript">
 		var center_x = <%= @center_x %>;
 		var center_y = <%= @center_y %>;
 		var wheel_id = <%= @wheel.id %>;
-		
+
 		function is_ie() {
 			return $.browser.msie;
 		}
-	
+
 		function update(id, value) {
 			target = $("#" + id).attr("target");
 			rotation = 'rotate(' + value + ',' + center_x + ',' + center_y + ')';
 			$("#" + target).animate({svgTransform: rotation}, 10);
 		}
-		
+
 		$(function() {
 			if (is_ie()) {
 				$("#sliders").hide();
@@ -30,30 +30,30 @@
 				bind_sliders();
 				resize_svg();
 			}
-			
+
 			bind_blockUI();
 		});
-		
+
 		function image_tag() {
 			return $(document.createElement("img"))
 					.attr({ src: '/wheel/draw_preview_png/' + wheel_id + "?v=" + new Date().getTime(), width: '500', height: '500'});
 		}
-		
+
 		function bind_blockUI() {
 			$(document).ajaxStart(function() {
-			  $.blockUI({ css: { 
-				            border: 'none', 
-				            padding: '15px', 
-				            backgroundColor: '#000', 
-				            '-webkit-border-radius': '10px', 
-				            '-moz-border-radius': '10px', 
-				            opacity: .5, 
-				            color: '#fff' 
+			  $.blockUI({ css: {
+				            border: 'none',
+				            padding: '15px',
+				            backgroundColor: '#000',
+				            '-webkit-border-radius': '10px',
+				            '-moz-border-radius': '10px',
+				            opacity: .5,
+				            color: '#fff'
 				        } });
 			});
 			$(document).ajaxStop($.unblockUI);
 		}
-		
+
 		function bind_sliders() {
 			$(".slider").slider({
 				slide: function(event, ui) { update(this.id, ui.value); },
@@ -62,20 +62,20 @@
 				orientation: "horizontal"
 			});
 		}
-		
+
 		function reset_sliders() {
 			$(".slider").slider("option", "value", 0);
 		}
-		
+
 		function resize_svg() {
 			$("svg").width("500px").height("500px");
 		}
-		
+
 		function reload_image() {
 			$("#png").find("img").remove();
 			image_tag().appendTo('#png');
 		}
-		
+
 		function update_print_configuration(id) {
 			form = $("#update_form");
 			form_data = form.serialize();
@@ -95,10 +95,10 @@
 	</script>
 <% end %>
 <% content_for :content do %>
-	
+
 	<div id="Main_Table">
 		<%= form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
-		
+
 		<table id="TopTable" cellpadding="0" cellspacing="0" >
 			<tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
 		</table><!-- /TopTable -->
@@ -119,13 +119,13 @@
 					<% end %>
 					</div>
 				</div>
-				<div id="right">	
+				<div id="right">
 					<%= render "print_configuration", :f => builder %>
 				</div>
 				<div style="clear:both;"></div>
 			</div>
         </div><!-- /wheel_preview -->
-        
+
         <div class="butt_create">
 			<%= link_to '<span class="butt_done"></span>'.html_safe, root_url %>
 			<%= link_to_function '<span class="butt_update"></span>'.html_safe, "update_print_configuration(#{@wheel.id})" %>

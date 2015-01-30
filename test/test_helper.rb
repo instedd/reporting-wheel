@@ -22,3 +22,5 @@ end
 require 'test/unit'
 require 'mocha'
 
+RAILS_ROOT = Rails.root
+

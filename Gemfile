@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.20'
+gem 'rails', '3.1.0'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -8,7 +8,7 @@ gem 'rails', '3.0.20'
 gem 'mysql2'
 
 gem 'test-unit', :require => 'test/unit'
-gem "mocha", :require => 'mocha'
+gem "mocha", "~> 0.12.8", :require => false
 gem "delayed_job",  :git => 'git://github.com/collectiveidea/delayed_job.git'
 
 gem 'daemons'
