@@ -1,117 +1,117 @@
 require 'test_helper'
 
 class WheelTest < ActiveSupport::TestCase
-  
-  DIR_PATH = "#{RAILS_ROOT}/tmp/test"
-  
+
+  DIR_PATH = "#{Rails.root}/tmp/test"
+
   def setup
     @wheel = Wheel.new :name => 'Test Wheel', :factors => [19,17,23].join(','), :url_callback => 'http://www.domain.com/a/valid/url'
-    
+
     @row1 = @wheel.rows.build
     @row1.index = 1
     @row2 = @wheel.rows.build
     @row2.index = 2
     @row3 = @wheel.rows.build
     @row3.index = 3
-    
+
     @row1.stubs(:valid?).returns(true)
     @row2.stubs(:valid?).returns(true)
     @row3.stubs(:valid?).returns(true)
-    
+
     @wheel.stubs(:calculate_factors).returns(nil)
-    
+
     @wheel.user = User.make
     @wheel.pool = Pool.make
-    
+
     FileUtils.mkdir_p DIR_PATH
   end
-  
+
   def setup_for_success_voice_file_tests
     @wheel.save!
-    
-    file_path = "#{RAILS_ROOT}/tmp/test/success"
+
+    file_path = "#{Rails.root}/tmp/test/success"
     File.new(file_path, "w").close
-    
+
     @wheel.success_voice_file = File.open(file_path, "r")
-    @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
+    @wheel_directory = "#{Rails.root}/public/wheels/#{@wheel.id}"
   end
-  
+
    def setup_for_cover_image_file_tests
     @wheel.save!
-    
-    file_path = "#{RAILS_ROOT}/tmp/test/cover"
+
+    file_path = "#{Rails.root}/tmp/test/cover"
     File.new(file_path, "w").close
-    
+
     @wheel.cover_image_file = File.open(file_path, "r")
-    @wheel_directory = "#{RAILS_ROOT}/public/wheels/#{@wheel.id}"
+    @wheel_directory = "#{Rails.root}/public/wheels/#{@wheel.id}"
   end
-  
+
   def teardown
     @wheel.delete
-    
+
     #cleaning up...
     FileUtils.rm_rf @wheel_directory if @wheel_directory and File.directory? @wheel_directory
-    FileUtils.rm_rf DIR_PATH if File.directory? DIR_PATH  
+    FileUtils.rm_rf DIR_PATH if File.directory? DIR_PATH
   end
-  
+
   test "should be valid with valid attributes" do
     assert @wheel.save
   end
-  
+
   [:name, :factors].each do |field|
     test "should validate presence of #{field}" do
       @wheel.send("#{field}=", nil)
       assert !@wheel.valid?
     end
   end
-  
+
   test "name should be unique" do
     @wheel.save
-    
+
     @wheel2 = Wheel.new :name => 'Test Wheel', :factors => [19].join(','), :url_callback => 'http://www.domain.com/a/valid/url', :pool => Pool.make
     @wheel2.user = @wheel.user
     row1 = @wheel2.rows.build
     row1.stubs(:valid?).returns(true)
-    
+
     @wheel2.stubs(:calculate_factors).returns(nil)
-    
-    assert_false @wheel2.save
-  end 
-  
+
+    assert !@wheel2.save
+  end
+
   test "should have at least one row" do
     @wheel.wheel_rows = []
     assert !@wheel.valid?
   end
-  
+
   test "should validate uniqueness of factors" do
     Wheel.expects(:exists_for_factors_and_pool).returns(true)
     assert !@wheel.valid?
   end
-  
+
   test "should validate that factors are primes" do
     @wheel.factors = [19,18,23].join(',')
     assert !@wheel.valid?
   end
-  
+
   test "should validate that the number of rows is the same as the number of factors" do
     new_row = @wheel.rows.build
     new_row.index = 4
     new_row.stubs(:valid?).returns(true)
-    
-    assert !@wheel.valid?    
-  end
-  
-  test "callback must be a valid url" do
-    @wheel.url_callback = 'some invalid url'
-    
+
     assert !@wheel.valid?
   end
-  
+
+  test "callback must be a valid url" do
+    @wheel.url_callback = 'some invalid url'
+
+    assert !@wheel.valid?
+  end
+
   test "should calculate factors and update rows and values when saved" do
     wheel = Wheel.new :name => 'Save Test Wheel'
     wheel.user = User.make
     wheel.pool = Pool.make
-    
+
     row1 = wheel.rows.build
     row1.label = 'Label 1'
     row1.index = 1
@@ -119,13 +119,13 @@ class WheelTest < ActiveSupport::TestCase
     value11.value = 'Value 1 1'
     value12 = row1.values.build
     value12.value = 'Value 1 2'
-    
+
     row2 = wheel.rows.build
     row2.index = 2
     row2.label = 'Label 2'
     value21 = row2.values.build
     value21.value = 'Value 2 1'
-    
+
     row3 = wheel.rows.build
     row3.index = 3
     row3.label = 'Label 3'
@@ -135,19 +135,19 @@ class WheelTest < ActiveSupport::TestCase
     value32 = 'Value 3 2'
     value33 = row3.values.build
     value33 = 'Value 3 3'
-    
+
     factors = [19,17,23]
-    
+
     wheel.rows.each_with_index do |r,i|
       wheel.expects(:get_best_factor).with(r.values.length).returns(factors[i])
     end
     wheel.stubs(:uniqueness_of_factors).returns(nil)
     Wheel.expects(:exists_for_factors_and_pool).with(factors, wheel.pool, nil).returns(false)
-    
+
     wheel.save
-    
+
     assert_equal wheel.factors, factors.join(',')
-    
+
     wheel.rows.each_with_index do |r,i|
       assert_equal r.index, i
       r.values.each_with_index do |v,j|
@@ -156,7 +156,7 @@ class WheelTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   test "should have a callback when url_callback is defined" do
     assert @wheel.has_callback?
     @wheel.url_callback = ''
@@ -164,96 +164,96 @@ class WheelTest < ActiveSupport::TestCase
     @wheel.url_callback = nil
     assert !@wheel.has_callback?
   end
-  
+
   test "should retrieve success voice path" do
     setup_for_success_voice_file_tests
-    
+
     @wheel.save!
-    
+
     assert_equal "/wheels/#{@wheel.id}/audio/success.mp3", @wheel.success_voice_path
   end
-  
+
   test "should save success voice file" do
     setup_for_success_voice_file_tests
-    
+
     @wheel.save!
-    
-    assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3")
+
+    assert File.exists?("#{Rails.root}/public/wheels/#{@wheel.id}/audio/success.mp3")
   end
-  
+
   test "should work if success voice file is empty" do
     @wheel.success_voice_file = ''
     @wheel.save!
   end
-  
+
   test "should delete success voice file" do
-    FileUtils.mkdir_p "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/"
-    File.open("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3", 'w') { |f| f.write 'foo' }
-  
+    FileUtils.mkdir_p "#{Rails.root}/public/wheels/#{@wheel.id}/audio/"
+    File.open("#{Rails.root}/public/wheels/#{@wheel.id}/audio/success.mp3", 'w') { |f| f.write 'foo' }
+
     @wheel.dont_use_success_voice_file = '1'
     @wheel.save!
-    
-    assert_false File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/audio/success.mp3")
+
+    assert !File.exists?("#{Rails.root}/public/wheels/#{@wheel.id}/audio/success.mp3")
   end
-  
+
   test "should retrieve cover image path" do
     setup_for_cover_image_file_tests
-    
+
     @wheel.save!
-    
+
     assert_equal "/wheels/#{@wheel.id}/images/cover.png", @wheel.cover_image_path
   end
-  
+
   test "should save cover image file" do
     setup_for_cover_image_file_tests
-    
+
     @wheel.save!
-    
-    assert File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.png")
+
+    assert File.exists?("#{Rails.root}/public/wheels/#{@wheel.id}/images/cover.png")
   end
-  
+
   test "should work if cover image file is empty" do
     @wheel.cover_image_file = ''
     @wheel.save!
   end
-  
+
   test "should delete cover image file" do
-    FileUtils.mkdir_p "#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/"
-    File.open("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg", 'w') { |f| f.write 'foo' }
-  
+    FileUtils.mkdir_p "#{Rails.root}/public/wheels/#{@wheel.id}/images/"
+    File.open("#{Rails.root}/public/wheels/#{@wheel.id}/images/cover.jpg", 'w') { |f| f.write 'foo' }
+
     @wheel.dont_use_cover_image_file = '1'
     @wheel.save!
-    
-    assert_false File.exists?("#{RAILS_ROOT}/public/wheels/#{@wheel.id}/images/cover.jpg")
+
+    assert !File.exists?("#{Rails.root}/public/wheels/#{@wheel.id}/images/cover.jpg")
   end
-  
+
   test "access render configuration" do
     w = Wheel.new
     assert_equal WHEEL_PRINT_CONFIG.keys, w.print_config.keys
   end
-  
+
   test "when saving keep same factors" do
     wheel = Wheel.new
     wheel.name = 'new wheel'
     wheel.user = User.make
     wheel.pool = Pool.make
     defaults = [['Disease', 'Malaria', 'Flu', 'Cholera'], ['Quantity', '1', '2', '3'], ['Type', 'Cases', 'Deaths']]
-    defaults.each_with_index do |values, index| 
+    defaults.each_with_index do |values, index|
       row = wheel.rows.build
       row.index = index
-      row.label = values[0] 
+      row.label = values[0]
       values[1 .. -1].each do |value|
         row_value = row.values.build
         row_value.value = value
       end
     end
     wheel.save!
-    
+
     old_factors = wheel.factors
     wheel.save!
-    
+
     assert_equal old_factors, wheel.factors
-    
+
     wheel.rows.each do |row|
       first = row.values.sort.first
       row.values.sort.each do |v|
@@ -261,13 +261,13 @@ class WheelTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   test "should let two wheel with same factors and different pool" do
     wheel1 = Wheel.make
     wheel2 = Wheel.make
-    
+
     assert_equal wheel1.factors, wheel2.factors
     assert_not_equal wheel1.user.username, wheel2.user.username
   end
-  
+
 end

@@ -1,9 +1,6 @@
 <% content_for :head do %>
-  <%= javascript_include_tag 'jquery-ui-1.8.8.min.js' %>
-	<%= javascript_include_tag 'user_form.js' %>
-  <link rel="stylesheet" href="/assets/jquery.ui.base.css" type="text/css"/>
   <script type="text/javascript">
-  $(function() { $("#Main_Table").tabs(); });
+  $(function() { initUserForm(); });
   </script>
 <% end %>
 

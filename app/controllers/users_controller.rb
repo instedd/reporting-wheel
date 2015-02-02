@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def create
-    @user = User.new(params[:user])
+    @user = User.new(params.permit![:user])
     if @user.save
       flash[:notice] = "New account successfully created"
       redirect_to root_url
@@ -9,15 +9,15 @@ class UsersController < ApplicationController
       render 'home/index'
     end
   end
-  
+
   def edit
     @user = current_user
     @local_gateway = @user.local_gateways.first
   end
-  
+
   def update
     @user = current_user
-    if @user.update_attributes(params[:user])
+    if @user.update_attributes(params.permit![:user])
       flash[:notice] = "Account successfully updated"
       redirect_to root_url
     else
@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   end
 
   def configure_local_gateway
-    channel = current_user.register_channel params[:code]
+    channel = current_user.register_channel params.permit![:code]
     render :json => {'success' => true, 'address' => channel.address}
   rescue Exception => ex
     render :json => {'success' => false}

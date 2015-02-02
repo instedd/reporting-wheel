@@ -1,7 +1,7 @@
 class UserSessionsController < ApplicationController
-  
+
   def create
-    @user_session = UserSession.new(params[:user_session])
+    @user_session = UserSession.new(params.permit![:user_session])
     if @user_session.save
       flash[:notice] = "Successfully logged in"
       redirect_to root_url

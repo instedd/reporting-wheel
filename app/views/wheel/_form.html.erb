@@ -1,6 +1,7 @@
 <% content_for :head do %>
-	<%= javascript_include_tag 'jquery-ui-1.8.8.min.js', 'jquery.placeholder.js', 'wheel_form.js' %>
-	<link rel="stylesheet" href="/assets/jquery.ui.base.css" type="text/css"/>
+  <script type="text/javascript">
+  $(function() { initWheelForm(); });
+  </script>
 <% end %>
 
 <%= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"], :header_message => nil %>

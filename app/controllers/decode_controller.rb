@@ -1,5 +1,3 @@
-require 'array'
-
 class DecodeController < ApplicationController
 
   protect_from_forgery :except => :wheel
@@ -30,7 +28,7 @@ class DecodeController < ApplicationController
   end
 
   def test
-    render :text => WheelCombination.new(Pool.first, params[:digits]).message
+    render :text => WheelCombination.new(Pool.first, params.permit![:digits]).message
   rescue RuntimeError => e
     render :text => 'Report code not understood'
   end

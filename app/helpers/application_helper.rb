@@ -1,4 +1,12 @@
 module ApplicationHelper
+  def link_to_function(name, js, options = {})
+    link_to name, "javascript:void(0)", options.merge("onclick" => "#{js}; return false")
+  end
+
+  def button_to_function(name, js, options = {})
+    button_to name, "javascript:void(0)", options.merge("onclick" => "#{js}; return false")
+  end
+
   def link_to_remove_fields(name, f)
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
   end

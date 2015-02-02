@@ -1,6 +1,4 @@
 <% content_for :head do %>
-  <%= javascript_include_tag 'knockout-2.1.0.min.js' %>
-  <%= javascript_include_tag 'channels.js' %>
   <script type="text/javascript">
   $(function() { initChannels(<%= @local_gateway ? @local_gateway.address : 'null' %>); });
   </script>
@@ -57,7 +55,7 @@
       <p class="w30">Copy the code for automated setup from the Nuntium Local Gateway in here.</p>
       <input data-bind="value: code" placeholder="Enter gateway code" size="19" type="text">
       <input type="submit" value="Next" />
-      </div> 
+      </div>
     <!-- /ko -->
     <!-- ko if: device() == 'desktop' -->
       <h3>Enter the gateway code from your mobile phone</h3>

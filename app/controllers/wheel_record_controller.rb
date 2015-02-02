@@ -4,7 +4,7 @@ class WheelRecordController < AuthController
   before_filter :load, only: [:index, :csv]
 
   def index
-    @wheel = Wheel.find_by_id_and_user_id params[:id], current_user.id
+    @wheel = Wheel.find_by_id_and_user_id params.permit![:id], current_user.id
     @records = WheelRecord.where(:wheel_id => @wheel).order('created_at DESC')
   end
 
@@ -27,7 +27,7 @@ class WheelRecordController < AuthController
 private
 
   def load
-    @wheel = Wheel.find_by_id_and_user_id params[:id], current_user.id
+    @wheel = Wheel.find_by_id_and_user_id params.permit![:id], current_user.id
     @records = WheelRecord.where(:wheel_id => @wheel).order('created_at DESC')
   end
 

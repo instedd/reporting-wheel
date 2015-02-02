@@ -1,4 +1,4 @@
-/*  --------  Redefined Tags --------  */
+/*/*  --------  Redefined Tags --------  */
 body, html { height: 100%; }
 body { font-family:Arial, Helvetica, sans-serif; font-size:95%; color: #666; margin:0; padding:0 }
 img { border:0 }
@@ -93,7 +93,7 @@ a { outline: none; }
 
 #report_result { margin-left: 10px; }
 
-/* -------- Edit Wheel ---------*/
+ -------- Edit Wheel ---------
 
 #tabs-print ul li { display: inline-block; width: 250px; padding-right: 10px; padding-bottom: 30px; }
 #tabs-print ul li input { width: 200px; margin-top: 5px; padding: 3px; height: 20px;}
@@ -236,3 +236,4 @@ a { outline: none; }
 .w30 {
   width: 300px !important;
 }
+*/

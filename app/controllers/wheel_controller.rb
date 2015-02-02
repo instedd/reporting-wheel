@@ -23,7 +23,7 @@ class WheelController < AuthController
   end
 
   def create
-    @wheel = Wheel.new(params[:wheel])
+    @wheel = Wheel.new(params.permit![:wheel])
     @wheel.user = current_user
     # TODO this hardcodes wheels to a default pool, remove when we add selection of pools
     @wheel.pool = Pool.first
@@ -41,12 +41,12 @@ class WheelController < AuthController
   end
 
   def should_recalculate
-    render :json => recalculate_factors(params[:wheel])
+    render :json => recalculate_factors(params.permit![:wheel])
   end
 
   def update
-    @wheel.recalculate_factors = recalculate_factors(params[:wheel])
-    if @wheel.update_attributes(params[:wheel])
+    @wheel.recalculate_factors = recalculate_factors(params.permit![:wheel])
+    if @wheel.update_attributes(params.permit![:wheel])
       flash[:notice] = "Wheel \"#{@wheel.name}\" udpated"
       redirect_to :action => 'index'
     else
@@ -94,12 +94,12 @@ class WheelController < AuthController
   end
 
   def update_print_configuration
-    wheel = Wheel.find(params[:id])
-    wheel.update_attributes(params[:wheel])
+    wheel = Wheel.find(params.permit![:id])
+    wheel.update_attributes(params.permit![:wheel])
 
     # HACK update_attributes on wheel doesn't forward
     # the render_configuration to the rows
-    params[:wheel]["wheel_rows_attributes"].each do |k,v|
+    params.permit![:wheel]["wheel_rows_attributes"].each do |k,v|
       r = wheel.rows[k.to_i]
       r.update_attributes(v)
     end
@@ -147,7 +147,7 @@ class WheelController < AuthController
   end
 
   def find_wheel
-    @wheel = Wheel.find_by_id_and_user_id params[:id], current_user.id, :include => {:wheel_rows => :wheel_values}
+    @wheel = Wheel.includes(:wheel_rows => :wheel_values).find_by_id_and_user_id params.permit![:id], current_user.id
     redirect_to :action => :index if not @wheel
   end
 

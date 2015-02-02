@@ -55,7 +55,7 @@ class WheelCombination
       # factorize codes to find factors
       begin
         factors = extract_codes(match).map{|c| Prime.factorize c}
-        wheel = Wheel.scoped
+        wheel = Wheel.all
         wheel = wheel.where(:user_id => @user.id) if @user
         wheel = wheel.find_for_factors_and_pool factors, @pool
         return wheel unless wheel.nil?

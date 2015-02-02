@@ -1,17 +1,17 @@
-$(function(){
+function initWheelForm() {
 	$("#Main_Table").tabs();
 	prepare_events();
 	$("#submit").click(function(){
 		$("#wheel_form").submit();
 	});
-});
+}
 
 function prepare_events() {
 	do_watermarks();
-	
+
 	$("#label_name").keydown(add_label_value);
 	$(".add_value").keypress(add_label_value);
-	
+
 	$( "#labels_list" ).sortable({
 		revert: true,
 		stop: function(event, ui) {
@@ -77,13 +77,13 @@ function should_recalculate_factors(id) {
 	if (!validate_form()) {
 		return false;
 	}
-	
+
 	form = $('#wheel_form');
 	form_data = form.serialize();
 	$.post('/wheel/should_recalculate/' + id, form_data, function(data) {
 		response = eval(data);
 		if (response) {
-			if (confirm("Your new wheel has more rows or more values in one row. This means that the old wheel won't work anymore and you need to print it again and redistribute. Are you sure you want to continue?")) { 
+			if (confirm("Your new wheel has more rows or more values in one row. This means that the old wheel won't work anymore and you need to print it again and redistribute. Are you sure you want to continue?")) {
 				form.submit();
 			}
 		} else {
@@ -96,12 +96,12 @@ function edit_field(object) {
 	var parent = $(object).parent();
 	var span_label = parent.find("span");
 	var input_label = parent.find("input");
-	
+
 	span_label.hide();
 	input_label.show();
-	
+
 	input_label.focus();
-	
+
 	var close_edit = function() {
 		var value = input_label.val();
 		if (value != "") {
@@ -111,7 +111,7 @@ function edit_field(object) {
 			span_label.show();
 		}
 	};
-	
+
 	input_label.keypress(function(e) {
 		code = (e.keyCode ? e.keyCode : e.which);
 		if (code == 13) {
@@ -132,7 +132,7 @@ function validate_form() {
 
 function validate_labels() {
 	var result = true;
-	
+
 	// Validate that there is at least one label
 	var labels_count = $(".label_box input.destroy_label[value!='1']").size();
 	if (labels_count == 0) {
@@ -148,7 +148,7 @@ function validate_labels() {
 			alert("One of your labels has an empty name. Please enter a name and then submit again.");
 			result = false;
 		}
-		
+
 		var values = label.find(".value input.destroy_value[value!='1']");
 		var values_count = values.size();
 		if (values_count == 0 && result) {

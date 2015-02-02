@@ -9,13 +9,13 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140129194653) do
+ActiveRecord::Schema.define(version: 20150202182137) do
 
-  create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
+  create_table "delayed_jobs", force: true do |t|
+    t.integer  "priority",   default: 0
+    t.integer  "attempts",   default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
@@ -24,23 +24,24 @@ ActiveRecord::Schema.define(:version => 20140129194653) do
     t.string   "locked_by"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "queue"
   end
 
-  create_table "local_gateways", :force => true do |t|
+  create_table "local_gateways", force: true do |t|
     t.integer  "user_id"
     t.string   "address"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "pools", :force => true do |t|
+  create_table "pools", force: true do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "users", :force => true do |t|
+  create_table "users", force: true do |t|
     t.string   "username"
     t.string   "crypted_password"
     t.string   "password_salt"
@@ -50,14 +51,14 @@ ActiveRecord::Schema.define(:version => 20140129194653) do
     t.datetime "updated_at"
   end
 
-  create_table "voice_channels", :force => true do |t|
+  create_table "voice_channels", force: true do |t|
     t.string   "number"
     t.string   "language"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "wheel_records", :force => true do |t|
+  create_table "wheel_records", force: true do |t|
     t.integer  "wheel_id"
     t.string   "code"
     t.text     "data"
@@ -68,7 +69,7 @@ ActiveRecord::Schema.define(:version => 20140129194653) do
     t.text     "values"
   end
 
-  create_table "wheel_rows", :force => true do |t|
+  create_table "wheel_rows", force: true do |t|
     t.integer  "index"
     t.string   "label"
     t.integer  "wheel_id"
@@ -77,7 +78,7 @@ ActiveRecord::Schema.define(:version => 20140129194653) do
     t.text     "render_configuration"
   end
 
-  create_table "wheel_values", :force => true do |t|
+  create_table "wheel_values", force: true do |t|
     t.integer  "index"
     t.string   "value"
     t.integer  "code"
@@ -86,7 +87,7 @@ ActiveRecord::Schema.define(:version => 20140129194653) do
     t.datetime "updated_at"
   end
 
-  create_table "wheels", :force => true do |t|
+  create_table "wheels", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -96,7 +97,7 @@ ActiveRecord::Schema.define(:version => 20140129194653) do
     t.text     "render_configuration"
     t.integer  "user_id"
     t.integer  "pool_id"
-    t.boolean  "allow_free_text",      :default => false
+    t.boolean  "allow_free_text",      default: false
   end
 
 end
