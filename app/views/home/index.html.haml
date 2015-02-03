@@ -1,0 +1,29 @@
+#Main_Table
+  %h3 Login to your account:
+  = form_for @user_session, :url => { :controller => "user_sessions", :action => "create" } do |f|
+    = f.error_messages
+    %p
+      = f.label :username
+      %br
+      = f.text_field :username, :class => 'medsize'
+    %p
+      = f.label :password
+      %br
+      = f.password_field :password, :class => 'medsize'
+    %p= f.submit "Log in"
+  %h3 Or create a new one:
+  = form_for @user do |f|
+    = f.error_messages
+    %p
+      = f.label :username
+      %br
+      = f.text_field :username, :class => 'medsize'
+    %p
+      = f.label :password
+      %br
+      = f.password_field :password, :class => 'medsize'
+    %p
+      = f.label :password_confirmation
+      %br
+      = f.password_field :password_confirmation, :class => 'medsize'
+    = f.submit 'Create Account'
