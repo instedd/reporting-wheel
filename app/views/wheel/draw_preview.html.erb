@@ -1,129 +1,125 @@
-<% content_for :head do %>
-	<script type="text/javascript">
-		var center_x = <%= @center_x %>;
-		var center_y = <%= @center_y %>;
-		var wheel_id = <%= @wheel.id %>;
+<script type="text/javascript">
+	var center_x = <%= @center_x %>;
+	var center_y = <%= @center_y %>;
+	var wheel_id = <%= @wheel.id %>;
 
-		function is_ie() {
-			return $.browser.msie;
-		}
+	function is_ie() {
+		return $.browser.msie;
+	}
 
-		function update(id, value) {
-			target = $("#" + id).attr("target");
-			rotation = 'rotate(' + value + ',' + center_x + ',' + center_y + ')';
-			$("#" + target).animate({svgTransform: rotation}, 10);
-		}
+	function update(id, value) {
+		target = $("#" + id).attr("target");
+		rotation = 'rotate(' + value + ',' + center_x + ',' + center_y + ')';
+		$("#" + target).animate({svgTransform: rotation}, 10);
+	}
 
-		$(function() {
-			if (is_ie()) {
-				$("#sliders").hide();
-				$("#svg").hide();
-				image_tag().appendTo('#png');
-				$("#png").show();
-			} else {
-				bind_sliders();
-				resize_svg();
-			}
-
-			bind_blockUI();
-		});
-
-		function image_tag() {
-			return $(document.createElement("img"))
-					.attr({ src: '/wheel/draw_preview_png/' + wheel_id + "?v=" + new Date().getTime(), width: '500', height: '500'});
-		}
-
-		function bind_blockUI() {
-			$(document).ajaxStart(function() {
-			  $.blockUI({ css: {
-				            border: 'none',
-				            padding: '15px',
-				            backgroundColor: '#000',
-				            '-webkit-border-radius': '10px',
-				            '-moz-border-radius': '10px',
-				            opacity: .5,
-				            color: '#fff'
-				        } });
-			});
-			$(document).ajaxStop($.unblockUI);
-		}
-
-		function bind_sliders() {
-			$(".slider").slider({
-				slide: function(event, ui) { update(this.id, ui.value); },
-				max: 180,
-				min: -180,
-				orientation: "horizontal"
-			});
-		}
-
-		function reset_sliders() {
-			$(".slider").slider("option", "value", 0);
-		}
-
-		function resize_svg() {
-			$("svg").width("500px").height("500px");
-		}
-
-		function reload_image() {
-			$("#png").find("img").remove();
+	$(function() {
+		if (is_ie()) {
+			$("#sliders").hide();
+			$("#svg").hide();
 			image_tag().appendTo('#png');
+			$("#png").show();
+		} else {
+			bind_sliders();
+			resize_svg();
 		}
 
-		function update_print_configuration(id) {
-			form = $("#update_form");
-			form_data = form.serialize();
-			$.post('/wheel/update_print_configuration/' + id, form_data, function(data) {
-				if (is_ie()) {
-					reload_image();
-				} else {
-					data = eval(data);
-					$("#svg").html(data['svg']);
-					center_x = data['center_x'];
-					center_y = data['center_y'];
-					resize_svg();
-					reset_sliders();
-				}
-			});
-		}
-	</script>
-<% end %>
-<% content_for :content do %>
+		bind_blockUI();
+	});
 
-	<div id="Main_Table">
-		<%= form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
+	function image_tag() {
+		return $(document.createElement("img"))
+				.attr({ src: '/wheel/draw_preview_png/' + wheel_id + "?v=" + new Date().getTime(), width: '500', height: '500'});
+	}
 
-		<table id="TopTable" cellpadding="0" cellspacing="0" >
-			<tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
-		</table><!-- /TopTable -->
+	function bind_blockUI() {
+		$(document).ajaxStart(function() {
+		  $.blockUI({ css: {
+			            border: 'none',
+			            padding: '15px',
+			            backgroundColor: '#000',
+			            '-webkit-border-radius': '10px',
+			            '-moz-border-radius': '10px',
+			            opacity: .5,
+			            color: '#fff'
+			        } });
+		});
+		$(document).ajaxStop($.unblockUI);
+	}
 
-    	<div id="TopTitle"></div><!-- /TopTitle -->
+	function bind_sliders() {
+		$(".slider").slider({
+			slide: function(event, ui) { update(this.id, ui.value); },
+			max: 180,
+			min: -180,
+			orientation: "horizontal"
+		});
+	}
 
-		<div class="wheel_preview">
-            <div id="draw_preview">
-				<div id="left">
-					<div id="svg">
-						<%= @svg.html_safe %>
-					</div>
-					<div id="png" style="display:none;">
-					</div>
-					<div id="sliders">
-					<% @wheel.rows.length.times do |i| %>
-						<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider"></div>
-					<% end %>
-					</div>
+	function reset_sliders() {
+		$(".slider").slider("option", "value", 0);
+	}
+
+	function resize_svg() {
+		$("svg").width("500px").height("500px");
+	}
+
+	function reload_image() {
+		$("#png").find("img").remove();
+		image_tag().appendTo('#png');
+	}
+
+	function update_print_configuration(id) {
+		form = $("#update_form");
+		form_data = form.serialize();
+		$.post('/wheel/update_print_configuration/' + id, form_data, function(data) {
+			if (is_ie()) {
+				reload_image();
+			} else {
+				data = eval(data);
+				$("#svg").html(data['svg']);
+				center_x = data['center_x'];
+				center_y = data['center_y'];
+				resize_svg();
+				reset_sliders();
+			}
+		});
+	}
+</script>
+
+<div id="Main_Table">
+	<%= form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder| %>
+
+	<table id="TopTable" cellpadding="0" cellspacing="0" >
+		<tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
+	</table><!-- /TopTable -->
+
+  	<div id="TopTitle"></div><!-- /TopTitle -->
+
+	<div class="wheel_preview">
+          <div id="draw_preview">
+			<div id="left">
+				<div id="svg">
+					<%= @svg.html_safe %>
 				</div>
-				<div id="right">
-					<%= render "print_configuration", :f => builder %>
+				<div id="png" style="display:none;">
 				</div>
-				<div style="clear:both;"></div>
+				<div id="sliders">
+				<% @wheel.rows.length.times do |i| %>
+					<div id="slider<%=i+1%>" target="surface<%=i+1%>" class="slider"></div>
+				<% end %>
+				</div>
 			</div>
-        </div><!-- /wheel_preview -->
+			<div id="right">
+				<%= render "print_configuration", :f => builder %>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+      </div><!-- /wheel_preview -->
 
-        <div class="butt_create">
-			<%= link_to '<span class="butt_done"></span>'.html_safe, root_url %>
-			<%= link_to_function '<span class="butt_update"></span>'.html_safe, "update_print_configuration(#{@wheel.id})" %>
-        </div><!-- /butt_create -->
-		<% end %>
-    </div><!-- /Main_Table -->
-<% end %>
+      <div class="butt_create">
+		<%= link_to '<span class="butt_done"></span>'.html_safe, root_url %>
+		<%= link_to_function '<span class="butt_update"></span>'.html_safe, "update_print_configuration(#{@wheel.id})" %>
+      </div><!-- /butt_create -->
+	<% end %>
+  </div><!-- /Main_Table -->

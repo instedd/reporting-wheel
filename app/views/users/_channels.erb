@@ -1,8 +1,7 @@
-<% content_for :head do %>
-  <script type="text/javascript">
-  $(function() { initChannels(<%= @local_gateway ? @local_gateway.address : 'null' %>); });
-  </script>
-<% end %>
+<script type="text/javascript">
+$(function() { initChannels(<%= @local_gateway ? @local_gateway.address : 'null' %>); });
+</script>
+
 <div class="ChannelWizard">
 <!-- ko if: state() == 'unconfigured' -->
   <p>A channel lets you report to an Android phone or a mobile phone connected to a computer.</p>

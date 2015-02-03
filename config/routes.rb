@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'logout' => 'user_sessions#destroy', :as => 'logout'
+  delete 'logout' => 'user_sessions#destroy', :as => 'logout'
   get 'home' => 'home#index', :as => 'home'
 
   match 'user_sessions' => 'user_sessions#create', via: [:get, :post]

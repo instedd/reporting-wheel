@@ -1,8 +1,6 @@
-<% content_for :head do %>
-  <script type="text/javascript">
-  $(function() { initWheelForm(); });
-  </script>
-<% end %>
+<script type="text/javascript">
+$(function() { initWheelForm(); });
+</script>
 
 <%= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"], :header_message => nil %>
 

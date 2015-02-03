@@ -16,4 +16,5 @@
 //= require jquery_ujs
 //= require j_growl_rails/jquery.jgrowl
 //= require jquery.blockUI
+//= require instedd-bootstrap
 //= require_tree .

@@ -1,0 +1,6 @@
+.btn-group.pull-right
+  - if current_user
+    - dropdown current_user.username do
+      - dropdown_item 'Settings', edit_user_path(:current)
+      - dropdown_divider
+      - dropdown_item 'Sign out', logout_url, method: :delete
