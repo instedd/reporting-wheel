@@ -37,7 +37,7 @@ class WheelController < AuthController
   end
 
   def edit
-    @wheel.rows.sort!
+    @wheel.rows.to_a.sort!
   end
 
   def should_recalculate
@@ -87,10 +87,6 @@ class WheelController < AuthController
 
     content = File.open(file).read
     @svg, @center_x, @center_y = prepare_svg content
-
-    if !SimpleUserAgent::is_ie?(self.request)
-      render :action => "draw_preview" , :content_type => "application/xhtml+xml"
-    end
   end
 
   def update_print_configuration
