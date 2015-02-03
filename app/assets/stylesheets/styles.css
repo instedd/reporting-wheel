@@ -93,7 +93,7 @@ a { outline: none; }
 
 #report_result { margin-left: 10px; }
 
- -------- Edit Wheel ---------
+/* -------- Edit Wheel ---------*/
 
 #tabs-print ul li { display: inline-block; width: 250px; padding-right: 10px; padding-bottom: 30px; }
 #tabs-print ul li input { width: 200px; margin-top: 5px; padding: 3px; height: 20px;}
