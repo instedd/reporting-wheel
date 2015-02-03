@@ -1,4 +1,4 @@
-/*/*  --------  Redefined Tags --------  */
+/*  --------  Redefined Tags --------  */
 body, html { height: 100%; }
 body { font-family:Arial, Helvetica, sans-serif; font-size:95%; color: #666; margin:0; padding:0 }
 img { border:0 }
@@ -236,4 +236,3 @@ a { outline: none; }
 .w30 {
   width: 300px !important;
 }
-*/
