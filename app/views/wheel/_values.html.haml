@@ -1,0 +1,11 @@
+#labels
+  .title_two Each label with its values will be printed in a disc of a wheel.
+  %div
+    Label
+    %br
+    %input#label_name.medsize{:placeholder => "Enter a new label", :type => "text"}/
+    = button_to_add_label "Add Label", f, :wheel_rows
+  %br
+  %ul#labels_list
+    = f.fields_for :wheel_rows do |builder|
+      = render 'wheel_row_fields', :f => builder

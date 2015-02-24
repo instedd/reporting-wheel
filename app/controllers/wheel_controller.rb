@@ -1,6 +1,6 @@
 class WheelController < AuthController
 
-  before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :draw_preview_png, :edit, :update, :show, :delete, :should_recalculate]
+  before_filter :find_wheel, :only => [:draw_text, :draw, :draw_blank_cover, :draw_preview, :draw_preview_png, :edit, :update, :show, :delete, :should_recalculate, :reports]
 
   def index
     @wheels = Wheel.where(:user_id => current_user.id)
@@ -55,6 +55,11 @@ class WheelController < AuthController
   end
 
   def show
+    @records_count = WheelRecord.where(:wheel_id => @wheel).count
+  end
+
+  def reports
+    @records = WheelRecord.where(:wheel_id => @wheel).order('created_at DESC')
   end
 
   def delete

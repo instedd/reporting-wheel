@@ -36,9 +36,9 @@ module WheelHelper
 
   def print_config_field_string(f, print_config, key, index)
     id = "pc_#{index}_#{key}"
-    res = print_config.desc(key) + "<br/>"
-    res << f.text_field(key, :value => print_config[key], :id => id, :class => 'medsize') + " "
-    res << link_to_function(image_tag("b_cross_big.gif"), "$('##{id}').val('#{print_config.default(key)}')", :title => "Reset to default")
+    res = "<label class='control-label'>" + print_config.desc(key) + "</label>"
+    res << "<div class='control-group'>" + f.text_field(key, :value => print_config[key], :id => id, :class => 'medsize')
+    res << link_to_function('<span class="icf-sync"></span>'.html_safe, "$('##{id}').val('#{print_config.default(key)}')", :title => "Reset to default")
     res.html_safe
   end
 

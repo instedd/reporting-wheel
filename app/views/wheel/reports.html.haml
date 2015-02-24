@@ -1,0 +1,74 @@
+= render 'shared_tabs'
+
+.row-fluid
+  .span12
+    %h2 Reports
+    %p.desc When testing a report below, report in this order:
+    %br
+    .row-fluid
+      - @wheel.rows.sort{|a, b| b <=> a}.each do |row|
+        .span2
+          %p= row.label
+          %ul.LabelList
+            - row.values.sort.each do |value|
+              %li
+                .value= value.value
+                .code= "%03d" % value.code
+
+%br
+%br
+.row-fluid
+  .span12
+    %p
+      To submit reports use this url:
+      %strong= decode_url
+      %a{:href => "http://code.google.com/p/reportingwheel/wiki/API#Decode_a_wheel_code", :target => "_blank"}
+        %img{:height => "14", :src => "/assets/question.png", :width => "14"}/
+    - if @wheel.has_callback?
+      %p
+        %strong> URL Callback
+        \: #{@wheel.url_callback}
+        %a{:href => "http://code.google.com/p/reportingwheel/wiki/API#Callback", :target => "_blank"}
+          %img{:height => "14", :src => "/assets/question.png", :width => "14"}/
+.row-fluid
+  .span12
+    = form_for :report, :html => {'onsubmit' => 'return test_report_code()'} do |f|
+      = f.label :code, 'Code'
+      = f.text_field :code, :id => 'report_code', :class => 'medsize'
+      = f.submit "Test report code", :class => 'btn'
+      %span#report_result
+    :javascript
+      $(function() {
+          $("#report_code").keydown(function() {
+            $("#report_result").text("");
+          });
+      });
+%br
+%br
+
+.row-fluid
+  .span12
+    %table.table
+      %thead
+        %tr
+          %th Date
+          %th Code
+          %th Data
+          %th Original
+          %th Decoded
+      %tbody
+        - if @records.count > 0
+          - @records.each_with_index do |record, i|
+            %tr
+              %td= record.created_at.strftime("%m/%d/%Y %H:%M")
+              %td= record.code
+              %td= record.data_str
+              %td= record.original
+              %td= record.decoded
+        - else
+          %tr
+            %td
+            %td
+            %td
+            %td
+            %td

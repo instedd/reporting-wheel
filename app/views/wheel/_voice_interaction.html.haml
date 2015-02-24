@@ -1,0 +1,16 @@
+.title_two
+  Upload an MP3 file that will be played to a user when she sends a report via a phone call and it is understood.
+  %br
+  If you do not upload any file, a standard (English) recording will be played instead.
+- if @wheel.success_voice_path
+  %br
+  = mp3_player "#{@wheel.success_voice_path}?#{rand}"
+%br
+.title_four= f.label :success_voice_file, '"Report understood" recording'
+%div= f.file_field :success_voice_file
+- if @wheel.success_voice_path
+  %br
+  %br
+  %div
+    = f.check_box :dont_use_success_voice_file
+    = f.label :dont_use_success_voice_file, "Or just check this if you want to use a standard (English) recording"

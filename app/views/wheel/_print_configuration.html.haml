@@ -1,0 +1,17 @@
+%ul.wheel_print_config.well-white
+  %li.row_title_print_config Wheel
+  = f.fields_for :render_configuration do |builder|
+    - print_config = f.object.print_config
+    - print_config.ordered_keys.each_with_index do |key, index|
+      %li
+        = print_config_field builder, print_config, key, index
+- row_index = 0
+= f.fields_for :wheel_rows do |row_builder|
+  %ul.row_print_config.well-white
+    %li.row_title_print_config= row_builder.object.label
+    = row_builder.fields_for :render_configuration do |builder|
+      - print_config = row_builder.object.print_config
+      - print_config.ordered_keys.each do |key|
+        %li
+          = print_config_field builder, print_config, key, row_index
+  - row_index += 1

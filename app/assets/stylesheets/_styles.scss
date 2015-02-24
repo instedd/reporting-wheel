@@ -40,6 +40,10 @@ a {
   outline: none;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
 /*  -------- Main Structure  --------  */
 
 #Container {
@@ -151,26 +155,6 @@ a {
 #ItemsTable {
   margin: 3px 0;
   tr {
-    border-bottom: 2px solid #FFF;
-    &.one {
-      background: #f6f6f6;
-    }
-    &.two {
-      background: #e6e3e3;
-    }
-    &:hover {
-      background: #e1f2d3;
-    }
-  }
-  .n {
-    padding-left: 30px;
-  }
-  .i {
-    vertical-align: top;
-    padding: 3px 1px;
-    width: 70px;
-  }
-  tr {
     .i span {
       opacity: 0.4;
       filter: alpha(opacity = 40);
@@ -222,9 +206,6 @@ a {
   tr.header {
     background: #a8a8a8;
     color: #FFF;
-  }
-  th {
-    padding: 7px 0;
   }
   td.r {
     padding: 3px 1px;
@@ -296,26 +277,24 @@ a {
 }
 
 .LabelList {
+  @include border-radius(4px);
+  @include box-shadow(0 1px 1px 1px rgba(0,0,0,.3));
+  margin: 0;
+  display: inline-block;
+  font-size: 0;
   li {
+    font-size: 12px;
     display: inline-block;
-    padding-right: 2px;
-    padding-bottom: 5px;
+    padding: 2px 5px;
+    border-right: 1px solid #eeeeee;
+
+    &:last-child {
+      border:none;
+    }
   }
   div {
-    &.value {
-      background: #a8a8a8;
-      color: #fff;
-      font-size: 0.9em;
-      font-weight: bold;
-      text-align: center;
-      padding: 3px;
-    }
-    &.code {
-      background: #E6E3E3;
-      font-size: 0.8em;
-      text-align: center;
-      padding: 3px;
-    }
+    text-align: center;
+    color: #777777;
   }
 }
 
@@ -360,7 +339,7 @@ a {
 .values {
   font-size: 0.8em;
   color: #6e6e6e;
-  margin: 10px 0 0 0;
+  /*margin: 10px 0 0 0;*/
   width: 630px;
   float: right;
   span.value {
@@ -517,7 +496,31 @@ a {
   }
 }
 
+.StateDisplay .action button,
+.StateDisplay .action a {
+  font-size: 88%;
+}
+
+.StateDisplay .action {
+  width: 53%;
+}
+
+.StateDisplay .values {
+  width: 45%;
+}
+
 /* -------- Gral Classes ---------*/
+
+
+
+h2 {
+  font-size: 18px;
+}
+p.desc {
+  font-size: 12px;
+  color: #777777;
+  margin-top: -3px;
+}
 
 .clear {
   clear: both;

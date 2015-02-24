@@ -1,0 +1,14 @@
+%li.label_box
+  = f.hidden_field :index, :class => 'label_index'
+  .delete_box
+    = link_to_remove_label f
+  .title_three
+    %span{:onclick => "javascript:edit_field(this);"}= f.object.label
+    = f.text_field :label, :class => 'medsize hidden label_name'
+  .left
+    %input.smallsize.add_value{:placeholder => "Add Value", :type => "text"}/
+    = link_to_add_value "Add value", f, :wheel_values
+  .values
+    = f.fields_for :wheel_values do |builder|
+      = render 'wheel_value_fields', :f => builder
+  .clear

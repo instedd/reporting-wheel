@@ -85,31 +85,27 @@
       }
     });
   }
-#Main_Table
-  = form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder|
-    %table#TopTable{:cellpadding => "0", :cellspacing => "0"}
-      %tr
-        %td.bleft
-        %td.bmid
-        %td.bright
-    / /TopTable
-    #TopTitle
-    / /TopTitle
-    .wheel_preview
-      #draw_preview
-        #left
+= render 'shared_tabs'
+.row-fluid
+  .span12
+    %h3 Wheel editor
+
+.row-fluid
+  .span12#Main_Table
+    = form_for @wheel, :url => {:action => :update_print_configuration, :id => @wheel.id}, :html => {:id => 'update_form'} do |builder|
+
+      .row-fluid#draw_preview
+        .span6
           #svg
             = @svg.html_safe
           #png{:style => "display:none;"}
           #sliders
             - @wheel.rows.length.times do |i|
               .slider{:id => "slider#{i+1}", :target => "surface#{i+1}"}
-        #right
+        .span6
           = render "print_configuration", :f => builder
-        %div{:style => "clear:both;"}
-    / /wheel_preview
-    .butt_create
-      = link_to '<span class="butt_done"></span>'.html_safe, root_url
-      = link_to_function '<span class="butt_update"></span>'.html_safe, "update_print_configuration(#{@wheel.id})"
-    / /butt_create
-/ /Main_Table
+%hr
+.row-fluid
+  .span12
+    = link_to 'Done', root_url, :class => 'btn'
+    = link_to_function 'Update', "update_print_configuration(#{@wheel.id})", :class => 'btn btn-primary'

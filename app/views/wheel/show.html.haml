@@ -1,64 +1,27 @@
-<div id="Main_Table">
-  <table id="TopTable" cellpadding="0" cellspacing="0" >
-    <tr><td class="bleft"></td><td class="bmid"></td><td class="bright"></td></tr>
-  </table><!-- /TopTable -->
-  <div class="MidTitle">Wheel <%= @wheel.name %></div>
-  <div class="mid_content">
-    <p>
-      To submit reports use this url: <strong><%= decode_url %></strong>
-      <a href="http://code.google.com/p/reportingwheel/wiki/API#Decode_a_wheel_code" target="_blank">
-        <img src="/assets/question.png" width="14" height="14"/>
-      </a>
-    </p>
+= render 'shared_tabs'
+.row-fluid
+  .span12
+    %h3 Status
 
-    <% if @wheel.has_callback? %>
-      <p><strong>URL Callback</strong>: <%= @wheel.url_callback %>
-        <a href="http://code.google.com/p/reportingwheel/wiki/API#Callback" target="_blank">
-          <img src="/assets/question.png" width="14" height="14"/>
-        </a>
-      </p>
-    <% end %>
-  </div>
-  <div class="MidTitle">Labels and Values</div>
-  <div class="mid_content">
-    <div class="description">When testing a report below, report in this order:</div>
-    <br/>
-    <% @wheel.rows.sort{|a, b| b <=> a}.each do |row| %>
-      <div class="Row">
-        <table>
-          <tr><th><%= row.label %></th></tr>
-          <tr><td>
-            <ul class="LabelList">
-              <% row.values.sort.each do |value| %>
-                <li>
-                  <div class="value"><%= value.value %></div>
-                  <div class="code"><%= "%03d" % value.code %></div>
-                </li>
-              <% end %>
-            </ul>
-          </td><tr>
-        </table>
-      </div>
-    <% end %>
-  </div>
-  <div class="MidTitle">Test a report</div>
-  <div class="mid_content mid_content_last">
-    <%= form_for :report, :html => {'onsubmit' => 'return test_report_code()'} do |f| %>
-      <p>
-        <%= f.label :code, 'Code:' %><br/>
-        <%= f.text_field :code, :id => 'report_code', :class => 'medsize' %> <span id="report_result"></span><br/>
-      </p>
-      <%= f.submit "Test report code" %>
-    <% end %>
-    <script>
-      $(function() {
-          $("#report_code").keydown(function() {
-            $("#report_result").text("");
-          });
-      });
-    </script>
-  </div>
-  <div class="butt_create">
-    <%= link_to '<span class="butt_back"></span>'.html_safe, root_url %>
-  </div>
-</div>
+.row-fluid
+  .span2
+    .StateDisplay
+      .values
+        .U
+          %span.big= @records_count
+          %span reports received
+      .action
+        = link_to 'Download as CSV', {:controller => 'wheel_record', :action => 'csv', :id => @wheel.id}, :class => 'btn btn-primary pull-right'
+%br
+%br
+.row-fluid
+  .span12
+    %h3 Preview
+%br
+.row-fluid
+  .span12
+    = link_to 'Download printable version', {:action => :draw, :id => @wheel.id}, :target => "_blank", :class => 'btn'
+%br
+.row-fluid
+  .span12
+    = image_tag 'wheel_preview.png'

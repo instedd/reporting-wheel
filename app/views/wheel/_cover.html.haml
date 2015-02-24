@@ -1,0 +1,13 @@
+.title_two
+  You can upload a custom image to be used as the cover of the wheel. First get the template of a #{link_to 'blank cover', :action => :draw_blank_cover, :id => @wheel.id}, customize the image and then upload it here.
+- if @wheel.cover_image_path
+  %br
+  = link_to image_tag(@wheel.cover_image_path, :height => 60), @wheel.cover_image_path, :target => '_blank'
+%br
+.title_four= f.label :cover_image_file, 'Cover image:'
+%div= f.file_field :cover_image_file
+- if @wheel.cover_image_path
+  %br
+  %br
+  = f.check_box :dont_use_cover_image_file
+  = f.label :dont_use_cover_image_file, "Or just check this if you don't want to use a blank cover"

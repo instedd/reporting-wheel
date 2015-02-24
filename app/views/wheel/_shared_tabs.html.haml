@@ -1,0 +1,16 @@
+.row-fluid
+  .span12
+    %h3 Wheel #{@wheel.name}
+%br
+.row-fluid
+  .span12
+    .tabbable
+      %ul.nav.nav-tabs
+        %li{:class => "#{'active' if params[:action] == 'show'}" }
+          %a{:href => url_for(:action => :show, :id => @wheel.id)} Overview
+        %li{:class => "#{'active' if params[:action] == 'reports'}" }
+          %a{:href => url_for(:action => :reports, :id => @wheel.id)} Reports
+        %li{:class => "#{'active' if params[:action] == 'edit'}" }
+          = link_to 'Edit wheel', :action => :edit, :id => @wheel.id
+        %li{:class => "#{'active' if params[:action] == 'draw_preview'}" }
+          = link_to 'Print configuration', :action => :draw_preview, :id => @wheel.id
