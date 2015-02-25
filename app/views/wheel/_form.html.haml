@@ -18,3 +18,4 @@
     - else
       %a.btn.btn-primary{:onclick => "should_recalculate_factors(#{@wheel.id})"}
         Update
+      = icon_link_to :'icf-delete', 'Delete this wheel', {:action => :delete, :id => @wheel.id}, data: {:confirm => "Are you sure you want to delete the wheel #{@wheel.name}?"}, :class => 'pull-right'

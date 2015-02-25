@@ -2,30 +2,15 @@
   .span12
     %h3
       Reporting Wheels
-      = link_to 'Create a new wheel', {:action => 'new'}, class: "btn btn-primary pull-right"
-/ .row-fluid
-/   .span6
-/     %table.table.items#ItemsTable
-/       %thead
-/         %th(colspan= 6) Wheel
-/       %tbody
-/         - @wheels.each_with_index do |wheel, i|
-/           %tr
-/             %td.n= link_to wheel.name, :action => :show, :id => wheel.id
-/             %td.i= link_to '<span class="i_view"></span>'.html_safe, :action => :draw_preview, :id => wheel.id
-/             %td.i= link_to '<span class="i_edit"></span>'.html_safe, :action => :edit, :id => wheel.id
-/             %td.i= link_to '<span class="i_download"></span>'.html_safe, :action => :draw, :id => wheel.id
-/             %td.i= link_to '<span class="i_delete"></span>'.html_safe, {:action => :delete, :id => wheel.id}, :confirm => "Are you sure you want to delete the wheel #{wheel.name}?"
-/             %td.i= link_to '<span class="i_records"></span>'.html_safe, {:controller => :wheel_record, :action => :index, :id => wheel.id}
 
 .row-fluid
   .span6
 
     - if @wheels.count > 0
 
-      - simple_list :application, icon: :folder, create_path: root_url do
+      - simple_list :application, title: 'My Wheels',icon: :folder, create_path: {:action => 'new'} do
         - @wheels.each_with_index do |wheel, i|
           - simple_list_item wheel.name, {action: :show, id: wheel.id}
 
     - else
-      %span not rendered content
+      - simple_list :application, title: 'My Wheels',icon: :folder, create_path: {:action => 'new'}
