@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   root :to => "wheel#index"
 
-  match ':controller(/:action(/:id(.:format)))', via: [:get, :put, :post, :delete]
+  match ':controller(/:action(/:id(.:format)))', via: [:get, :put, :post, :delete, :patch]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

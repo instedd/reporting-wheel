@@ -5,12 +5,6 @@
 
 .row-fluid
   .span6
-
-    - if @wheels.count > 0
-
-      - simple_list :application, title: 'My Wheels',icon: :folder, create_path: {:action => 'new'} do
-        - @wheels.each_with_index do |wheel, i|
-          - simple_list_item wheel.name, {action: :show, id: wheel.id}
-
-    - else
-      - simple_list :application, title: 'My Wheels',icon: :folder, create_path: {:action => 'new'}
+    - simple_list :wheel, title: 'My Wheels',icon: :folder, create_path: {:action => 'new'} do
+      - @wheels.each_with_index do |wheel, i|
+        - simple_list_item wheel.name, {action: :show, id: wheel.id}

@@ -24,7 +24,7 @@ module WheelHelper
   end
 
   def link_to_remove_label(f)
-    f.hidden_field(:_destroy, :class => "destroy_label") + link_to_function(image_tag("b_cross_big.gif", :title => "Delete label"), "remove_label(this)")
+    f.hidden_field(:_destroy, :class => "destroy_label") + link_to_function('<span class="ic-wrapper"><i class="icf-delete"></i></span>'.html_safe, "remove_label(this)", :class => 'btn-icon')
   end
 
   def print_config_field(f, print_config, key, index)

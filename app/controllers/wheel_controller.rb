@@ -48,7 +48,7 @@ class WheelController < AuthController
     @wheel.recalculate_factors = recalculate_factors(params.permit![:wheel])
     if @wheel.update_attributes(params.permit![:wheel])
       flash[:notice] = "Wheel \"#{@wheel.name}\" udpated"
-      redirect_to :action => 'index'
+      redirect_to :action => 'show'
     else
       render :action => 'edit'
     end

@@ -1,13 +1,23 @@
 :javascript
   $(function() { initWheelForm(); });
-= f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"], :header_message => nil
-%h3 Properties
-= render :partial => 'general', :locals => {:f => f}
-= render :partial => 'values', :locals => {:f => f}
-- unless @wheel.new_record?
-  = render :partial => 'cover', :locals => {:f => f}
-= render :partial => 'sms_interaction', :locals => {:f => f}
-= render :partial => 'voice_interaction', :locals => {:f => f}
+.row-fluid
+  .span6
+    = f.error_messages :show_fields => false, :exclude => ["factors", "wheel_rows.index", "wheel_rows.wheel_values.code", "wheel_rows.wheel_values.index"], :header_message => nil
+.row-fluid
+  .span4
+    %h3 Properties
+    = render :partial => 'general', :locals => {:f => f}
+.row-fluid
+  .span4
+    = render :partial => 'values', :locals => {:f => f}
+    - unless @wheel.new_record?
+      = render :partial => 'cover', :locals => {:f => f}
+.row-fluid
+  .span4
+    = render :partial => 'sms_interaction', :locals => {:f => f}
+.row-fluid
+  .span4
+    = render :partial => 'voice_interaction', :locals => {:f => f}
 %hr
 .row-fluid
   .span12

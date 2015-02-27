@@ -1,6 +1,6 @@
-%li.label_box
+%li.label_box.well-white{'style' => 'position:relative'}
   = f.hidden_field :index, :class => 'label_index'
-  .delete_box
+  .pull-right
     = link_to_remove_label f
   .title_three
     %span{:onclick => "javascript:edit_field(this);"}= f.object.label
