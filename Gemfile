@@ -35,8 +35,8 @@ gem 'instedd-bootstrap', git: "https://bitbucket.org/instedd/instedd-bootstrap.g
 
 group :development do
   # Deploy with Capistrano
-  gem 'capistrano'
-  gem 'rvm-capistrano'
+  gem 'capistrano', :require => false
+  gem 'rvm-capistrano', :require => false
 end
 
 gem 'foreman'
