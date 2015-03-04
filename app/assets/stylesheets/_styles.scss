@@ -319,10 +319,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .label_box {
-  background: #FFF;
+  background: #d0d0d0;
   border: #adadad 1px solid;
   padding: 10px 20px;
-  margin: 0 0 10px 10px;
+  margin: 0 0 10px;
   position: relative;
   cursor: move;
   .title_three span {
@@ -593,38 +593,37 @@ input[type="text"].hidden {
   text-align: center;
 }
 
-#Main_Table {
-  .ui-tabs-panel {
-    padding: 0;
-  }
-  .ui-tabs-nav {
-    background: #A8A8A8;
-    padding: 0;
-    font-size: 1.6em;
-    li {
+.ui-tabs-panel {
+  padding: 0;
+}
+.ui-tabs-nav {
+  background: #A8A8A8;
+  padding: 0;
+  font-size: 1.6em;
+  li {
+    float: none;
+    display: inline-block;
+    padding: 7px 10px;
+    text-align: center;
+    a {
       float: none;
-      display: inline-block;
-      padding: 7px 10px;
-      text-align: center;
-      a {
-        float: none;
-        padding: 0;
-      }
+      padding: 0;
     }
-    .ui-state-default {
-      font-size: 0.7em;
-    }
-    .ui-tabs-selected {
-      font-size: 1em;
-    }
-    .ui-state-default a {
-      color: #5F5F5F;
-    }
-    li a:hover, .ui-tabs-selected a {
-      color: #FFFFFF;
-    }
+  }
+  .ui-state-default {
+    font-size: 0.7em;
+  }
+  .ui-tabs-selected {
+    font-size: 1em;
+  }
+  .ui-state-default a {
+    color: #5F5F5F;
+  }
+  li a:hover, .ui-tabs-selected a {
+    color: #FFFFFF;
   }
 }
+
 
 /* -------- Errors ---------*/
 
@@ -641,6 +640,10 @@ input[type="text"].hidden {
 
 .ChannelWizard {
   height: 430px;
+  .title_two {
+    font-size: 14px;
+    color: #000000;
+  }
   > label {
     font-size: 15px;
   }
@@ -666,15 +669,14 @@ input[type="text"].hidden {
   }
   > {
     p {
-      margin-top: 15px !important;
-      font-size: 12px;
+      font-size: 14px;
       color: #555;
-      margin: 15px 0;
+      margin: 10px 0 30px;
     }
     div, a {
-      font-size: 12px;
+      font-size: 14px;
       color: #555;
-      margin: 15px 0;
+      margin: 15px 0 5px;
     }
   }
   .AndroidQR {
@@ -720,6 +722,13 @@ input[type="text"].hidden {
     background-repeat: no-repeat;
     width: 461px;
     height: 302px;
+  }
+  input[type="text"] {
+    vertical-align: middle;
+    margin: 0;
+    & + input[type="submit"] {
+      vertical-align: middle;
+    }
   }
 }
 

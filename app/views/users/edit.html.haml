@@ -1,0 +1,19 @@
+:javascript
+  $(function() { initUserForm(); });
+.row-fluid
+  .span12
+    %h3 Edit User
+%br
+.row-fluid
+  .span12
+    .tabbable
+      %ul.nav.nav-tabs
+        %li.active
+          %a{"data-toggle" => "tab", :href => "#password"} Change password
+        %li
+          %a{"data-toggle" => "tab", :href => "#channels"} Edit channels
+      .tab-content
+        #password.tab-pane.active
+          = render 'change_password'
+        #channels.tab-pane
+          = render 'channels'
