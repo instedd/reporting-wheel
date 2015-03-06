@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  layout 'login', only: :create
   def create
     @user = User.new(params.permit![:user])
     if @user.save
@@ -6,6 +7,14 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       @user_session = UserSession.new
+      @use_new_account = true
+      if @user.username.blank?
+        flash[:error] = 'Missing account name'
+      elsif @user.password.blank?
+        flash[:error] = 'Missing password'
+      else
+        flash[:error] = 'Password confirmation mismatch'
+      end
       render 'home/index'
     end
   end

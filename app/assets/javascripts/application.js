@@ -18,3 +18,14 @@
 //= require jquery.blockUI
 //= require instedd-bootstrap
 //= require_tree .
+
+$(document).ready(function() {
+  $('.create-account a').click(function() {
+    $('.create-account').addClass('disabled');
+    $('.login-signup').addClass('switch');
+  });
+  $('.login').click(function() {
+    $('.login-signup').removeClass('switch');
+    $('.create-account').removeClass('disabled');
+  });
+});

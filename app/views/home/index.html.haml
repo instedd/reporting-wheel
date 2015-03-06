@@ -1,29 +1,49 @@
-#Main_Table
-  %h3 Login to your account:
-  = form_for @user_session, :url => { :controller => "user_sessions", :action => "create" } do |f|
-    = f.error_messages
-    %p
-      = f.label :username
-      %br
-      = f.text_field :username, :class => 'medsize'
-    %p
-      = f.label :password
-      %br
-      = f.password_field :password, :class => 'medsize'
-    %p= f.submit "Log in"
-  %h3 Or create a new one:
-  = form_for @user do |f|
-    = f.error_messages
-    %p
-      = f.label :username
-      %br
-      = f.text_field :username, :class => 'medsize'
-    %p
-      = f.label :password
-      %br
-      = f.password_field :password, :class => 'medsize'
-    %p
-      = f.label :password_confirmation
-      %br
-      = f.password_field :password_confirmation, :class => 'medsize'
-    = f.submit 'Create Account'
+.row-fluid
+  .span12
+    .create-account.pull-right{class: @use_new_account ? 'disabled' : nil}
+      Dont you have an account yet?
+      %a.btn.btn-warning
+        Create account
+.row-fluid
+  .span12.login-logo
+    = image_tag "instedd-bootstrap/header/logos/reportingWheel.png"
+.row-fluid.login-signup{class: @use_new_account ? 'switch' : nil}
+  .box-container
+    .login-box
+      %h3 Login
+
+      = form_for @user_session, :url => { :controller => 'user_sessions', :action => :create } do |f|
+        .control-group
+          = f.label :username, :class => 'control-label'
+          .controls
+            = f.text_field :username, :class => 'span12'
+        .control-group
+          = f.label :password, :class => 'control-label'
+          .controls
+            = f.password_field :password, :class => 'span12'
+        %hr
+        .control-group
+          = f.submit 'Log in', :class => 'btn'
+
+    .login-box
+      %h3 Sign up
+
+      = form_for @user do |f|
+        .control-group
+          = f.label :username
+          .controls
+            = f.text_field :username, :autocomplete => :off, :class => 'span12'
+        .control-group
+          = f.label :password
+          .controls
+            = f.password_field :password, :autocomplete => :off, :class => 'span12'
+        .control-group
+          = f.label :password_confirmation
+          .controls
+            = f.password_field :password_confirmation, :autocomplete => :off, :class => 'span12'
+        %hr
+        .control-group
+          = f.submit 'Sign up', :class => 'btn'
+        .control-group
+          Already have an account?
+          %a.login Log in
