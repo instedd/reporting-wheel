@@ -1,13 +1,11 @@
 require 'bundler/capistrano'
-require 'rvm/capistrano'
 
 set :rvm_ruby_string, '1.9.3'
-set :rvm_type, :system
 
 set :application, "reportingwheel"
-set :repository,  "https://bitbucket.org/instedd/reporting-wheel.git"
+set :repository,  "https://github.com/instedd/reporting-wheel.git"
 set :deploy_via, :remote_cache
-set :user, 'ubuntu'
+set :user, 'ec2-user'
 
 default_environment['TERM'] = ENV['TERM']
 
@@ -16,13 +14,11 @@ after "deploy:restart", "deploy:cleanup"
 namespace :deploy do
   task :start do ; end
   task :stop do ; end
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-  end
+  task :restart do ; end
 
   task :symlink_configs, :roles => :app do
     %W(database nuntium printing_config).each do |file|
-      run "ln -nfs #{shared_path}/#{file}.yml #{release_path}/config/"
+      run "ln -nfs #{shared_path}/config/#{file}.yml #{release_path}/config/"
     end
   end
 end
@@ -30,8 +26,8 @@ end
 namespace :foreman do
   desc 'Export the Procfile to Ubuntu upstart scripts'
   task :export, :roles => :app do
-    run "echo -e \"PATH=$PATH\\nGEM_HOME=$GEM_HOME\\nGEM_PATH=$GEM_PATH\\nRAILS_ENV=production\" >  #{current_path}/.env"
-    run "cd #{current_path} && rvmsudo bundle exec foreman export upstart /etc/init -f #{current_path}/Procfile -a #{application} -u #{user} --concurrency=\"delayed=1\""
+    run "echo -e \"PATH=$PATH\\nPUMA_OPTS=$PUMA_OPTS\\nRAILS_ENV=production\" >  #{current_path}/.env"
+    run "cd #{current_path} && sudo /usr/local/bin/bundle exec foreman export upstart /etc/init -t #{current_path}/etc/upstart -f #{current_path}/Procfile -a #{application} -u #{user} --concurrency=\"delayed=1,puma=1,web=0\""
   end
 
   desc "Start the application services"
