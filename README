@@ -1,2 +1,79 @@
-To play mp3 this project uses http://github.com/GavinM/mp3_player
-Please read the documentation on that website on how to setup things.
+# Reporting Wheel
+
+The Reporting Wheel is a non-electronic device that simplifies data reporting for the most remote workers, including those with literacy challenges.
+
+This projects allows to generate new Reporting Wheels, and provides an endpoint for decoding values sent by looking at a Reporting Wheel. This endpoint returns the decoded message and also allows you to configure a callback URL to forward the message to.
+
+## What is a Reporting Wheel?
+
+A reporting wheel is a device used to report structured information in a very intuitive and user-friendly way: the user just have to send a number. A double-entry table might be such a device:
+
+| disease/amount | 1 | 2 | 3 |
+|----------------|---|---|---|
+| cholera | 0507 | 0514 | 0521 |
+| h1n1 | 1007 | 1014 | 1021 |
+| flu | 1507 | 1514 | 1521 |
+
+Here, to report 2 cases of cholera the user will have to report "0514". Numbers are easy to report using a mobile phone, whether the user needs to type it in an sms or when talking to a machine.
+
+But the most common Reporting Wheel is a wheel with three discs: on one side you specify the reported information and on the right side the code you need to send. You choose the information by rotating each of the discs. So for example a user reports "0514" to an sms number. This message is forwarded to the API and the response will be "disease:cholera, amount:2".
+
+## Installing
+
+After getting the code and before running the normal rake tasks to get everything up and running (`db:setup`), make sure to get imagemagick and rmagick to work.
+
+### MP3
+
+To play mp3 this project uses http://github.com/GavinM/mp3_player. Please read the documentation on that website on how to setup things.
+
+### ImageMagick
+
+Install imagemagick and the dev library:
+```
+sudo apt-get install imagemagick
+sudo apt-get install libmagick9-dev
+```
+
+For imagemagick to use the fonts in your system:
+```
+wget http://www.imagemagick.org/Usage/scripts/imagick_type_gen
+chmod +x imagick_type_gen
+mkdir ~/.magick
+sudo updatedb
+./imagick_type_gen >> ~/.magick/type.xml
+```
+
+Finally install rmagick:
+```
+sudo gem install rmagick
+```
+
+## API
+
+Decode a wheel code:
+```
+HTTP POST /decode/wheel
+```
+
+The request body must contain the reported digits (if seeing the sketch for the wheel, the smallest wheel codes must be sent first, then the largest ones).
+The response body will contain the decoded message in the form `label1:value1, label2:value2, ..., labelN:valueN`.
+A record will be saved for each request. Query parameters will be associated to that record, so this can act as metadata for the report.
+
+### Callback
+
+If a callback if configured, an HTTP POST will be issued to that url with the body containing the decoded report message. If query parameters were supplied, these will be supplied in the callback as well.
+
+## Using with Geochat
+
+Wheels con be easily connected with GeoChat through [Dataset Services](http://geochathelp.com/doku.php?id=advanced:datasetservices). When GeoChat receives a message, it will forward it to the Reporting Wheel. The Reporting Wheel is going to decode the message, and reply to GeoChat with the decoded information. GeoChat will replace the wheel code in the message with the decoded information, so the message will appear decoded in GeoChat to the users of the group. If something is wrong with the code, Reporting Wheel is going to reply to GeoChat with the error message, and GeoChat is going to reply the original sender with this error message.
+
+To use this, follow this steps:
+
+1. Create your wheel
+2. Go to the settings of your group in GeoChat
+3. Choose the "Dataset" tab
+4. Check "Use structured data service"
+5. In the Url field, insert the url to the decode endpoint ("/decode/wheel", more of this in [API]). For example "http://reportingwheel.instedd.org/decode/wheel"
+6. Choose either if you want to forward all incoming messages to this group or only those that start with a prefix.
+
+You can see a log of the messages that the wheel received in the "records" action of your wheel.
