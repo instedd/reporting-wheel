@@ -12,8 +12,8 @@ gem "mocha", :require => 'mocha'
 gem "delayed_job",  :git => 'git://github.com/collectiveidea/delayed_job.git'
 
 gem 'daemons'
-gem 'cairo'
-gem 'pango'
+gem 'cairo', '= 1.15.3'
+gem 'pango', '= 2.2.5'
 gem 'authlogic'
 gem "guid"
 gem 'dynamic_form'

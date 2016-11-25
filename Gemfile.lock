@@ -40,8 +40,8 @@ GEM
     authlogic (2.1.6)
       activesupport
     builder (2.1.2)
-    cairo (1.12.8)
-      pkg-config
+    cairo (1.15.3)
+      pkg-config (>= 1.1.5)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -66,7 +66,7 @@ GEM
     foreman (0.63.0)
       dotenv (>= 0.7)
       thor (>= 0.13.6)
-    glib2 (2.1.0)
+    glib2 (2.2.5)
       pkg-config
     guid (0.1.1)
     highline (1.6.20)
@@ -94,10 +94,10 @@ GEM
     nuntium_api (0.20)
       json
       rest-client
-    pango (2.1.0)
-      cairo (>= 1.12.5)
-      glib2 (= 2.1.0)
-    pkg-config (1.1.5)
+    pango (2.2.5)
+      cairo (>= 1.14.0)
+      glib2 (= 2.2.5)
+    pkg-config (1.1.7)
     polyglot (0.3.3)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -145,7 +145,7 @@ PLATFORMS
 
 DEPENDENCIES
   authlogic
-  cairo
+  cairo (= 1.15.3)
   capistrano
   daemons
   delayed_job!
@@ -157,9 +157,12 @@ DEPENDENCIES
   mocha
   mysql2
   nuntium_api
-  pango
+  pango (= 2.2.5)
   pry
   pry-debugger
   rails (= 3.0.20)
   rvm-capistrano
   test-unit
+
+BUNDLED WITH
+   1.12.5
