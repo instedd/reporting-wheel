@@ -1,2 +1,3 @@
 web: bundle exec rails s
-delayed: script/delayed_job run
+delayed: bundle exec script/delayed_job run
+puma: bundle exec puma $PUMA_OPTS -e $RAILS_ENV
