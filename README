@@ -24,7 +24,7 @@ After getting the code and before running the normal rake tasks to get everythin
 
 ### MP3
 
-To play mp3 this project uses http://github.com/GavinM/mp3_player. Please read the documentation on that website on how to setup things.
+To play mp3 this project uses http://github.com/Bodacious/mp3_player. Please read the documentation on that website on how to setup things.
 
 ### ImageMagick
 
